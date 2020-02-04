@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+
+<head th:replace="public :: head">
+</head>
+
+<body>
+<div class="cBody">
+    <table class="layui-table">
+        <thead>
+        <tr>
+            <th>提现用户</th>
+            <th>提现金额</th>
+            <th>提现时间</th>
+            <th>银行卡号</th>
+            <th>银行名称</th>
+            <th>状态</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="p : ${deposit}">
+            <td th:text="${p.userId}"></td>
+            <td th:text="${p.price}"></td>
+            <td th:text="${p.sTime}"></td>
+            <td th:text="${p.bankId}"></td>
+            <td th:text="${p.bankName}"></td>
+            <td th:if="${p.state}==2" style="color: red">待审核</td>
+            <td th:if="${p.state}==3" style="color: #00FF00">已完成</td>
+            <td>
+                <button th:if="${p.state}==2" class="layui-btn  layui-btn-xs" th:data-id="${p.id}"
+                        onclick="look_But(this)">审核
+                </button>
+                <button th:if="${p.state}==3" class="layui-btn  layui-btn-xs">已完成
+                </button>
+            </td>
+        </tr>
+
+        </tbody>
+    </table>
+
+</div>
+<script>
+    function look_But(e) {
+        var id = $(e).data("id");
+        location.href = "/deposit/update?id=" + id;
+    }
+</script>
+</body>
+
+</html>

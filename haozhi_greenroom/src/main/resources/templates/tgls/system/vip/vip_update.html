@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+
+<head th:replace="public :: head">
+    <style>
+        .layui-form {
+            margin-right: 30%;
+        }
+
+        .layui-form-label {
+            width: 100px;
+        }
+
+        .layui-input-block {
+            margin-left: 130px;
+        }
+    </style>
+</head>
+
+<body>
+<div class="cBody">
+    <form id="addForm" class="layui-form" action="/vip/update/info" method="post">
+        <div class="layui-form-item">
+            <label class="layui-form-label">vip价格</label>
+            <div class="layui-input-inline shortInput">
+                <input type="text" name="price" th:value="${vip.price}"
+                       class="layui-input">
+                <input type="hidden" th:value="${vip.id}" name="id">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">vip优惠券</label>
+            <div class="layui-input-inline shortInput">
+                <input type="text" name="couponPrice" th:value="${vip.couponPrice}"
+                       class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">vip优惠券数量</label>
+            <div class="layui-input-inline shortInput">
+                <input type="text" name="personNum" th:value="${vip.personNum}"
+                       class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" lay-submit lay-filter="submitBut">修改</button>
+            </div>
+        </div>
+    </form>
+
+
+</div>
+</body>
+
+</html>

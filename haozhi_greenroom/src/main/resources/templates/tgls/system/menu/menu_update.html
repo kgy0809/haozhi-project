@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+
+    <head th:replace="public :: head">
+    </head>
+
+    <body>
+        <div class="cBody">
+            <form id="addForm" class="layui-form" action="/menu/update/add" method="post">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">菜单</label>
+                    <div class="layui-input-inline shortInput">
+                        <input type="text" name="name" th:value="${hzZc.name}" required autocomplete="off"
+                               class="layui-input">
+                        <input type="hidden" th:value="${hzZc.id}" name="id">
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">编码</label>
+                    <div class="layui-input-inline shortInput">
+                        <input type="text" name="coding" th:value="${hzZc.coding}" required autocomplete="off"
+                               class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <button class="layui-btn" lay-submit lay-filter="submitBut">修改</button>
+                        <input class="layui-btn layui-btn-primary" onClick="history.go(-1)" value="返回" type="button">
+                    </div>
+                </div>
+            </form>
+        </div>
+    </body>
+
+</html>

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+
+<head th:replace="public :: head">
+</head>
+
+<body>
+<div class="cBody">
+    <div class="console">
+       <!-- <form class="layui-form" action="">
+            <div class="layui-form-item">
+                <div class="layui-input-inline">
+                    <input type="text" name="name" required lay-verify="required" placeholder="输入分管名称"
+                           autocomplete="off" class="layui-input">
+                </div>
+                <button class="layui-btn" lay-submit lay-filter="formDemo">检索</button>
+            </div>
+        </form>-->
+
+        <script>
+            layui.use('form', function () {
+                var form = layui.form;
+
+                //监听提交
+                form.on('submit(formDemo)', function (data) {
+                    layer.msg(JSON.stringify(data.field));
+                    return false;
+                });
+            });
+            function updateBut(e) {
+                var id = $(e).data("id");
+                location.href="/dataInfo/update?id="+id;
+            }
+        </script>
+    </div>
+    <div class="console">
+        <button class="layui-btn" lay-submit lay-filter="formDemo" onclick="insertBut()">新增</button>
+    </div>
+
+    <table class="layui-table">
+        <thead>
+        <tr>
+            <th>标题</th>
+            <th>发表日期</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="p : ${data}">
+            <td th:text="${p.title}"></td>
+            <td th:text="${p.sTime}"></td>
+            <td>
+                <button class="layui-btn layui-btn-xs" th:data-id="${p.id}" onclick="updateBut(this)">修改</button>
+                <button class="layui-btn layui-btn-xs" th:data-id="${p.id}" onclick='delCustomList(this)'>删除</button>
+            </td>
+        </tr>
+
+        </tbody>
+    </table>
+
+<!--    &lt;!&ndash; layUI 分页模块 &ndash;&gt;
+    <div id="pages"></div>-->
+    <script>
+        layui.use(['laypage', 'layer'], function () {
+            var laypage = layui.laypage,
+                layer = layui.layer;
+
+            //总页数大于页码总数
+            laypage.render({
+                elem: 'pages'
+                , count: 100
+                , layout: ['count', 'prev', 'page', 'next', 'limit', 'skip']
+                , jump: function (obj) {
+                    console.log(obj)
+                }
+            });
+        });
+        //删除
+        function delCustomList(e) {
+            var id = $(e).data("id");
+            layui.use(['form', 'laydate'], function () {
+                layer.confirm('确定要删除么？', {
+                    btn: ['确定', '取消'] //按钮
+                }, function () {
+                    $.ajax({
+                        "type": "delete",
+                        "dataType": 'json',
+                        "url": "/dataInfo/delete/" + id,
+                        "success": function (res) {
+                            layer.msg(res.msg);
+                            $(e).parent().parent().remove();
+                            layer.msg('删除成功', {
+                                icon: 1
+                            });
+                        },
+                        error: function (res) {
+                            console.log(res);
+                        }
+
+                    });
+                }, function () {
+                    layer.msg('取消删除', {
+                        time: 2000 //20s后自动关闭
+                    });
+                });
+            });
+        }
+        //新增按钮
+        function insertBut() {
+            window.location = "/dataInfo/update/add";
+        }
+    </script>
+</div>
+</body>
+
+</html>

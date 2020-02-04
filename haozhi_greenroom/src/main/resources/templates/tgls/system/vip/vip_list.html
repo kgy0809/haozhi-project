@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+
+<head th:replace="public :: head">
+</head>
+
+<body>
+<div class="cBody">
+    <div class="console">
+
+        <script>
+            layui.use('form', function () {
+                var form = layui.form;
+
+                //监听提交
+                form.on('submit(formDemo)', function (data) {
+                    layer.msg(JSON.stringify(data.field));
+                    return false;
+                });
+            });
+            function updateBut(e) {
+                var id = $(e).data("id");
+                location.href="/vip/update?id="+id;
+            }
+        </script>
+    </div>
+
+    <table class="layui-table">
+        <thead>
+        <tr>
+            <th>vip价格</th>
+            <th>vip优惠券</th>
+            <th>vip优惠券数量</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="p : ${vip}">
+            <td th:text="${p.price}"></td>
+            <td th:text="${p.couponPrice}"></td>
+            <td th:text="${p.personNum}"></td>
+            <td>
+                <button class="layui-btn layui-btn-xs" th:data-id="${p.id}" onclick="updateBut(this)">修改</button>
+                <!--<button class="layui-btn layui-btn-xs" th:data-id="${p.id}" onclick='delCustomList(this)'>删除</button>-->
+            </td>
+        </tr>
+
+        </tbody>
+    </table>
+
+<!--    &lt;!&ndash; layUI 分页模块 &ndash;&gt;
+    <div id="pages"></div>-->
+    <script>
+        layui.use(['laypage', 'layer'], function () {
+            var laypage = layui.laypage,
+                layer = layui.layer;
+
+            //总页数大于页码总数
+            laypage.render({
+                elem: 'pages'
+                , count: 100
+                , layout: ['count', 'prev', 'page', 'next', 'limit', 'skip']
+                , jump: function (obj) {
+                    console.log(obj)
+                }
+            });
+        });
+        //删除
+        function delCustomList(e) {
+            var id = $(e).data("id");
+            layui.use(['form', 'laydate'], function () {
+                layer.confirm('确定要删除么？', {
+                    btn: ['确定', '取消'] //按钮
+                }, function () {
+                    $.ajax({
+                        "type": "delete",
+                        "dataType": 'json',
+                        "url": "/vip/delete/" + id,
+                        "success": function (res) {
+                            layer.msg(res.msg);
+                            $(e).parent().parent().remove();
+                            layer.msg('删除成功', {
+                                icon: 1
+                            });
+                        },
+                        error: function (res) {
+                            console.log(res);
+                        }
+
+                    });
+                }, function () {
+                    layer.msg('取消删除', {
+                        time: 2000 //20s后自动关闭
+                    });
+                });
+            });
+        }
+        //新增按钮
+        function insertBut() {
+            window.location = "/dataInfo/update";
+        }
+    </script>
+</div>
+</body>
+
+</html>

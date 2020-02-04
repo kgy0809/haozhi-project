@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<head th:replace="default :: head">
+</head>
+
+<body>
+    <div class="Box">
+        <!-- 第一级 -->
+        <div class="category_Box">
+            <ul>
+                <li th:each="p : ${menu}" id="" th:data-id="${p.id}">
+                    <p class="category_Txt" th:text="${p.name}"></p>
+                    <div class="category_Img"><img th:src="@{/image/17_icon.png}" alt="" onclick="f(this)"></div>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <script>
+
+        function f(e) {
+            var id =$(e).parents("li").data("id") ;
+            location.href="/api/business/GgTwo/"+id;
+        }
+    </script>
+</body>
+
+</html>

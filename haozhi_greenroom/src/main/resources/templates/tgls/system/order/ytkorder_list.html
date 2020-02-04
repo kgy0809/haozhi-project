@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+
+<head th:replace="public :: head">
+</head>
+
+<body>
+<div class="cBody">
+    <table class="layui-table">
+        <thead>
+        <tr>
+            <th>用户</th>
+            <th>订单号</th>
+            <th>商标名称</th>
+            <th>商标服务</th>
+            <th>服务费</th>
+            <th>官费</th>
+            <th>订单数量</th>
+            <th>合计</th>
+            <th>备注</th>
+            <th>创建时间</th>
+            <th>状态</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!--<tr th:each="p : ${order}">
+            <td th:text="${p.userId}"></td>
+            <td th:text="${p.id}"></td>
+            <td th:text="${p.title}"></td>
+            <td th:text="${p.sbName}"></td>
+            <td th:text="${p.doubleFwPrice}"></td>
+            <td th:text="${p.doubleGfPrice}"></td>
+            <td th:text="${p.number}"></td>
+            <td th:text="${p.doublePrice}"></td>
+            <td th:text="${p.remark}"></td>
+            <td th:text="${p.sTime}"></td>
+            <td style="color: #0000FF">已退款</td>
+            <td>
+                <button class="layui-btn  layui-btn-xs" th:data-id="${p.id}" onclick="look_But(this)">查看
+                </button>
+            </td>
+        </tr>-->
+
+        </tbody>
+    </table>
+    <!-- layUI 分页模块 -->
+    <div id="pages"></div>
+    <script >
+        ajaxFun(1, 10);
+
+        function ajaxFun(page, rows) {
+            $.ajax({
+                url: "/order/ytk",
+                type: 'POST',
+                data: {
+                    page: page,
+                    rows: rows
+                },
+                success(res) {
+                    var html = '';
+                    $.each(res.rows, function (index, ele) {
+                        html += ' <tr>'+
+                            '            <td>'+ele.userId+'</td>'+
+                            '            <td >'+ele.id+'</td>'+
+                            '            <td>'+ele.title+'</td>'+
+                            '            <td >'+ele.sbName+'</td>'+
+                            '            <td >'+ele.doubleFwPrice+'</td>'+
+                            '            <td>'+ele.doubleGfPrice+'</td>'+
+                            '            <td>'+ele.number+'</td>'+
+                            '            <td >'+ele.doublePrice+'</td>'+
+                            '            <td >'+ele.remark+'</td>'+
+                            '            <td >'+ele.stime+'</td>'+
+                            '            <td style="color: #0000FF">已退款</td>'+
+                            '            <td>'+
+                            '                <button class="layui-btn  layui-btn-xs" data-id="'+ele.id+'" onclick="look_But(this)">查看'+
+                            '                </button>'+
+                            '            </td>'+
+                            '        </tr>';
+                    });
+                    $('tbody').empty().html(html);
+                    listPage(res.total, page);
+                }
+            })
+        }
+
+        function listPage(total, page) {
+            layui.use('laypage', function () {
+                var laypage = layui.laypage;
+                var limits = total / 10;
+                //总页数大于页码总数
+                laypage.render({
+                    elem: 'pages'
+                    , count: total,
+                    limit: 10,
+                    curr: page
+                    , layout: ['count', 'prev', 'page', 'next']
+                    , jump: function (obj, first) {
+                        if (!first) {
+                            ajaxFun(obj.curr, 10);
+                        }
+                    }
+                });
+            });
+        }
+        function update_But(e) {
+            var id = $(e).data("id");
+            location.href = "/order/wx/update?id=" + id;
+        }
+
+        function look_But(e) {
+            var id = $(e).data("id");
+            location.href = "/order/xx/view?id=" + id;
+        }
+    </script>
+</div>
+
+</body>
+
+</html>

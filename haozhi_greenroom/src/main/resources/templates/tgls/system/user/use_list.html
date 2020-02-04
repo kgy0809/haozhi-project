@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+
+<head th:replace="public :: head">
+    <style>
+
+    </style>
+</head>
+
+<body>
+
+<div class="cBody">
+    <form id="timeBox" action="/excel/export" method="post">
+        <!--        <div class="layui-form-item" style="margin-bottom: 0;width: 60%">
+                    <label class="layui-form-label">日期</label>
+                    <div class="layui-input-inline shortInput">
+                        <input type="text" class="layui-input" name="time" id="test1" style="width: 100%">
+                    </div>
+                </div>-->
+        <div class="layui-form-item" style="margin-bottom: 0;width: 60%">
+            <label class="layui-form-label">日期</label>
+            <div class="layui-input-inline shortInput">
+                <input type="text" class="layui-input" name="time" id="test1" style="width: 100%">
+            </div>
+        </div>
+        <div class="console">
+            <button class="layui-btn" lay-submit lay-filter="formDemo" onclick="insertBut()">用户数据导出</button>
+        </div>
+    </form>
+    <table class="layui-table">
+        <thead>
+        <tr>
+            <th>姓名</th>
+            <th>手机号</th>
+            <th>邮箱</th>
+            <th>vip状态</th>
+            <th>上级</th>
+            <th>注册日期</th>
+            <th>累计完成单数</th>
+            <th>城市</th>
+            <th>当前余额</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!--        <tr th:each="p : ${data}">
+                    <td th:text="${p.name}"></td>
+                    <td th:text="${p.tel}"></td>
+                    <td th:text="${p.mail}"></td>
+                    <td th:text="${p.state} == '1' ? '普通会员' : 'vip'"></td>
+                    <td th:text="${p.superId}"></td>
+                    <td th:text="${p.sTime}"></td>
+                    <td th:text="${p.totalNum}"></td>
+                    <td th:text="${p.city}"></td>
+                    <td th:text="${p.doubleBalance}"></td>
+                </tr>-->
+
+        </tbody>
+    </table>
+
+    <!-- layUI 分页模块 -->
+    <div id="pages"></div>
+    <script>
+        ajaxFun(1, 10);
+
+        function ajaxFun(page, rows) {
+            $.ajax({
+                url: "/user",
+                type: 'POST',
+                data: {
+                    page: page,
+                    rows: rows
+                },
+                success(res) {
+                    var html = '';
+                    $.each(res.rows, function (index, ele) {
+                        var stateHtml = '';
+                        if (ele.state == 1) {
+                            stateHtml = "普通会员"
+                        } else {
+                            stateHtml = "vip"
+                        }
+                        if (ele.superId == null) {
+                            ele.superId = ''
+                        }
+                        if (ele.doubleBalance == null) {
+                            ele.doubleBalance = 0.00;
+                        }
+                        if (ele.totalNum == null) {
+                            ele.totalNum = 0;
+                        }
+                        if (ele.city == null) {
+                            ele.city = '';
+                        }
+                        html += ' <tr>' +
+                            '            <td>' + ele.name + '</td>' +
+                            '            <td >' + ele.tel + '</td>' +
+                            '            <td>' + ele.mail + '</td>' +
+                            '            <td >' + stateHtml + '</td>' +
+                            '            <td >' + ele.superId + '</td>' +
+                            '            <td>' + ele.stime + '</td>' +
+                            '            <td>' + ele.totalNum + '</td>' +
+                            '            <td >' + ele.city + '</td>' +
+                            '            <td >' + ele.doubleBalance + '</td>' +
+                            '        </tr>';
+                    });
+                    $('tbody').empty().html(html);
+                    listPage(res.total, page);
+                }
+            })
+        }
+
+        function listPage(total, page) {
+            layui.use('laypage', function () {
+                var laypage = layui.laypage;
+                var limits = total / 10;
+                //总页数大于页码总数
+                laypage.render({
+                    elem: 'pages'
+                    , count: total,
+                    limit: 10,
+                    curr: page
+                    , layout: ['count', 'prev', 'page', 'next']
+                    , jump: function (obj, first) {
+                        if (!first) {
+                            ajaxFun(obj.curr, 10);
+                        }
+                    }
+                });
+            });
+        }
+
+        layui.use(['laydate'], function () {
+            var laydate = layui.laydate;
+            laydate.render({
+                elem: '#test1' //指定元素
+            });
+        })
+    </script>
+</div>
+</body>
+
+</html>

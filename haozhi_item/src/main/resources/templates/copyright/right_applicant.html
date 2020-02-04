@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<head th:replace="default :: head">
+</head>
+
+<body>
+<div class="Box">
+    <!-- 软著申报服务 -->
+    <div class="solt_item">
+        <h1 class="applicant_Txt" style="margin-bottom:0.28rem;">版权代理</h1>
+        <div class="solt_Box">
+            <!--                <p class="solt_Txt" th:text="${hzYw.sjName}=='1'?'软著代理':'软著撰写+代理'">有材料代理</p>-->
+            <p class="solt_Txt" th:text="${hzYw.name}">15-25工作日</p>
+            <div class="solt_Box2">
+                <div class="solt_Txt">服务费：<span
+                        th:text="${user.state}=='1'? ${hzYw.doubleHyPrice}:${hzYw.doubleVipPrice}">¥300.00</span></div>
+                <div class="solt_Txt">官费：<span th:text="${hzYw.doubleGfPrice}">¥300.00</span></div>
+            </div>
+        </div>
+        <div th:if="${user.state}==2">
+            <!-- 附加代理费 -->
+            <h1 class="solt_Tit">附加代理费</h1>
+            <div class="applicant_Box3">
+                <input id="dlf_Price" type="number">
+                <p>元</p>
+            </div>
+            <!--数量-->
+            <h1 class="solt_Tit">数量</h1>
+            <div class="applicant_Box3">
+                <input id="sl_Num" type="number">
+                <p>个</p>
+            </div>
+        </div>
+
+    </div>
+    <!-- 申请人联系方式 -->
+    <div class="applicant_item2">
+        <h1 class="applicant_Txt">申请人联系方式</h1>
+        <div class="applicant_Box2">
+            <div class="applicant_Li">
+                <div class="applicant_Txt3">联系人名称：</div>
+                <input id="lxrName" type="text" placeholder="请输入联系人名称">
+            </div>
+            <div class="applicant_Li">
+                <div class="applicant_Txt3">联系电话：</div>
+                <input id="phone" type="text" placeholder="请输入联系电话">
+            </div>
+            <div class="applicant_Li">
+                <div class="applicant_Txt3">电子邮箱：</div>
+                <input id="email" type="text" placeholder="请输入电子邮箱">
+            </div>
+        </div>
+    </div>
+    <!-- 材料信息 -->
+    <div class="applicant_item4">
+        <h1 class="applicant_Txt">材料信息</h1>
+        <div class="applicant_Box4">
+            <div class="applicant_Li2">
+                <div class="applicant_Img"><img src="../image/19_icon.png" alt=""></div>
+                <p class="wts_download" data-id="1">委托书下载</p>
+            </div>
+            <div class="applicant_Li2">
+                <div class="applicant_Img"><img src="../image/19_icon.png" alt=""></div>
+                <div class="appli_submit" data-id="2">
+                    <p>合同预览</p>
+                </div>
+            </div>
+        </div>
+        <!-- 阅读同意 -->
+        <div class="applicant_Box5">
+            <img class="applicant_Img2" src="../image/20_icon.png" alt="">
+            <div class="applicant_Txt4">我已阅读并同意<a href="#">《知识产权代理服务合同》</a></div>
+        </div>
+    </div>
+    <div class="appli_submit order_btn" data-id="3" style="margin:0.46rem auto 0.24rem;">下一步</div>
+</div>
+<script>
+    // 阅读同意
+    $('.applicant_Box5').click(function () {
+        if ($(this).find('img').attr('src') == '../image/20_icon.png') {
+            $(this).find('img').attr('src', '../image/21_icon.png')
+        } else {
+            $(this).find('img').attr('src', '../image/20_icon.png')
+        }
+    });
+    //委托书下载
+    $('.wts_download').click(function () {
+        $.ajax({
+            url: "/api/copyright/downloadOf",
+            tpye: "get",
+            success: function (res) {
+                if (res.code == 20000) {
+                    if (res.data == null) {
+                        mui.toast('此业务内容不可下载', {
+                            duration: 1600,
+                            type: 'div'
+                        })
+                    } else {
+                        location.href = res.data
+                    }
+                }
+            }
+        })
+    });
+    $('.appli_submit').click(function () {
+        var lxrName = $('#lxrName').val(); //联系人
+        var phone = $('#phone').val(); //手机号
+        var email = $('#email').val(); //邮箱
+        var dlf_Price = $('#dlf_Price').val(); //代理费
+        var sl_Num = $('#sl_Num').val(); //代理费
+        if(dlf_Price == ""){
+            dlf_Price = 0
+        }
+        var type = $(this).data('id');
+        //保存数据
+        $.ajax({
+            url: "/api/copyright/save",
+            type: "post",
+            data: {
+                applicationNumName: lxrName,
+                applicationNumTel: phone,
+                applicationNumMail: email,
+                commission: dlf_Price,
+                number: sl_Num,
+            },
+            success: function (res) {
+                if (res.code == 20000) {
+                    if (type == 3) {
+                        location.href = "/api/copyright/last";
+                    } else if (type == 2) {
+                        location.href = "/api/copyright/etc";
+                    }
+
+                }
+            }
+        })
+    });
+</script>
+</body>
+
+</html>

@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<head th:replace="default :: head">
+</head>
+<style>
+    .mui-loading {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        z-index: 100;
+        transform: translate(-50%, -50%);
+        -webkit-transform: translate(-50%, -50%);
+        -ms-transform: translate(-50%, -50%);
+        -moz-transform: translate(-50%, -50%);
+        -o-transform: translate(-50%, -50%);
+    }
+    .loadingTxt {
+        font-size: 0.26rem;
+        color: #333333;
+        text-align: center;
+        margin-top: 0.18rem;
+    }
+
+    .pdfImg img {
+        width: 100%;
+    }
+    .fsForm{
+        margin: 0.7rem 0.44rem 0.2rem;
+    }
+    .fsForm input {
+        height: 0.64rem;
+        background-color: #EEEEEE;
+        font-size: 0.28rem;
+        text-align: center;
+        width: 100%;
+        display: block;
+    }
+
+    .fsForm button {
+        font-size: 0.28rem;
+        color: white;
+        border: 0;
+        margin: 0.4rem 0rem 0.46rem;
+    }
+
+    .fsForm p {
+        color: #ED291B;
+        font-size: 0.24rem;
+        line-height: 0.28rem;
+    }
+</style>
+<body>
+<div class="Box">
+    <!-- 弹框 -->
+    <div class="my_Mask">
+        <form action="/api/soft/updateEtc">
+            <div class="my_MaskCon">
+                <h1 class="my_MaskTxt">申请人联系方式</h1>
+                <div class="my_MaskBox">
+                    <div class="my_MaskLi">
+                        <p>联系人名称:</p>
+                        <input type="text" name="applicationNumName" th:value="${etc.applicationNumName}" placeholder="请输入联系人名称">
+                    </div>
+                    <div class="my_MaskLi">
+                        <p>联系电话:</p>
+                        <input type="text" name="applicationNumTel" th:value="${etc.applicationNumTel}" placeholder="请输入联系电话">
+                    </div>
+                    <div class="my_MaskLi">
+                        <p>电子邮箱:</p>
+                        <input type="hidden" id="etc_id" th:value="${etc_id}">
+                        <input type="text" name="applicationNumMail" th:value="${etc.applicationNumMail}" placeholder="请输入电子邮箱">
+                    </div>
+                </div>
+                <div class="my_MaskBtnBox">
+                    <div type="submit" class="my_MaskBtn1">取消</div>
+                    <button type="submit" class="my_MaskBtn2">确认</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="ht_Mask">
+        <div class="my_MaskCon">
+            <h1 class="my_MaskTxt">申请人联系方式</h1>
+            <div class="fsForm">
+                <input type="text" placeholder="请输入您的邮箱地址">
+                <button type="submit" class="my_MaskBtn2 my_fsBtn" style="width: 100%;height: 0.64rem;">发送到邮箱</button>
+                <p>IOS操作系统不支持下载到手机，请选择发送至邮箱接收合同。</p>
+            </div>
+            <div class="my_MaskBtnBox">
+                <div type="submit" class="my_MaskBtn1">取消</div>
+                <button type="submit" class="my_MaskBtn2 my_htBtn">下载到手机</button>
+            </div>
+        </div>
+    </div>
+    <div class="mui-loading">
+        <div class="mui-spinner">
+        </div>
+        <p class="loadingTxt">加载合同中</p>
+    </div>
+    <div class="pdfImg">
+
+    </div>
+    <img src="" alt="">
+    <div class="my_ContractBtn">
+        <button class="my_ContractEditor">编辑合同</button>
+        <div class="my_ContractDownLoad">下载合同</div>
+    </div>
+</div>
+<script>
+    var pdfArr = [];
+    var html = "";
+    // 编辑合同
+    $('.my_ContractEditor').click(function () {
+        $('.my_Mask').show();
+    });
+    // 取消编辑
+    $('.my_MaskBtn1').click(function () {
+        $('.my_Mask').hide();
+        $('.ht_Mask').hide();
+    });
+    //下载合同
+    $('.my_ContractDownLoad').click(function () {
+        $('.ht_Mask').show();
+    });
+    //发送到邮箱
+    $('.my_fsBtn').click(function () {
+        var val = $('.fsForm input').val();
+        $.ajax({
+            url: "/api/soft/downloadContractCN",
+            type: "POST",
+            data: {
+                type: 2,
+                email:val
+            },
+            success(res) {
+                if (res.code == 20000) {
+                    $('.ht_Mask').hide();
+                }
+            }
+        })
+    })
+    //下载到手机
+    $('.my_htBtn').click(function () {
+
+        $.ajax({
+            url: "/api/soft/downloadContractCN",
+            type: "POST",
+            data: {
+                type: 1
+            },
+            success(res) {
+                if (res.code == 20000) {
+                    $('.ht_Mask').hide();
+                    window.open(res.data)
+                    // $('.my_htBtn').find('a').attr('src', res.data);
+                }
+            }
+        })
+    });
+    var etc_id = $('etc_id').val();
+    $.ajax({
+        url: "/api/soft/downloadContractCN",
+        type: "POST",
+        data:{
+          id:etc_id
+        },
+        success(res) {
+            if (res.code == 20000) {
+                $('.mui-loading').hide();
+                var url = res.data;
+                var numUrl = res.data.split('-')[0];
+                var num = res.data.split('-')[1];
+                for (var i = 0; i <= num.length + 1; i++) {
+                    var newUrl = numUrl + '-' + i;
+                    pdfArr.push(newUrl)
+                }
+                $.each(pdfArr, function (index, ele) {
+                    html += '<img src="' + ele + '" alt="">'
+                })
+                $('.pdfImg').append(html);
+            }
+        }
+    })
+</script>
+</body>
+
+</html>

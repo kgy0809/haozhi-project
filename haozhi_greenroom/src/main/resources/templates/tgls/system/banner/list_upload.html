@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+
+
+<head th:replace="public :: head">
+    <style>
+        .layui-table img {
+            max-width: none;
+        }
+    </style>
+</head>
+<body>
+<div class="cBody">
+    <div class="console">
+        <button class="layui-btn" lay-submit lay-filter="formDemo" onclick="insertBut()">新增</button>
+    </div>
+    <table class="layui-table" style="text-align:center">
+        <thead>
+        <tr>
+            <th style="text-align:center">轮播图名称</th>
+            <th style="text-align:center">轮播图ID</th>
+            <th style="text-align:center">轮播图</th>
+            <th style="text-align:center">操作</th>
+        </tr>
+        </thead>
+        <tbody>
+
+
+        </tbody>
+    </table>
+
+    <!-- layUI 分页模块 -->
+    <div id="pages"></div>
+    <script th:inline="javascript">
+        ajaxFun(1, 10);
+        function ajaxFun(page, rows) {
+            $.ajax({
+                url: "/upload/fy",
+                type: 'post',
+                data: {
+                    page: page,
+                    rows: rows
+                },
+                success(res) {
+                    var html = '';
+                    $.each(res.rows, function (index, ele) {
+                        html += '<tr>' +
+                            '            <td>轮播图</td>' +
+                            '            <td>' + ele.id + '</td>' +
+                            '            <td><img width="20" height="20" onmouseenter="imgBig(this)"' +
+                            '                     onmouseleave="imgSmall(this)" src="' + ele.image + '"/></td>' +
+                            '            <td>' +
+                            '                <!--<button class="layui-btn layui-btn-xs" onclick="updateBut()">修改</button>-->' +
+                            '                <a class="layui-btn layui-btn-xs" data-id="'+ele.id+'" onclick=\'delCustomList(this)\'>删除</a>' +
+                            '            </td>' +
+                            '        </tr>';
+                    });
+                    $('tbody').empty().html(html);
+                    listPage(res.total,page);
+                }
+            })
+        }
+
+        function listPage(total,page) {
+            layui.use('laypage', function () {
+                var laypage = layui.laypage;
+                var limits = total/10;
+                //总页数大于页码总数
+                laypage.render({
+                    elem: 'pages'
+                    , count:total,
+                    limit: 10,
+                    curr:page
+                    , layout: ['count', 'prev', 'page', 'next']
+                    , jump: function (obj, first) {
+                        if (!first) {
+                            ajaxFun(obj.curr,10);
+                        }
+                    }
+                });
+            });
+        }
+
+
+        //修改规格
+        function specificationsBut() {
+            layui.use('layer', function () {
+                var layer = layui.layer;
+
+                //iframe层-父子操作
+                layer.open({
+                    type: 2,
+                    area: ['70%', '60%'],
+                    fixed: false, //不固定
+                    maxmin: true,
+                    content: 'specifications_list.html'
+                });
+            });
+
+        }
+
+        //修改按钮
+        var updateFrame = null;
+
+        function updateBut() {
+            layui.use('layer', function () {
+                var layer = layui.layer;
+                //iframe层-父子操作
+                updateFrame = layer.open({
+                    title: "商品信息修改",
+                    type: 2,
+                    area: ['70%', '60%'],
+                    scrollbar: false,	//默认：true,默认允许浏览器滚动，如果设定scrollbar: false，则屏蔽
+                    maxmin: true,
+                    content: '/upload/update'
+                });
+            });
+
+        }
+
+        //新增按钮
+        function insertBut() {
+            window.location = "/upload/update";
+        }
+
+        //删除
+        function delCustomList(e) {
+            var id = $(e).data("id");
+            layui.use(['form', 'laydate'], function () {
+                layer.confirm('确定要删除么？', {
+                    btn: ['确定', '取消'] //按钮
+                }, function () {
+                    $.ajax({
+                        "type": "delete",
+                        "dataType": 'json',
+                        "url": "/upload/delete/" + id,
+                        "success": function (res) {
+                            layer.msg(res.msg);
+                            $(e).parent().parent().remove();
+                            layer.msg('删除成功', {
+                                icon: 1
+                            });
+                        },
+                        error: function (res) {
+                            console.log(res);
+                        }
+
+                    });
+                }, function () {
+                    layer.msg('取消删除', {
+                        time: 2000 //20s后自动关闭
+                    });
+                });
+            });
+        }
+
+    </script>
+</div>
+</body>
+
+</html>

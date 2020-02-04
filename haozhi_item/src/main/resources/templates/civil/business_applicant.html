@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<head th:replace="default :: head">
+</head>
+
+<body>
+<div class="Box">
+    <!-- 申请人信息 -->
+    <div class="applicant_item">
+        <h1 class="applicant_Txt">申请人信息</h1>
+        <div class="order_RBox">
+            <div class="order_RLi2" style="margin-left:0" data-id="1">
+                <img class="order_Img" style="width:0.24rem;height:0.24rem;" th:src="@{/image/13_icon.png}" alt="">
+                <p class="order_Txt2">企业申请</p>
+            </div>
+            <div class="order_RLi2" data-id="2">
+                <img class="order_Img" style="width:0.24rem;height:0.24rem;" th:src="@{/image/12_icon.png}" alt="">
+                <p class="order_Txt2">个人申请</p>
+            </div>
+        </div>
+        <div>
+            <div class="applicant_Box" style="display:block;">
+                <div class="applicant_Li">
+                    <div class="applicant_Txt3">公司名称：</div>
+                    <input id="gsName" type="text" placeholder="请输入公司名称">
+                </div>
+                <div class="applicant_Li">
+                    <div class="applicant_Txt3">统一社会信用代码：</div>
+                    <input id="xymName" type="text" placeholder="请输入统一社会信用代码">
+                </div>
+            </div>
+            <div class="applicant_Box">
+                <div class="applicant_Li">
+                    <div class="applicant_Txt3">个人姓名：</div>
+                    <input id="grName" type="text" placeholder="请输入个人名称">
+                </div>
+                <div class="applicant_Li">
+                    <div class="applicant_Txt3">身份证号：</div>
+                    <input id="sfzName" type="text" placeholder="请输入身份证号">
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 申请人联系方式 -->
+    <div class="applicant_item2">
+        <h1 class="applicant_Txt">申请人联系方式</h1>
+        <div class="applicant_Box2">
+            <div class="applicant_Li">
+                <div class="applicant_Txt3">联系人名称：</div>
+                <input id="lxrName" type="text" placeholder="请输入联系人名称">
+            </div>
+            <div class="applicant_Li">
+                <div class="applicant_Txt3">联系电话：</div>
+                <input id="phone" type="text" placeholder="请输入联系电话">
+            </div>
+            <div class="applicant_Li">
+                <div class="applicant_Txt3">电子邮箱：</div>
+                <input id="email" type="text" placeholder="请输入电子邮箱">
+            </div>
+        </div>
+    </div>
+    <!-- 附加代理费 -->
+    <div th:if="${user.state}==2">
+        <div class="applicant_item3">
+            <h1 class="applicant_Txt">附加代理费</h1>
+
+            <div class="applicant_Box3">
+                <input id="dlf_Price" type="number">
+                <p>元</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 材料下载 -->
+    <div class="applicant_item4">
+        <h1 class="applicant_Txt">材料下载</h1>
+
+        <div class="applicant_Box4">
+            <div class="applicant_Li2">
+                <div class="applicant_Img"><img th:src="@{/image/19_icon.png}" alt=""></div>
+                <p class="wts_download" data-id="1">委托书下载</p>
+            </div>
+            <div class="applicant_Li2">
+                <div class="applicant_Img"><img th:src="@{/image/19_icon.png}" alt=""></div>
+                <div class="appli_submit" data-id="2">
+                    <p>合同预览</p>
+                </div>
+            </div>
+        </div>
+        <!-- 阅读同意 -->
+        <div class="applicant_Box5" data-id="0">
+            <img class="applicant_Img2" th:src="@{/image/20_icon.png}" alt="">
+            <div class="applicant_Txt4">我已阅读并同意<a href="#">《知识产权代理服务合同》</a></div>
+        </div>
+    </div>
+    <div class="order_btn appli_submit" data-id="3" style="margin:0.46rem auto 0.24rem;">下一步</div>
+</div>
+<script>
+    var applicationId;  //申请类别
+    applicationId = $('.order_RLi2').eq(0).data('id');
+
+    $('.wts_download').click(function () {
+        $.ajax({
+            url: "/api/business/downloadOf",
+            type: 'GET',
+            success: function (res) {
+                if (res.code == 20000) {
+                    if (res.data == null) {
+                        mui.toast('此业务内容不可下载', {
+                            duration: 1600,
+                            type: 'div'
+                        })
+                    } else {
+                        location.href = res.data
+                    }
+                }
+            }
+        })
+    });
+
+    // 个人申请/企业申请
+    $('.order_RLi2').click(function () {
+        applicationId = $(this).data('id');
+        var index = $(this).index();
+        $('.applicant_Box').eq(index).show().siblings().hide();
+        var src = $(this).find('.order_Img');
+        if (src.attr('src') == '/api/image/12_icon.png') {
+            src.attr('src', '/api/image/13_icon.png').parent('.order_RLi2').siblings().find('.order_Img').attr('src', '/api/image/12_icon.png');
+        }
+    });
+    // 阅读同意
+    $('.applicant_Box5').click(function () {
+        if ($(this).find('img').attr('src') == '/api/image/20_icon.png') {
+            $(this).find('img').attr('src', '/api/image/21_icon.png')
+            $(this).attr('data-id', 1);
+        } else {
+            $(this).find('img').attr('src', '/api/image/20_icon.png')
+            $(this).attr('data-id', 0);
+        }
+    });
+    // ajax
+    $('.appli_submit').click(function () {
+        var type = $(this).data('id');
+        var BusinessTwo = {};
+        var gsName = $('#gsName').val(); //公司名称
+        var xymName = $('#xymName').val(); //信用码
+        var grName = $('#grName').val(); //  个人
+        var sfzName = $('#sfzName').val(); //身份证
+        var lxrName = $('#lxrName').val(); //联系人
+        var phone = $('#phone').val(); //手机号
+        var email = $('#email').val(); //邮箱
+        var dlf_Price = $('#dlf_Price').val(); //代理费
+        if(dlf_Price == ""){
+            dlf_Price = 0
+        }
+        if (applicationId == 1) {
+            BusinessTwo = {
+                type: type,
+                application: applicationId,
+                applicationName: gsName,
+                applicationId: xymName,
+                applicationNumName: lxrName,
+                applicationNumTel: phone,
+                applicationNumMail: email,
+                commission: dlf_Price
+            }
+        } else {
+            BusinessTwo = {
+                type: type,
+                application: applicationId,
+                applicationName: grName,
+                applicationId: sfzName,
+                applicationNumName: lxrName,
+                applicationNumTel: phone,
+                applicationNumMail: email,
+                commission: dlf_Price
+            }
+        }
+        $.ajax({
+            url: "/api/business/save/four",
+            type: 'POST',
+            data: BusinessTwo,
+            success: function (res) {
+                if (res.code == 20000) {
+                    if(type == 3){
+                        location.href = "/api/business/last";
+                    }else if(type == 2){
+                        location.href = "/api/business/etc";
+                    }
+                }
+            }
+        })
+    });
+</script>
+</body>
+
+</html>

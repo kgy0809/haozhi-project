@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<head th:replace="default :: head">
+</head>
+
+<body>
+<div class="Box ">
+    <div class="team_width">
+        <!-- 我的团队/当月总业绩 -->
+        <div class="team_Box">
+            <div class="team_item">
+                <div class="team_Img"><img th:src="@{/image/24_icon.png}" alt=""></div>
+                <p class="team_Txt" th:text="${newDto.newNum}+人">80人</p>
+                <p class="team_Txt2">我的团队</p>
+            </div>
+            <div class="team_item2">
+                <div class="team_Img"><img th:src="@{/image/25_icon.png}" alt=""></div>
+                <p class="team_Txt one-txt-cut" th:text="'¥'+${newDto.doubleNewPrice}">¥16000.00</p>
+                <p class="team_Txt2">当月总业绩</p>
+            </div>
+        </div>
+
+        <!-- 业务查询 -->
+        <a href="/api/team/query">
+            <div class="team_Box2">
+                <p class="team_Txt3">业务查询</p>
+            </div>
+        </a>
+
+        <!-- 推荐新人 -->
+        <a href="/api/team/new">
+            <div class="team_Box3">
+                <p class="team_Txt3">推荐新人</p>
+            </div>
+        </a>
+
+    </div>
+    <div class="footer">
+        <ul>
+            <a href="/api/index">
+                <li>
+                    <div class="footer_Img"><img th:src="@{/image/7_icon2.png}" alt=""></div>
+                    <p class="footer_Txt">首页</p>
+                </li>
+            </a>
+            <a href="/api/team">
+                <li>
+                    <div class="footer_Img"><img th:src="@{/image/8_icon2.png}" alt=""></div>
+                    <p class="footer_Txt" style="color:#ED291B">团队管理</p>
+                </li>
+            </a>
+            <a href="/api/progress">
+                <li>
+                    <div class="footer_Img"><img th:src="@{/image/9_icon.png}" alt=""></div>
+                    <p class="footer_Txt">进度查询</p>
+                </li>
+            </a>
+            <a href="/api/personal">
+                <li>
+                    <div class="footer_Img"><img th:src="@{/image/10_icon.png}" alt=""></div>
+                    <p class="footer_Txt">我的</p>
+                </li>
+            </a>
+        </ul>
+    </div>
+</div>
+</body>
+
+</html>

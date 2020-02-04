@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<head th:replace="default :: head">
+</head>
+<body>
+    <div class="Box">
+        <div class="data_detailBox">
+            <!-- 标题 -->
+            <h1 class="data_DTit" th:text="${dataText.title}">在全市重点工作暨年度目标任务推进会上</h1>
+            <!-- 时间 -->
+            <p class="data_Dtime" th:text="${dataText.sTime}">2019-09-10</p>
+            <!-- 富文本 -->
+            <div class="data_DBox" >
+                这是富文本内容
+            </div>
+        </div>
+    </div>
+</body>
+<script th:inline="javascript">
+    var data=[[${dataText.content}]]
+    $(".data_DBox").html(data);
+</script>
+</html>

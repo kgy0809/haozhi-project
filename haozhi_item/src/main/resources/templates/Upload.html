@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<head th:replace="default :: head">
+</head>
+
+<body>
+<div class="Box">
+    <form id="firstFile" action="/api/progress/orderurl" method="post">
+        <div class="uploadBox">
+            <h1 class="applicant_Txt">材料信息</h1>
+            <div class="applicant_Box4">
+                <div class="applicant_Li2" id="form">
+                        <div class="applicant_Img">
+                            <img th:src="@{/image/33_icon.png}" alt="">
+                            <input class="input1" type="file" name="file" id="book" accept=".doc,.docx">
+                            <input class="input2" type="hidden" name="power" value="">
+                            <input type="hidden" name="id" th:value="${id}">
+                        </div>
+                        <p>上传委托书</p>
+                </div>
+                <div class="applicant_Li2" id="form_contract">
+                        <div class="applicant_Img">
+                            <img th:src="@{/image/33_icon.png}" alt="">
+                            <input class="input1" type="file" name="file" id="contract" accept=".doc,.docx">
+                            <input class="input2" type="hidden" name="contract" value="">
+                        </div>
+                        <p>上传合同</p>
+                </div>
+            </div>
+        </div>
+        <button type="submit" class="order_btn contract_btn">确认上传</button>
+    </form>
+</div>
+<script>
+    $('.applicant_Li2 .input1').change(function() {
+        var datas = new FormData($('#firstFile')[0]);
+        let t = this;
+        $.ajax({
+            url: "/api/order/upload/file",
+            type: 'POST',
+            data: datas,
+            dataType: 'JSON',
+            cache: false,
+            processData: false,
+            contentType: false,
+            success:function(res){
+                if(res.code==20000){
+
+                    $(t).prev('img').attr('src', '/api/image/19_icon.png');
+                    $(t).next('.input2').val(res.data);
+                    mui.toast('上传成功', {
+                        duration: 1600,
+                        type: 'div'
+                    })
+                }else{
+                    mui.toast('上传失败', {
+                        duration: 1600,
+                        type: 'div'
+                    })
+                }
+            }
+        })
+    });
+
+    // $('#book').change(function () {
+    //     var data = new FormData($('#form')[0]);
+    //     console.log(data)
+    //     $(this).prev('img').attr('src', '../image/19_icon.png')
+    // });
+    // $('#contract').change(function () {
+    //     var data = new FormData($('#form_contract')[0]);
+    //     console.log(data)
+    //     $(this).prev('img').attr('src', '../image/19_icon.png')
+    // })
+</script>
+</body>
+
+</html>

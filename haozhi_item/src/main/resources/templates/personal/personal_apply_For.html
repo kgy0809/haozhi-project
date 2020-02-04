@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<head th:replace="default :: head">
+</head>
+<style>
+    .drawal_Mask{
+        display: none;
+    }
+</style>
+<body>
+<div class="Box">
+    <!-- 信息 -->
+    <form action="/api/personal/save/apply" method="post">
+        <div class="drawal_Mask">
+            <!-- 列表 -->
+            <div class="my_orderList" style="margin-bottom:1.2rem;">
+                <input id="orderId" type="hidden" name="invoiceOrder" value="">
+                <ul>
+                    <li th:each="order : ${order}">
+                        <div class="my_orderBox">
+                            <p class="my_oTxt" th:data-id="${order.id}" th:text="订单号：+ ${order.id}">订单号：364877789666</p>
+                            <div class="personal_orImg"><img th:src="@{/image/51_icon.png}" alt=""></div>
+                        </div>
+                        <div class="my_orderBox2">
+                            <div class="my_oTit" th:text="${order.title}">商标注册业务</div>
+                            <div class="my_oTxt4" th:text="${order.sbName}">国内注册 快捷注册</div>
+                            <div class="my_orderBox3">
+                                <div class="my_oTxt4">服务费：<span th:text="'¥'+${order.doubleFwPrice}">¥300.00</span></div>
+                                <div class="my_oTxt4">官费：<span th:text="'¥'+${order.doubleGfPrice}">¥300.00</span></div>
+                            </div>
+                            <div class="my_orderBox4">
+                                <p class="my_oTime" th:text="${order.sTime}">2019.10.10 12:33:25</p>
+                                <p class="my_oPrice" th:text="${order.doublePrice}">合计：¥1200.00</p>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div class="order_btn invoice_btn">确定</div>
+        </div>
+        <div class="apply_item">
+            <ul>
+                <li>
+                    <input id="typeOf" type="hidden" name="type" value="1">
+                    <div class="apply_Txt">抬头类型：</div>
+                    <div class="order_RBox">
+                        <div class="order_RLi2" style="margin-left:0" data-id="1">
+                            <img class="order_Img" style="width:0.24rem;height:0.24rem;" th:src="@{/image/13_icon.png}"
+                                 alt="">
+                            <p class="order_Txt2">企业申请</p>
+                        </div>
+                        <div class="order_RLi2" data-id="2">
+                            <img class="order_Img" style="width:0.24rem;height:0.24rem;" th:src="@{/image/12_icon.png}"
+                                 alt="">
+                            <p class="order_Txt2">个人/非企业单位</p>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <div class="apply_Txt">发票抬头:<span>*</span></div>
+                    <input class="apply_input" name="fpName" type="text" placeholder="请填写发票抬头">
+                </li>
+                <li>
+                    <div class="apply_Txt">税号:<span>*</span></div>
+                    <input class="apply_input" name="duty" type="text" placeholder="请填写纳税人识别号">
+                </li>
+                <li>
+                    <div class="apply_Txt">备注说明:<span>*</span></div>
+                    <input class="apply_input" name="remark" type="text" placeholder="请填写备注说明">
+                </li>
+                <li>
+                    <div class="apply_Txt">地址和电话:<span>*</span></div>
+                    <input class="apply_input" name="addrAndTel" type="text" placeholder="请填写地址和电话">
+                </li>
+                <li>
+                    <div class="apply_Txt">开户行和帐号:<span>*</span></div>
+                    <input class="apply_input" name="bankAndAddr" type="text" placeholder="请填写开户行和帐号">
+                </li>
+            </ul>
+        </div>
+        <!-- 选择开票订单 -->
+        <div class="apply_item2">
+            <ul>
+                <li class="apply_clickShow">
+                    <div class="apply_Txt">选择开票订单</div>
+                    <div class="apply_Img"><img th:src="@{/image/34_icon.png}" alt=""></div>
+                </li>
+                <li style="border-bottom:0;">
+                    <div class="apply_Txt">发票金额：</div>
+                    <p class="apply_Txt2"></p>
+                    <input id="apply_price" type="hidden" name="invoicePrice" value="">
+                </li>
+            </ul>
+        </div>
+        <!-- 邮递确认 -->
+        <div class="apply_item">
+            <h1 class="apply_Tit">邮递确认</h1>
+            <ul>
+                <li>
+                    <div class="apply_Txt">姓名:<span>*</span></div>
+                    <input name="name" class="apply_input" type="text" placeholder="请填写收件人姓名">
+                </li>
+                <li>
+                    <div class="apply_Txt">电话:<span>*</span></div>
+                    <input name="tel" class="apply_input" type="text" placeholder="请填写收件人电话">
+                </li>
+                <li>
+                    <div class="apply_Txt">地址:<span>*</span></div>
+                    <input name="address" class="apply_input" type="text" placeholder="请填写收件人地址">
+                </li>
+            </ul>
+        </div>
+        <button type="submit" class="order_btn" style="margin:0.46rem auto 0.24rem;">确认开票</button>
+    </form>
+
+</div>
+
+<script>
+    var id = 1;//抬头类型
+    var orderIdArr = [];
+    var orderPrice = 0;
+    // 个人申请/企业申请
+    $('.order_RLi2').click(function () {
+        var index = $(this).index();
+        $('#typeOf').val($(this).data('id'));
+        console.log(id)
+        $('.applicant_Box').eq(index).show().siblings().hide();
+        var src = $(this).find('.order_Img');
+        if (src.attr('src') == '/api/image/12_icon.png') {
+            src.attr('src', '/api/image/13_icon.png').parent('.order_RLi2').siblings().find('.order_Img').attr('src', '/api/image/12_icon.png');
+        }
+    });
+    $('.apply_clickShow').click(function () {
+        $('.drawal_Mask').show();
+    })
+    $('.my_orderList ul li').click(function() {
+        var index = $(this).index;
+        var img = $(this).find('.personal_orImg').find('img');
+        if(img.attr('src') == '/api/image/51_icon.png'){
+            img.attr('src', '/api/image/52_icon.png');
+            var id =$(this).find('.my_oTxt').data('id');
+            var price = $(this).find('.my_oPrice').text();
+            orderPrice+= Number(price);
+            orderIdArr.push(id)
+
+        }else{
+            img.attr('src', '/api/image/51_icon.png');
+            var price =$(this).find('.my_oPrice').text();
+            orderPrice-= Number(price);
+            orderIdArr.splice(index,1)
+        }
+        console.log(orderPrice)
+        var joinOrder = orderIdArr.join(',');
+        $('#orderId').val(String(joinOrder))
+    });
+    $('.invoice_btn').click(function () {
+        if(orderIdArr.length == 0){
+            mui.toast('请选择开票订单！', {
+                duration: 1600,
+                type: 'div'
+            })
+        }else{
+            $('.drawal_Mask').hide();
+            $('#apply_price').val(parseFloat(orderPrice).toFixed(2) * 100)
+            $('.apply_Txt2').text(parseFloat(orderPrice).toFixed(2))
+        }
+    })
+</script>
+</body>
+
+</html>

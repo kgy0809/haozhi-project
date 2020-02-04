@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>绑定手机</title>
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/index.css">
+    <link rel="stylesheet" type="text/css" href="../css/mui.css">
+</head>
+
+<body>
+    <div class="Box">
+        <div class="phone_item">
+            <!-- 输入信息 -->
+            <div class="reg_li">
+                <div class="phone_Txt">手机号：</div>
+                <input type="text" placeholder="请输入手机号">
+            </div>
+            <div class="reg_li">
+                <div class="phone_Txt">验证码：</div>
+                <input class="reg_liCode" type="text" placeholder="请输入短信验证码" id="phone">
+                <div class="reg_codeBtn">发送验证码</div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript" src="../js/base.js"></script>
+    <script type="text/javascript" src="../js/jquery.js"></script>
+    <script src="../js/mui.js"></script>
+    <script>
+        // 发送验证码
+        var res = /^1[0-9][0-9]\d{8}$/; //手机号正则
+        var time = 60; //时间
+        var Timeout; //计时器
+        var isclick = true; //状态
+        $('.reg_codeBtn').click(function() {
+            if (isclick) {
+                if (res.test($('#phone').val())) {
+                    // 表示验证成功
+                    isclick = false;
+                    var time2 = $(this).text(60 + 's');
+                    Timeout = setInterval(function() {
+                        if (time > 0) {
+                            time--;
+                            $('.reg_codeBtn').text(time + 's');
+                        } else {
+                            isclick = true;
+                            clearInterval(Timeout);
+                            $('.reg_codeBtn').innerHTML = '发送验证码';
+                        }
+                    }, 1000)
+                } else {
+                    mui.toast('手机号错误', {
+                        duration: 1600,
+                        type: 'div'
+                    })
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>

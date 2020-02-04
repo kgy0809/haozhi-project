@@ -1,0 +1,39 @@
+server:
+  port: 9001
+  servlet:
+    context-path: /api
+spring:
+  servlet:
+    multipart:
+      max-file-size: 10MB # 限制文件上传的大小
+  thymeleaf:
+    cache: false
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://47.103.26.35:3306/kong?characterEncoding=utf-8
+    username: kong
+    password: kong
+  redis:
+    host: 182.92.205.118
+    port: 6379
+    jedis:
+      pool:
+        max-active: 8
+        max-wait: -1
+  mail:
+    host: smtp.163.com  # 邮箱配置
+    username: kgy0809@163.com  #  你的163邮箱
+    password: Aa19970809  # 注意这里不是邮箱密码，而是SMTP授权密码
+    protocol: smtp
+    default-encoding: UTF-8
+    port: 25
+mybatis:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    map-underscore-to-camel-case: true
+    cache-enabled: true
+haozhi:
+  openid:
+    APPID: wx061b55a767d388d8
+    SECRET: 87c3d6673bd8d18b6b37bb41c817b0e6
+

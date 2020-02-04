@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<head th:replace="default :: head">
+</head>
+
+<body>
+    <div class="Box">
+        <form action="/api/business/update" method="post" id="form">
+            <div class="order_Box">
+                <!-- 商标名称 -->
+                <div class="order_item">
+                    <div class="order_Txt">商标名称：</div>
+                    <input class="order_input" type="text" placeholder="请输入商标名称" name="sbName">
+                </div>
+                <!-- 商标类型： -->
+                <div class="order_item">
+                    <div class="order_Txt">商标类型：</div>
+                    <input class="order_typeInput" type="hidden" name="sbType" value="1">
+                    <div class="order_RBox">
+                        <div class="order_RLi2">
+                            <img class="order_Img" th:src="@{/image/13_icon.png}" alt="">
+                            <p class="order_Txt2">文字</p>
+                        </div>
+                        <div class="order_RLi2" >
+                            <img class="order_Img" th:src="@{/image/12_icon.png}" alt="">
+                            <p class="order_Txt2">图形</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- 指定颜色 -->
+                <div class="order_item">
+                    <div class="order_Txt">是否指定颜色：</div>
+                    <div class="order_Img3" data-id="0">
+                        <input type="hidden" name="sbColor" value="0">
+                        <img th:src="@{/image/15_icon.png}" alt="">
+                    </div>
+                </div>
+
+                <div>
+                    <!-- 商标图样 文字-->
+                    <div class="order_item2 order_type">
+                        <div class="order_Txt">商标图样：</div>
+                        <div class="order_item2Box">
+                            <div class="order_item2Img"></div>
+                            <div class="order_item2Btn">自动生成</div>
+                        </div>
+                        <div class="order_Txt3">自动生成商标，默认宋体字样从左向右排列</div>
+                    </div>
+                    <!-- 商标图样 图片 -->
+                    <div class="order_item3 order_type">
+                        <div class="order_Txt">商标图样：</div>
+                        <div class="order_item3Box">
+                            <div class="order_Img2" >
+                                <img class="order_Img2_img" th:src="@{/image/14_icon.png}" alt="">
+                                <img class="order_Img2_img2" src="" alt="">
+                                <input type="hidden" id="flieImg"  name="sbImage">
+                                <input type="file" name="file">
+                            </div>
+                            <p>上传图样应为不大于200k的jpg文件</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="order_Txt4">商标注册申请规范</div>
+            <!-- 立即办理 -->
+            <a href="business_category.html">
+                <button type="submit" class="order_btn">下一步</button>
+            </a>
+        </form>
+    </div>
+    <script>
+        $('.order_Img2 input').change(function() {
+            var datas = new FormData($('#form')[0]);
+            console.log(datas)
+            $.ajax({
+                url: "/api/business/upload",
+                type: 'POST',
+                data: datas,
+                dataType: 'JSON',
+                cache: false,
+                processData: false,
+                contentType: false,
+                success:function(res){
+                    if(res.code==20000){
+                        $("#flieImg").val(res.data);
+                        $('.order_Img2_img2').attr('src',res.data)
+                        mui.toast('上传成功', {
+                            duration: 1600,
+                            type: 'div'
+                        })
+                    }else{
+                        mui.toast('上传失败', {
+                            duration: 1600,
+                            type: 'div'
+                        })
+                    }
+                }
+            })
+        });
+        // 商标类型
+        $('.order_RLi2').click(function() {
+            var index = $(this).index();
+            $('.order_type').eq(index).show().siblings().hide();
+            var src = $(this).find('.order_Img');
+            if (src.attr('src') == '/api/image/12_icon.png') {
+                $(this).find('input').attr('name','1').parents('.order_RLi2').siblings().find('input').attr('name','0');
+                src.attr('src', '/api/image/13_icon.png').parent('.order_RLi2').siblings().find('.order_Img').attr('src', '/api/image/12_icon.png');
+            }
+            if(index == 0){
+                $('.order_typeInput').val(1)
+            }else{
+                $('.order_typeInput').val(2)
+            }
+        });
+        // 指定颜色
+        $('.order_Img3').click(function() {
+            var dataId = $(this).attr('data-id');
+            if (dataId == '0') {
+                $(this).attr('data-id','1');
+                $(this).find('input').val('1')
+                $(this).find('img').attr('src', '/api/image/16_icon.png');
+            } else {
+                $(this).attr('data-id','0');
+                $(this).find('input').val('0')
+                $(this).find('img').attr('src', '/api/image/15_icon.png');
+            }
+        });
+        // 自动生成图标
+        $('.order_item2Btn').click(function () {
+            var val = $('.order_input').val();
+            $('.order_item2Img').text(val);
+        });
+
+    </script>
+</body>
+
+</html>

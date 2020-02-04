@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+
+<head th:replace="public :: head">
+</head>
+
+<body>
+<div class="cBody">
+    <table class="layui-table">
+        <thead>
+        <th>抬头类型： <i th:text="${invoice.type} == '1'?'企业申请':'个人/非企业单位'"></i></th>
+        </tr>
+        <th>发票抬头： <i th:text="${invoice.fpName}"></i></th>
+        </tr>
+        <th>税号： <i th:text="${invoice.duty}"></i></th>
+        </tr>
+        <th>备注说明： <i th:text="${invoice.remark}"></i></th>
+        </tr>
+        <th>地址和电话： <i th:text="${invoice.addrAndTel}"></i></th>
+        </tr>
+        <th>开户行和账号： <i th:text="${invoice.bankAndAddr}"></i></th>
+        </tr>
+        <th>开票订单： <i th:text="${invoice.invoiceOrder}"></i></th>
+        </tr>
+        <th>开票订单金额： <i th:text="${invoice.doubleInvoicePrice}"></i></th>
+        </tr>
+        <th>开票日期： <i th:text="${invoice.sTime}"></i></th>
+        </tr>
+        <th>邮递姓名： <i th:text="${invoice.name}"></i></th>
+        </tr>
+        <th>邮递电话： <i th:text="${invoice.tel}"></i></th>
+        </tr>
+        <th>邮递地址： <i th:text="${invoice.address}"></i></th>
+        </tr>
+        </thead>
+    </table>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" lay-submit lay-filter="submitBut" id="tb_btn" th:data-id="${invoice.id}"
+                    onclick="tb_btn(this)">通过
+            </button>
+            <button type="reset" class="layui-btn layui-btn-primary" onclick="javascript:history.back(-1);">返回</button>
+        </div>
+    </div>
+</div>
+<script>
+    function tb_btn(e) {
+        var id = $(e).data("id");
+        location.href="/invoice/update?id="+id;
+    }
+</script>
+</body>
+
+</html>

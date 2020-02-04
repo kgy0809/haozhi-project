@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+
+
+<head th:replace="default :: head">
+</head>
+
+<body>
+<div class="Box">
+    <!-- 顶部导航 -->
+    <div class="my_OrderBox">
+        <p class="my_order_Active" data-id="1">已提交</p>
+        <p data-id="2">已审核</p>
+        <p data-id="3">已邮寄</p>
+    </div>
+    <div class="invoice_Box">
+        <ul>
+<!--            <li>-->
+<!--                <a href="personal_apply_For.html">-->
+<!--                    <div class="invoice_line">-->
+<!--                        <div class="invoice_Img"><img src="../image/50_icon.png" alt=""></div>-->
+<!--                        <p class="invoice_Txt">2018.01.29 10:52</p>-->
+<!--                        <div class="invoice_Txt2">待审核</div>-->
+<!--                    </div>-->
+<!--                    <div class="invoice_line2">-->
+<!--                        <p class="invoice_Time">快递单号：566678687878</p>-->
+<!--                        <p class="invoice_Price">12.13元</p>-->
+<!--                    </div>-->
+<!--                </a>-->
+<!--            </li>-->
+<!--            <li>-->
+<!--                <a href="personal_apply_For.html">-->
+<!--                    <div class="invoice_line">-->
+<!--                        <div class="invoice_Img"><img src="../image/50_icon.png" alt=""></div>-->
+<!--                        <p class="invoice_Txt">2018.01.29 10:52</p>-->
+<!--                        <div class="invoice_Txt3">已邮寄</div>-->
+<!--                    </div>-->
+<!--                    <div class="invoice_line2">-->
+<!--                        <p class="invoice_Time">快递单号：566678687878</p>-->
+<!--                        <p class="invoice_Price">12.13元</p>-->
+<!--                    </div>-->
+<!--                </a>-->
+<!--            </li>-->
+        </ul>
+    </div>
+    <a href="/api/personal/apply">
+        <div class="order_btn invoice_btn">申请开票</div>
+    </a>
+</div>
+<script>
+    $(function () {
+        var state = 1;
+        var page = 1;
+        var rows = 10;
+        var html = ""
+        function dataFun(state,page,rows){
+            $.ajax({
+                url:"/api/personal/invoice",
+                type:"post",
+                data:{
+                    type:state,
+                    page:page,
+                    rows:rows,
+                },
+                success:function (res) {
+                    if (res.code==20000){
+                        console.log(res)
+                        $.each(res.data,function (index,ele) {
+                            var newHtml = "";
+                            var newOrderkd = "";
+                            if(ele.state == 1){
+                                newHtml = '<div class="invoice_Txt2">待审核</div>'
+                            }else if(ele.state == 2){
+                                newHtml = '<div class="invoice_Txt3">已审核</div>'
+                            }else if(ele.state == 3){
+                                newHtml = '<div class="invoice_Txt3">已邮寄</div>'
+                                newOrderkd = '<p class="invoice_Time">快递单号：'+ele.express+'</p>'
+                            }
+                            html+='<li>'+
+
+                                '                    <div class="invoice_line">'+
+                                '                        <div class="invoice_Img"><img src="../image/50_icon.png" alt=""></div>'+
+                                '                        <p class="invoice_Txt">'+ele.time+'</p>'+newHtml+
+                                '                    </div>'+
+                                '                    <div class="invoice_line2">'+newOrderkd+
+                                '                        <p class="invoice_Price">'+ele.doubleInvoicePrice+'元</p>'+
+                                '                    </div>'+
+
+                                '            </li>';
+                        })
+                        $('.invoice_Box ul').append(html)
+                    }
+                }
+            });
+        }
+        dataFun(state,page,rows)
+
+
+        $('.my_OrderBox p').click(function () {
+            state = $(this).data('id');
+            $('.invoice_Box ul').html('');
+            html = ""
+            dataFun(state,page,rows);
+            $(this).addClass('my_order_Active').siblings().removeClass('my_order_Active')
+        });
+    })
+
+</script>
+</body>
+
+</html>

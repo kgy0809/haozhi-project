@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+
+    <head th:replace="public :: head">
+    </head>
+
+    <body>
+        <div class="cBody">
+            <div>
+                <button type="button" class="layui-btn" id="test3"><i class="layui-icon"></i>菜单导入
+                </button>
+            </div>
+        </div>
+        <script>
+            layui.use('upload', function () {
+                var $ = layui.jquery
+                    , upload = layui.upload;
+                //指定允许上传的文件类型
+                upload.render({
+                    elem: '#test3'
+                    , url: '/menu/add/file' //改成您自己的上传接口
+                    , accept: 'file' //普通文件
+                    , done: function (res) {
+                        layer.msg('导入成功');
+                        console.log(res);
+                    }
+                });
+            })
+        </script>
+    </body>
+
+</html>

@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<head th:replace="default :: head">
+</head>
+
+<body>
+<div class="Box">
+    <!-- 提现确认弹框 -->
+    <div class="withdrawal_mask">
+        <div class="withdrawal_con">
+            <div class="withdrawal_Img"><img src="../image/49_icon.png" alt=""></div>
+            <h1 class="withdrawal_Txt">申请成功</h1>
+            <p class="withdrawal_Txt2">提现审核需10个工作日，审核成功后将转账到您的银行卡</p>
+            <button class="withdrawal_Btn">确定</button>
+        </div>
+    </div>
+    <!-- 绑定银行卡弹框 -->
+    <div class="drawal_Mask">
+        <form action="/api/personal/add/" method="post">
+            <div class="drawal_MaskCon">
+                <ul>
+                    <li>
+                        <p>持卡人</p>
+                        <input type="text" name="name" placeholder="请输入持卡人姓名">
+                    </li>
+                    <li>
+                        <p>卡号</p>
+                        <input type="text" name="bankId" placeholder="请输入卡号">
+                    </li>
+                    <li>
+                        <p>银行名称</p>
+                        <input type="text" name="bankName" placeholder="请输入银行名称">
+                    </li>
+                    <li>
+                        <p>手机号</p>
+                        <input type="text" name="num" placeholder="请输入手机号">
+                    </li>
+                </ul>
+            </div>
+            <div class="my_ContractBtn">
+                <button class="my_ContractEditor" type="submit">取消</button>
+                <button class="my_ContractDownLoad" type="submit">确定</button>
+            </div>
+        </form>
+    </div>
+    <!-- 信息 -->
+    <div class="drawal_Box">
+        <h1 class="drawal_Tit">我的银行卡</h1>
+        <div class="cardBox">
+            <!-- 添加银行卡 -->
+            <div class="add_card" th:if="${bank}==null">
+                <p>+ 添加银行卡</p>
+            </div>
+            <!-- 已绑定 -->
+            <div class="bank_Card" th:if="${bank}!=null">
+                <p class="bank_CardName" th:text="${bank.bankName}">建设银行</p>
+                <p class="bank_CardNum" th:text="${bank.bankId}">1234 1234 1234 2255</p>
+                <div class="bank_Card_img">
+                    <a href="/api/personal/each">
+                        <img src="../image/48_icon.png" alt="">
+                    </a>
+                </div>
+            </div>
+
+            <div class="card_prompt">
+                <div class="card_prompt_Li">
+                    <img src="../image/46_icon.png" alt="">
+                    <p>收益在次月5日后可申请提现，提现审核需10个工作日，审核成功后将转账到您的银行卡</p>
+                </div>
+                <div class="card_prompt_Li">
+                    <img src="../image/47_icon.png" alt="">
+                    <p>收入发放时，须按照国家税务要求代扣月度个人所得税</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 底部提现列表 -->
+    <div class="card_ListBox">
+        <div class="card_ListTit">
+            <p>时间</p>
+            <p style="width:38%;">收益金额（未扣税）</p>
+            <p>操作</p>
+        </div>
+        <div class="card_List">
+            <ul>
+
+            </ul>
+        </div>
+    </div>
+</div>
+<script>
+    var page = 1;
+    var rows = 10;
+    var html = ""
+    //请求明细
+    function priceAjax(page,rows){
+        $.ajax({
+            url:"/api/personal/monthOrder",
+            type:"POST",
+            success(res){
+                if(res.code == 20000){
+                    $.each(res.data,function (index,ele) {
+                        var stateHtml = "";
+                        if(ele.state == 1){
+                            stateHtml = '<div class="card_Txt4" data-id="'+ele.id+'">申请提现</div>'
+                        }else if(ele.state == 2){
+                            stateHtml = '<div class="card_Txt3">结算中</div>'
+                        }else if(ele.state == 3){
+                            stateHtml = '<div class="card_Txt5">提现完成</div>'
+                        }
+                        html+='<li>'+
+                            '                    <div class="card_Txt">'+ele.time+'</div>'+
+                            '                    <div class="card_Txt" style="width:38%;">¥'+ele.doublePrice+'</div>'+
+                            '                    <div class="card_state">'+stateHtml+
+                            '                    </div>'+
+                            '                </li>';
+                    })
+                    $('.card_List ul').append(html);
+                }
+                $('.card_Txt4').click(function () {
+                    var id = $(this).data('id')
+                    mui.confirm('您确定要提现嘛？', '提示', function(e) {
+                        if (e.index == 1) {
+                            $.ajax({
+                                url:"/api/personal/requestWithdrawal",
+                                type:"POST",
+                                data:{
+                                    id:id
+                                },
+                                success(res){
+                                    $('.withdrawal_mask').show();
+                                }
+                            });
+                        } else {
+                            console.log('点击取消')
+                        }
+                    })
+                })
+            }
+        })
+    }
+    priceAjax(page,rows)
+    // 弹框
+    $('.add_card').click(function () {
+        $('.drawal_Mask').show();
+    });
+    $('.my_ContractEditor').click(function () {
+        $('.drawal_Mask').hide();
+    });
+
+    // 确定按钮
+    $('.withdrawal_Btn').click(function () {
+        $('.withdrawal_mask').hide();
+        location.reload();
+    });
+    // 卡号 *
+    function cardNum(text) {
+        var str = text;
+        var str2 = '****' + ' ' + '****' + ' ' + '****' + ' ' + str.substr(12);
+        $('.bank_CardNum').text(str2);
+    };
+    cardNum($('.bank_CardNum').text());
+</script>
+</body>
+
+</html>

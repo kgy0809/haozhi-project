@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<head th:replace="default :: head">
+</head>
+
+<body>
+<div class="Box">
+    <form action="/api/personal/update/settings" method="post">
+        <!-- 个人设置 -->
+        <div class="setting_item">
+            <ul>
+                <li>
+                    <p class="setting_Txt">姓名：</p>
+                    <input class="setting_input" type="text" name="name" th:value="${user.name}">
+                </li>
+                <li>
+                    <p class="setting_Txt">邮箱：</p>
+                    <input class="setting_input" type="text" name="mail" th:value="${user.mail}">
+                </li>
+                <li>
+                    <p class="setting_Txt">绑定手机：</p>
+                    <input class="setting_input" type="text" name="tel" th:value="${user.tel}">
+                </li>
+                <li>
+                    <p class="setting_Txt">所有城市：</p>
+                    <div class="settimg_address" th:text="${user.city}==''?'请选择地址':${user.city}">请选择地址</div>
+                    <input id="address_name" type="hidden" name="city" value="">
+                    <div class="setting_Img"><img src="../image/34_icon.png" alt=""></div>
+                </li>
+            </ul>
+        </div>
+        <button class="order_btn" style="margin:0.46rem auto 0.24rem;width:2.6rem;">确定修改</button>
+    </form>
+</div>
+<script>
+    //mui 地址
+    var city_picker = new mui.PopPicker({
+        layer: 3
+    });
+    city_picker.setData(cityData3);
+    $(".settimg_address").on("click", function () {
+        setTimeout(function () {
+            city_picker.show(function (items) {
+                $('#address_name').val((items[0] || {}).text + " " + (items[1] || {}).text + ' ' + (items[2] || {}).text)
+                $(".settimg_address").html((items[0] || {}).text + " " + (items[1] || {}).text + ' ' + (items[2] || {}).text);
+            });
+        }, 200);
+    });
+</script>
+</body>
+
+</html>

@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<head th:replace="default :: head">
+    <script type="text/javascript" th:src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+</head>
+
+<body>
+    <div class="Box" th:each="p : ${list}">
+        <!-- 软著申报服务 -->
+        <div class="solt_item">
+            <h1 class="applicant_Txt" style="margin-bottom:0.28rem;">商标案件服务</h1>
+            <p class="solt_Txt" style="margin-bottom:0;" th:text="${p.sqrMessage}"></p>
+            <input type="hidden" th:value="${p.id}" id="pid">
+        </div>
+        <!-- 申请人联系方式 -->
+        <div class="information_item5">
+            <h1 class="applicant_Txt" style="margin-bottom:0.26rem;">申请人联系方式</h1>
+            <div class="information_List2">
+                <p>联系人名称：<span th:text="${p.applicationNumName}"></span></p>
+                <p>联系电话：<span th:text="${p.applicationNumTel}"></span></p>
+                <p>电子邮箱：<span th:text="${p.applicationNumMail}"></span></p>
+                <div class="information_bei">备注：<input type="text" id="text" placeholder="请输入备注信息"></div>
+            </div>
+        </div>
+        <!-- 合计 -->
+        <div class="information_item6">
+            <h1>合计：</h1>
+            <p th:text="${p.doublePrice}" id="price">936.66元</p>
+        </div>
+        <!-- 支付 -->
+        <div class="information_pay">
+            <div class="applicant_Box5" style="margin-top:0;">
+                <img class="applicant_Img2" src="../image/20_icon.png" alt="">
+                <div class="applicant_Txt4">我已阅读并同意<a href="#">《知识产权代理服务合同》</a></div>
+            </div>
+            <!-- 支付按钮 -->
+            <div class="information_btn">
+                <div class="information_Ok">确认支付</div>
+                <div class="information_other">线下支付</div>
+            </div>
+        </div>
+    </div>
+    <script>
+        // 阅读同意
+        $('.applicant_Box5').click(function() {
+            if ($(this).find('img').attr('src') == '../image/20_icon.png') {
+                $(this).find('img').attr('src', '../image/21_icon.png')
+            } else {
+                $(this).find('img').attr('src', '../image/20_icon.png')
+            }
+        });
+        $('.information_Ok').click(function () {
+            let price = $("#price").text();
+            let text = $("#text").val();
+            let pid = $("#pid").val();
+
+            $.ajax({
+                url: "[[@{/pay}]]",
+                type: "post",
+                data: {
+                    bid: pid,
+                    pay: price * 100,
+                    remark: text
+                },
+                success: function (ref) {
+                    if (ref.code == 20000) {
+                        console.log(ref)
+                        function onBridgeReady(){
+                            WeixinJSBridge.invoke(
+                                'getBrandWCPayRequest', {
+                                    "appId": ref.data.appId, //公众号名称，由商户传入
+                                    "timeStamp": ref.data.timeStamp, //时间戳，自1970年以来的秒数
+                                    "nonceStr": ref.data.nonceStr, //随机串
+                                    "package": ref.data.package,
+                                    "signType": 'MD5', //微信签名方式：
+                                    "paySign": ref.data.sign, //微信签名
+                                },
+                                function(res){
+                                    if(res.err_msg == "get_brand_wcpay_request:ok" ){
+                                        // 使用以上方式判断前端返回,微信团队郑重提示：
+                                        console.log(res.err_msg)
+                                        //res.err_msg将在用户支付成功后返回ok，但并不保证它绝对可靠。
+                                        location.href="/api/progress/orderIndex";
+                                    }
+                                });
+                        }
+                        if (typeof WeixinJSBridge == "undefined"){
+                            if( document.addEventListener ){
+                                document.addEventListener('WeixinJSBridgeReady', onBridgeReady, false);
+                            }else if (document.attachEvent){
+                                document.attachEvent('WeixinJSBridgeReady', onBridgeReady);
+                                document.attachEvent('onWeixinJSBridgeReady', onBridgeReady);
+                            }
+                        }else{
+                            onBridgeReady();
+                        }
+                    }
+                }
+            })
+        })
+        $('.information_other').click(function () {
+            let price = $("#price").text();
+            let text = $("#text").val();
+            let pid = $("#pid").val();
+
+            $.ajax({
+                url:"/api/pay/xxPayOrder",
+                type:"post",
+                data:{
+                    bid: pid,
+                    pay: price * 100,
+                    remark: text
+                },
+                success:function (ref) {
+                    if (ref.code == 20000){
+                        location.href="/api/progress";
+                    }
+                }
+            })
+        })
+    </script>
+</body>
+
+</html>

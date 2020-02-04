@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<head th:replace="default :: head">
+</head>
+
+<body>
+<div class="Box">
+    <div class="businessBox">
+        <!-- banner -->
+        <div class="bus_banner">
+            <img src="" alt="">
+        </div>
+        <!-- 信息 -->
+        <div class="bus_Con">
+            <!-- 检索报告 -->
+            <div class="bus_item">
+                <h1></h1>
+                <p class="txt-cut"></p>
+            </div>
+            <!-- 服务项目 -->
+            <div class="bus_item2">
+                <div>
+                    <h1 class="bus_Tit">代理类型：</h1>
+                    <div class="bus_item2List bus_TitelList">
+                        <ul>
+                            <li class="bus_active" data-id="1"><span class="one-txt-cut">软著代理</span></li>
+                            <li data-id="2" style="width: 2rem;"><span class="one-txt-cut">软著撰写+代理</span></li>
+                        </ul>
+                    </div>
+                </div>
+                <div>
+                    <h1 class="bus_Tit">代理时间：</h1>
+                    <div class="bus_item2List">
+                        <ul class="bus_dataUl">
+
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <!-- 费用 -->
+            <div class="bus_item3">
+                <div class="bus_Txt">服务费：<span>300.00</span></div>
+                <div class="bus_item3Box">
+                    <div class="bus_Txt">官&nbsp;&nbsp;&nbsp;费：<span>300.00</span></div>
+                </div>
+            </div>
+            <!-- 合计 -->
+            <div class="bus_item4">
+                <div class="bus_Txt3">xx戒：<span>¥880.00</span></div>
+                <div class="bus_Txt3" style="margin-right:0">xx师：<span>¥880.00</span></div>
+                <div class="bus_Txt4">合计：<i>¥</i> <span></span></div>
+            </div>
+        </div>
+        <!-- 产品详情 -->
+        <div class="bus_detail">
+            <h1 class="bus_Tit2">产品详情</h1>
+            <!-- 富文本 -->
+            <div class="bus_Txt5">
+                提间利需向就金用被广即商中平。等白太周议却亲成单气属白由层市。农专毛本品放或我元对种果又力号图。
+            </div>
+            <!-- <div class="bus_Txt5"></div>
+    <div class="bus_Img"><img th:src="@{/image/11_icon.png}" alt=""></div> -->
+        </div>
+        <!-- 立即办理 -->
+        <div class="bus_btn">立即办理</div>
+    </div>
+</div>
+
+<script th:inline="javascript">
+    var user=[[${user}]]
+    console.log(user);
+</script>
+<script>
+
+    $(function () {
+        var type = 1;
+        var html = '';
+        $('.bus_item h1').text($('.bus_TitelList ul li').eq(0).find('span').text())
+
+        function ajax(type) {
+            var str=location.href; //取得整个地址栏
+            var url = str.split("?")[1];
+            var url2  = url.split("=")[1];
+            var id;
+            html ='';
+
+            $.ajax({
+                url:"/api/soft/listId/"+url2+"/"+type,
+                type: 'POST',
+                dataType: "json",
+                async: false,
+                success:function (res) {
+                    if(res.code == 20000){
+                        $.each(res.data,function (index,ele) {
+                            html += '<li class="bus_Lis" data-id='+ ele.id +'><span class="one-txt-cut">' + ele.name + '</span></li>';
+                        });
+                        $('.bus_banner').find('img').attr('src',res.data[0].image); //图片
+                        $('.bus_item p').text(res.data[0].title); //标题
+
+                        $('.bus_Txt').eq(1).find('span').text(res.data[0].doubleGfPrice);//官费
+                        $('.bus_Txt3').eq(0).find('span').text(res.data[0].bjPrice);//八戒费用
+                        $('.bus_Txt3').eq(1).find('span').text(res.data[0].dsPrice);//大师费用
+                        $('.bus_Txt5').html(res.data[0].text) //富文本
+                        if(user.state == 1){
+                            $('.bus_Txt').eq(0).find('span').text(res.data[0].doubleHyPrice);
+                            var Price = parseFloat(Number(res.data[0].doubleHyPrice)+ Number(res.data[0].doubleGfPrice)).toFixed(2);
+                            $('.bus_Txt4').eq(0).find('span').text(Price);
+                        }else if(user.state == 2){
+                            $('.bus_Txt').eq(0).find('span').text(res.data[0].doubleVipPrice);
+                            var Price = parseFloat(Number(res.data[0].doubleVipPrice) + Number(res.data[0].doubleGfPrice)).toFixed(2);
+                            $('.bus_Txt4').eq(0).find('span').text(Price);
+                        }
+                        $('.bus_dataUl').html(html);
+                        id = $('.bus_Lis ').eq(0).data('id');
+                    }
+                }
+            });
+            $('.bus_Lis').click(function() {
+                id = $(this).data('id');
+                $(this).addClass('bus_active').siblings().removeClass('bus_active');
+                // ajax(id);
+                $.ajax({
+                    url:'/api/soft/numb/'+id,
+                    type:'post',
+                    dataType: "json",
+                    async: false,
+                    success:function (res) {
+                        if(res.code == 20000){
+                            $('.bus_banner').find('img').attr('src',res.data.image); //图片
+                            $('.bus_item p').text(res.data.title); //标题
+
+                            $('.bus_Txt').eq(1).find('span').text(res.data.doubleGfPrice); //官费
+                            $('.bus_Txt3').eq(0).find('span').text(res.data.bjPrice); //八戒费用
+                            $('.bus_Txt3').eq(1).find('span').text(res.data.dsPrice); //大师费用
+
+                            $('.bus_Txt5').html(res.data.text); //富文本
+
+                            if(user.state == 1){
+                                $('.bus_Txt').eq(0).find('span').text(res.data.doubleHyPrice);
+                                var Price = parseFloat(Number(res.data.doubleHyPrice) +Nuber(res.data.doubleGfPrice)).toFixed(2);
+                                $('.bus_Txt4').eq(0).find('span').text(Price);
+                            }else if(user.state == 2){
+                                $('.bus_Txt').eq(0).find('span').text(res.data.doubleVipPrice);
+                                var Price = parseFloat(Number(res.data.doubleVipPrice) + Number(res.data.doubleGfPrice)).toFixed(2);
+                                $('.bus_Txt4').eq(0).find('span').text(Price);
+                            }
+                        }
+                    }
+                })
+            });
+            $('.bus_btn').click(function () {
+                location.href="/api/soft/two?id="+id;
+            });
+            $('.bus_Lis').eq(0).addClass('bus_active');
+        }
+        ajax(type);
+        $('.bus_TitelList ul li').click(function () {
+            $(this).addClass('bus_active').siblings().removeClass('bus_active');
+            $('.bus_item h1').text($(this).find('span').text());
+            type = $(this).attr('data-id');
+            ajax(type);
+        });
+
+    });
+
+</script>
+</body>
+
+</html>

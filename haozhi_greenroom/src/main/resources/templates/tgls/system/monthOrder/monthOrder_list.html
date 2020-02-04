@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+
+<head th:replace="public :: head">
+</head>
+
+<body>
+<div class="cBody">
+    <table class="layui-table">
+        <thead>
+        <tr>
+            <th>商标名称</th>
+            <th>会员价格</th>
+            <th>vip价格</th>
+            <th>八戒价格</th>
+            <th>大师价格</th>
+            <th>官费价格</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!--<tr th:each="p : ${data}">
+            <td th:text="${p.name}"></td>
+            <td th:text="${p.doubleHyPrice}"></td>
+            <td th:text="${p.doubleVipPrice}"></td>
+            <td th:text="${p.bjPrice}"></td>
+            <td th:text="${p.dsPrice}"></td>
+            <td th:text="${p.doubleGfPrice}"></td>
+            <td>
+                <button class="layui-btn layui-btn-xs" th:data-id="${p.id}" onclick="updateBut(this)">修改</button>
+                <button class="layui-btn layui-btn-xs">详情</button>
+            </td>
+        </tr>-->
+        </tbody>
+    </table>
+
+    <!-- layUI 分页模块 -->
+    <div id="pages"></div>
+    <script>
+
+        ajaxFun(1, 10);
+
+        function ajaxFun(page, rows) {
+            $.ajax({
+                url: "/brand/fy",
+                type: 'post',
+                data: {
+                    page: page,
+                    rows: rows
+                },
+                success(res) {
+                    var html = '';
+                    $.each(res.rows, function (index, ele) {
+                        console.log(ele);
+                        html += '<tr>' +
+                            '            <td>' + ele.name + '</td>' +
+                            '            <td>' + ele.doubleHyPrice + '</td>' +
+                            '            <td>' + ele.doubleVipPrice + '</td>' +
+                            '            <td>' + ele.bjPrice + '</td>' +
+                            '            <td>' + ele.dsPrice + '</td>' +
+                            '            <td>' + ele.doubleGfPrice + '</td>' +
+                            '            <td>' +
+                            '                <button class="layui-btn layui-btn-xs" data-id="' + ele.id + '" onclick="updateBut(this)">修改</button>' +
+                            '                <button class="layui-btn layui-btn-xs">详情</button>' +
+                            '            </td>' +
+                            '        </tr>';
+                    });
+                    $('tbody').empty().html(html);
+                    listPage(res.total, page);
+                }
+            })
+        }
+
+        function listPage(total, page) {
+            layui.use('laypage', function () {
+                var laypage = layui.laypage;
+                var limits =Math.ceil(total/10);
+                //总页数大于页码总数
+                laypage.render({
+                    elem: 'pages'
+                    , count: total,
+                    limit: 10,
+                    curr: page
+                    , layout: ['count', 'prev', 'page', 'next']
+                    , jump: function (obj, first) {
+                        if (!first) {
+                            ajaxFun(obj.curr, 10);
+                        }
+                    }
+                });
+            });
+        }
+
+
+        /*layui.use(['laypage', 'layer'], function () {
+            var laypage = layui.laypage,
+                layer = layui.layer;
+
+            //总页数大于页码总数
+            laypage.render({
+                elem: 'pages'
+                , count: 100,
+                limit:10
+                , layout: ['count', 'prev', 'page', 'next']
+                , jump: function (obj,first) {
+                    console.log(obj)
+                }
+            });
+        });*/
+
+    </script>
+</div>
+</body>
+
+</html>

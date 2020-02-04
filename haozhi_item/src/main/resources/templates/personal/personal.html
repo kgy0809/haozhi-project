@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<head th:replace="default :: head">
+</head>
+
+<body>
+<div class="Box">
+    <!-- 顶部 -->
+    <div class="personal_top">
+        <div class="personal_Box">
+            <div class="personal_Img"><img th:src="${user.wxImage}" alt=""></div>
+            <div class="personal_topB">
+                <p class="personal_name" th:text="${user.wxName}">昵称昵称昵称昵称</p>
+                <div class="personal_topB2">
+                    <div class="personal_vip" th:if="${user.state}==2">VIP </div>
+                    <p class="personal_name" th:if="${user.state}==2">会员到期时间：[[${svipTime}]]</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 本月 -->
+    <div class="progress_month">
+        <ul>
+            <li>
+                <p class="progress_Txt">我的余额</p>
+                <p class="progress_Txt2 one-txt-cut" th:text="${user.DoubleBalance}">800</p>
+            </li>
+            <li>
+                <p class="progress_Txt">本月完成单数</p>
+                <p class="progress_Txt2 one-txt-cut" th:text="${numDto.newWcNum}">380.00</p>
+            </li>
+            <li>
+                <p class="progress_Txt">累计完成单数</p>
+                <p class="progress_Txt2 one-txt-cut" th:text="${numDto.wcNum}">999999.99</p>
+            </li>
+        </ul>
+    </div>
+    <!-- 列表 -->
+    <div class="progress_List">
+        <ul>
+            <li>
+                <a href="/api/personal/card">
+                    <div class="personal_Img3"><img th:src="@{/image/35_icon.png}" alt=""></div>
+                    <p class="personal_Txt3">收益提现</p>
+                    <div class="personal_Img2"><img th:src="@{/image/34_icon.png}" alt=""></div>
+                </a>
+            </li>
+            <li>
+                <a href="/api/personal/vip">
+                    <div class="personal_Img3"><img th:src="@{/image/36_icon.png}" alt=""></div>
+                    <p class="personal_Txt3">成为VIP</p>
+                    <div class="personal_Img2"><img th:src="@{/image/34_icon.png}" alt=""></div>
+                </a>
+            </li>
+            <li>
+                <a href="/api/personal/personalInvoice">
+                    <div class="personal_Img3"><img th:src="@{/image/37_icon.png}" alt=""></div>
+                    <p class="personal_Txt3">申请开票</p>
+                    <div class="personal_Img2"><img th:src="@{/image/34_icon.png}" alt=""></div>
+                </a>
+            </li>
+            <li>
+                <a href="/api/personal/settings">
+                    <div class="personal_Img3"><img th:src="@{/image/38_icon.png}" alt=""></div>
+                    <p class="personal_Txt3">个人设置</p>
+                    <div class="personal_Img2"><img th:src="@{/image/34_icon.png}" alt=""></div>
+                </a>
+            </li>
+            <li>
+                <a href="/api/personal/code">
+                    <div class="personal_Img3"><img th:src="@{/image/39_icon.png}" alt=""></div>
+                    <p class="personal_Txt3">我的二维码</p>
+                    <div class="personal_Img2"><img th:src="@{/image/34_icon.png}" alt=""></div>
+                </a>
+            </li>
+            <li>
+                <a href="/api/personal/regard">
+                    <div class="personal_Img3"><img th:src="@{/image/40_icon.png}" alt=""></div>
+                    <p class="personal_Txt3">关于我们</p>
+                    <div class="personal_Img2"><img th:src="@{/image/34_icon.png}" alt=""></div>
+                </a>
+            </li>
+            <li>
+                <a href="tel:15666666666">
+                    <div class="personal_Img3"><img th:src="@{/image/41_icon.png}" alt=""></div>
+                    <p class="personal_Txt3">联系客服</p>
+                    <p class="personal_Txt4">15666666666</p>
+                    <div class="personal_Img2" style="margin-left:0.16rem;"><img th:src="@{/image/34_icon.png}" alt="">
+                    </div>
+                </a>
+            </li>
+        </ul>
+    </div>
+    <!-- 底部 -->
+    <div class="footer">
+        <ul>
+            <a th:href="@{/index}">
+                <li>
+                    <div class="footer_Img"><img th:src="@{/image/7_icon2.png}" alt=""></div>
+                    <p class="footer_Txt">首页</p>
+                </li>
+            </a>
+            <a th:href="@{/team}">
+                <li>
+                    <div class="footer_Img"><img th:src="@{/image/8_icon.png}" alt=""></div>
+                    <p class="footer_Txt">团队管理</p>
+                </li>
+            </a>
+            <a th:href="@{/progress}">
+                <li>
+                    <div class="footer_Img"><img th:src="@{/image/9_icon.png}" alt=""></div>
+                    <p class="footer_Txt">进度查询</p>
+                </li>
+            </a>
+            <a th:href="@{/personal}">
+                <li>
+                    <div class="footer_Img"><img th:src="@{/image/10_icon2.png}" alt=""></div>
+                    <p class="footer_Txt" style="color:#ED291B">我的</p>
+                </li>
+            </a>
+        </ul>
+    </div>
+</div>
+</body>
+
+</html>

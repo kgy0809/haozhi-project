@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<head th:replace="default :: head">
+</head>
+
+<body>
+<div class="Box">
+    <div class="businessBox" th:each="p,key:${list}" >
+        <div th:class="ids+${p.id}" th:style="${key.index}!=0?'display:none':''">
+            <!-- banner -->
+            <div class="bus_banner">
+                <img th:src="${p.image}" alt="">
+            </div>
+            <!-- 信息 -->
+            <div class="bus_Con">
+                <!-- 检索报告 -->
+                <div class="bus_item">
+                    <h1 th:text="${p.name}">检索报告</h1>
+                    <p class="txt-cut" th:text="${p.title}">提间利需向就金用被广即商中平。等白太周议却亲成单气属白由层市。农专毛本品放或我元对种果又力号图。</p>
+                </div>
+                <!-- 服务项目 -->
+                <div class="bus_item2">
+                    <h1 class="bus_Tit">服务项目：</h1>
+                    <div class="bus_item2List">
+                        <ul>
+                            <li class="" th:each="p,key:${list}">
+                                    <span class="one-txt-cut" th:data-id="${p.id}" th:text="${p.name}"></span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- 费用 -->
+                <div class="bus_item3">
+                    <div class="bus_Txt">服务费：<span th:text="${user.state}=='1'?${p.doubleHyPrice}:${p.doubleVipPrice}"></span></div>
+                    <div class="bus_item3Box">
+                        <div class="bus_Txt">官&nbsp;&nbsp;&nbsp;费：<span th:text="${p.doubleGfPrice}">300.00</span></div>
+                        <div class="bus_Txt2">【包含10个商品】</div>
+                    </div>
+                </div>
+                <!-- 合计 -->
+                <div class="bus_item4">
+                    <div class="bus_Txt3">xx戒：<span th:text="${p.bjPrice}">¥880.00</span></div>
+                    <div class="bus_Txt3" style="margin-right:0">xx师：<span th:text="${p.dsPrice}">¥880.00</span></div>
+                    <div class="bus_Txt4">合计：<i>¥</i> <span th:text="${user.state}=='1'?${p.doubleHyPrice}+(${p.doubleGfPrice}=='国外费用单独确认'?'':${p.doubleGfPrice}):${p.doubleVipPrice}+(${p.doubleGfPrice}=='国外费用单独确认'? '':${p.doubleGfPrice}) ">¥600.00</span></div>
+                </div>
+            </div>
+            <!-- 产品详情 -->
+            <div class="bus_detail">
+                <h1 class="bus_Tit2">产品详情</h1>
+                <!-- 富文本 -->
+                <div class="bus_Txt5" th:utext="${p.text}">
+                    提间利需向就金用被广即商中平。等白太周议却亲成单气属白由层市。农专毛本品放或我元对种果又力号图。
+                </div>
+                <!-- <div class="bus_Txt5"></div>
+        <div class="bus_Img"><img src="../image/11_icon.png" alt=""></div> -->
+            </div>
+            <!-- 立即办理
+             th:href="@{/business/two?id=}+${p.id}"
+             -->
+            <div class="bus_btn">立即办理</div>
+        </div>
+
+    </div>
+</div>
+<script>
+
+    $(function () {
+        var id;
+        id = $('.bus_item2List ul li ').eq(0).find('span').data('id');
+        //服务项目切换
+        $('.businessBox').eq(0).find('.bus_item2List ul li').eq(0).addClass('bus_active');
+        $('.bus_item2List ul li').click(function () {
+            var index = $(this).index();
+            id = $(this).find('span').data('id');
+            $('.businessBox').eq(index).children('div').show().parents('.businessBox').siblings().children('div').hide();
+            $('.businessBox').eq(index).find('.bus_item2List ul li').eq(index).addClass('bus_active');
+        });
+
+        $('.bus_btn').click(function () {
+            location.href="/api/case/two?id="+id;
+        });
+    });
+
+</script>
+</body>
+
+</html>

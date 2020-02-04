@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<head th:replace="default :: head">
+</head>
+
+<body>
+<div class="Box">
+    <div class="in_Box">
+        <!-- banner -->
+        <div class="swiper-container in_banner">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide" th:each="p : ${labelList}">
+                    <img th:src="${p.image}" alt="">
+                </div>
+            </div>
+            <div class="swiper-pagination"></div>
+        </div>
+        <!-- 导航 -->
+        <div class="in_nav">
+            <ul>
+                <li th:each="p : ${zcList}">
+                    <a th:href="@{${p.url}}">
+                        <div class="in_navImg"><img th:src="@{${p.png}}" alt=""></div>
+                        <div class="in_navTxt" th:text="${p.name}">国内商标注册<br></div>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <!-- 资料库 -->
+        <div class="in_data">
+            <div class="in_dataTit">资料库</div>
+            <div id="pullrefresh">
+                <ul class="in_dataUl">
+
+                </ul>
+            </div>
+
+        </div>
+        <div class="footer">
+            <ul>
+                <a th:href="@{/index}">
+                    <li>
+                        <div class="footer_Img"><img th:src="@{/image/7_icon.png}" alt=""></div>
+                        <p class="footer_Txt" style="color:#ED291B">首页</p>
+                    </li>
+                </a>
+                <a th:href="@{/team}">
+                    <li>
+                        <div class="footer_Img"><img th:src="@{/image/8_icon.png}" alt=""></div>
+                        <p class="footer_Txt">团队管理</p>
+                    </li>
+                </a>
+                <a th:href="@{/progress}">
+                    <li>
+                        <div class="footer_Img"><img th:src="@{/image/9_icon.png}" alt=""></div>
+                        <p class="footer_Txt">进度查询</p>
+                    </li>
+                </a>
+                <a th:href="@{/personal}">
+                    <li>
+                        <div class="footer_Img"><img th:src="@{/image/10_icon.png}" alt=""></div>
+                        <p class="footer_Txt">我的</p>
+                    </li>
+                </a>
+            </ul>
+        </div>
+    </div>
+
+</div>
+<script>
+        // swiper 轮播
+        var swiper = new Swiper('.swiper-container', {
+            pagination: '.swiper-pagination',
+            paginationClickable: true,
+            spaceBetween: 30,
+            centeredSlides: true,
+            autoplay: 2500,
+            autoplayDisableOnInteraction: false
+        });
+
+        //上拉加载
+        var page = 1;
+        var size = 6;
+        var data_status = true;
+
+        function get_data(page) {
+            var data = {
+                page: page
+            };
+            $.ajax({
+                url:"[[@{/data/list}]]",
+                /*url: "/api/data/list/"+page+"/"+size,*/
+                type: 'POST',
+                dataType: "json",
+                async: false,
+                data: {
+                    page: page,
+                    size: 6
+                },
+                success: function (res) {
+                    if (res.code == 20000) {
+                        var html = '';
+                        if (res.data != '') {
+                            $.each(res.data, function (index, element) {
+                                html += '<a href="/api/data/list/'+element.id+'">' +
+                                    '<li>' +
+                                    '<div class="in_dataBox">' +
+                                    ' <p class="in_dataTxt txt-cut">' + element.title + '</p>' +
+                                    ' <p class="in_dataTime">' + element.time + '</p>' +
+                                    '</div>' +
+                                    '<div class="in_dataImg">' +
+                                    '<img src="' + element.image + '" alt="">' +
+                                    '</div>' +
+                                    '</li>' + '</a>';
+                                data_status = true;
+                            });
+                            $('.in_dataUl').append(html);
+                        } else {
+                            data_status = false;
+                            mui.toast('已经到底了！', {
+                                duration: 1600,
+                                type: 'div'
+                            })
+                        }
+                    }
+                }
+            })
+        };
+        get_data(page)
+        //滚动事件触发
+        window.onscroll = function (ev) {
+            if (getScrollTop() + getClientHeight() >= getScrollHeight() && data_status) {
+                // 后台数据调用
+                if (data_status === true) {
+                    ++page;
+                    get_data(page);
+                }
+            } else if (getScrollTop() + getClientHeight() >= getScrollHeight() && !data_status) {
+                mui.toast('已经到底了！', {
+                    duration: 1600,
+                    type: 'div'
+                })
+            }
+        };
+</script>
+</body>
+
+</html>

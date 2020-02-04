@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<head th:replace="default :: head">
+
+</head>
+<body>
+<div class="Box">
+    <!-- nav -->
+    <div class="query_nav">
+        <div class="query_Txt query_nav1 query_active">一级业务员</div>
+        <div class="query_Txt query_nav2">二级业务员</div>
+    </div>
+    <!-- 查询 -->
+    <div class="query_search">
+        <div class="query_li">
+            <p class="query_Txt2">查询日期</p>
+            <div class="query_time"></div>
+        </div>
+        <div class="query_li">
+            <p class="query_Txt2">业务员</p>
+            <input class="query_people" type="text">
+        </div>
+        <!-- 搜索 -->
+        <div class="query_btn">搜索</div>
+    </div>
+
+    <!-- 查询列表 -->
+    <div class="query_results">
+        <div class="query_top">
+            <div>ID</div>
+            <div>姓名</div>
+            <div>单数</div>
+            <div>我的收益</div>
+        </div>
+        <div class="query_List">
+            <ul>
+            </ul>
+        </div>
+
+    </div>
+</div>
+<script th:src="@{/js/mui.dtpicker.js}"></script>
+<script th:src="@{/js/mui.picker.min.js}"></script>
+<script>
+    $(function () {
+        var type = 1;
+        var dateData;
+        var nameData;
+        var page = 1;
+        var rows = 20;
+        var html = '';
+        var data_status = true;
+        // 日期
+        $(".query_time").click(function () {
+            var dtPicker = new mui.DtPicker({
+                type: 'date'
+            });
+            dtPicker.show(function (selectItems) {
+                var y = selectItems.y.text; //获取选择的年
+                var m = selectItems.m.text; //获取选择的月
+                var d = selectItems.d.text; //获取选择的日
+                var date = y + "-" + m + "-" + d;
+                $(".query_time").text(date);
+            })
+        });
+        // 导航
+        $('.query_Txt').click(function () {
+            $(this).addClass('query_active').siblings().removeClass('query_active');
+        });
+        //点击预计
+        $('.query_nav1').click(function () {
+            type = 1;
+            page = 1;
+            html = '';
+            $('.query_List ul').html(html);
+            $('.query_time').text('');
+            $('.query_people').val('');
+            dateData = '';
+            nameData = '';
+            ajax(dateData,nameData,type)
+        });
+        //点击二级
+        $('.query_nav2').click(function () {
+            type = 2;
+            page = 1;
+            html = '';
+            $('.query_List ul').html(html);
+            $('.query_time').text('');
+            $('.query_people').val('');
+            dateData = '';
+            nameData = '';
+            ajax(dateData,nameData,type,page,rows)
+        });
+        //点击搜索
+        $('.query_btn').click(function () {
+            page = 1;
+            html = '';
+            $('.query_List ul').html(html);
+            dateData = $('.query_time').text();
+            nameData = $('.query_people').val();
+            ajax(dateData,nameData,type,page,rows)
+        });
+        //ajax
+        function ajax(dateData,nameData,type,page,rows) {
+            $.ajax({
+                url: "/api/team/search",
+                type: 'POST',
+                data: {
+                    type:type,
+                    date: dateData,
+                    name: nameData,
+                    page:page,
+                    rows:rows
+                },
+                success: function (res) {
+                    if (res.code == 20000) {
+                        if(res.data != ''){
+                            if(type == 1){
+                                $.each(res.data, function (index, ele) {
+                                    html += ' <li>' +
+                                        '                        <p class="txt-cut">' + ele.id + '</p>' +
+                                        '                        <p class="txt-cut">' + ele.name + '</p>' +
+                                        '                        <p class="txt-cut">' + ele.totalNum + '</p>' +
+                                        '                        <p class="txt-cut">¥' + ele.doubleBalance + '</p>' +
+                                        '                    </li>';
+
+                                });
+                                $('.query_List ul').append(html)
+                                html = ''
+                            }else if(type == 2){
+                                $.each(res.data, function (index, ele) {
+                                    if(res.data[index] !=''){
+                                        $.each(res.data[index],function (index,ele) {
+                                            html += ' <li>' +
+                                                '                        <p class="txt-cut">' + ele.id + '</p>' +
+                                                '                        <p class="txt-cut">' + ele.name + '</p>' +
+                                                '                        <p class="txt-cut">' + ele.totalNum + '</p>' +
+                                                '                        <p class="txt-cut">¥' + ele.balance + '</p>' +
+                                                '                    </li>';
+                                        })
+
+                                    }
+                                    console.log(html)
+                                    $('.query_List ul').append(html)
+                                    html = ''
+                                });
+                            }
+                            data_status = true;
+                        }else{
+                            data_status = false;
+                        }
+                    }
+
+                }
+            })
+        }
+        ajax(dateData,nameData,type,page,rows);
+
+        //滚动事件触发
+        window.onscroll = function (ev) {
+            if (getScrollTop() + getClientHeight() >= getScrollHeight() && data_status) {
+                // 后台数据调用
+                if (data_status === true) {
+                    ++page;
+                    ajax(dateData,nameData,type,page,rows);
+                }
+            } else if (getScrollTop() + getClientHeight() >= getScrollHeight() && !data_status) {
+                mui.toast('已经到底了！', {
+                    duration: 1600,
+                    type: 'div'
+                })
+            }
+        };
+    })
+</script>
+</body>
+
+</html>

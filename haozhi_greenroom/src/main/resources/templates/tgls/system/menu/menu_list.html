@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+
+    <head th:replace="public :: head">
+    </head>
+
+    <body>
+        <div class="cBody">
+            <table class="layui-table">
+                <thead>
+                    <tr>
+                        <th>菜单</th>
+                        <th>编码</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="p : ${HzZc}">
+                        <td th:text="${p.name}"></td>
+                        <td th:text="${p.coding}"></td>
+                        <td>
+                            <button class="layui-btn  layui-btn-xs" th:data-id="${p.id}" onclick="look_But(this)">修改
+                            </button>
+                        </td>
+                    </tr>
+
+                </tbody>
+            </table>
+
+        </div>
+        <script>
+            function look_But(e) {
+                var id = $(e).data("id");
+                location.href="/menu/update?id="+id;
+            }
+        </script>
+    </body>
+
+</html>

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+
+<head th:replace="public :: head">
+</head>
+
+<body>
+<div class="cBody">
+    <table class="layui-table">
+        <thead>
+        <th>支付类型： <i th:text="${order.xxPayStart} == '2'?'微信支付':'线下支付'"></i></th>
+        </tr>
+        <th>订单号： <i th:text="${order.id}"></i></th>
+        </tr>
+        <th>商标名称： <i th:text="${order.title}"></i></th>
+        </tr>
+        <th>商标服务： <i th:text="${order.sbName}"></i></th>
+        </tr>
+        <th>服务费： <i th:text="${order.doubleFwPrice}"></i></th>
+        </tr>
+        <th>官费： <i th:text="${order.doubleFwPrice}"></i></th>
+        </tr>
+        <th>订单数量： <i th:text="${order.number}"></i></th>
+        </tr>
+        <th>合计： <i th:text="${order.doublePrice}"></i></th>
+        </tr>
+        <th>备注： <i th:text="${order.remark}"></i></th>
+        </tr>
+        <th>创建时间： <i th:text="${order.sTime}"></i></th>
+        </tr>
+        <th th:if="${order.state} == '1'">状态： <i th:text="代付款"></i></th>
+        </tr>
+        <th th:if="${order.state} == '2'">状态： <i th:text="审核中"></i></th>
+        </tr>
+        <th th:if="${order.state} == '3'">状态： <i th:text="已确认"></i></th>
+        </tr>
+        <th th:if="${order.state} == '4'">状态： <i th:text="已退款"></i></th>
+        </tr>
+        <th>是否开票： <i th:text="${order.invoiceState}=='1' ? '否':'是'"></i></th>
+        </tr>
+        <th th:if="${order.invoiceState} == '2'">开票日期： <i th:text="${order.sInvoiceTime}"></i></th>
+        </tr>
+        <th>委托书： <i> <a th:text="${order.power}" th:href="${order.power}"></a> </i></th>
+        </tr>
+        <th>合同： <i> <a th:text="${order.contract}" th:href="${order.contract}"></a> </i></th>
+        </tr>
+
+        <th>注册商标名称： <i th:text="${business.sbName}"></i></th>
+        </tr>
+
+        <th th:if="${business.sbType} == '1'">商标类型： <i th:if="${business.sbType} == '1'">文字</i> &nbsp;&nbsp;<i th:text="${business.sbName}"></i></th>
+        </tr>
+        <th th:if="${business.sbType} == '2'">商标类型： <i th:if="${business.sbType} == '2'">图片</i> &nbsp;&nbsp;<a th:href="${business.sbName}" th:text="${business.sbName}"></a> </th>
+        </tr>
+
+        <th th:if="${business.sbColor} == '0'">是否指定颜色： <i th:if="${business.sbColor} == '0'">不指定</i></th>
+        </tr>
+        <th th:if="${business.sbColor} == '1'">是否指定颜色： <i th:if="${business.sbColor} == '1'">指定</i></th>
+        </tr>
+
+        <th>商标类别： <i th:text="${business.oneName}"></i> <span th:each="a : ${business.menuName}"> &nbsp;&nbsp;<i th:text="${a.name}"></i> </span></th>
+        </tr>
+
+        <th th:if="${business.application} == '1'">企业申请</th>
+        </tr>
+        <th th:if="${business.application} == '2'">个人申请</th>
+        </tr>
+        <th th:if="${business.application} == '1'">公司名称： <i th:text="${business.applicationName}"></i>
+        </th>
+        <th th:if="${business.application} == '2'">个人姓名： <i th:text="${business.applicationName}"></i>
+        </th>
+        </tr>
+        <th th:if="${business.application} == '1'">统一社会信用代码： <i th:text="${business.applicationId}"></i>
+        </th>
+        <th th:if="${business.application} == '2'">身份证号： <i th:text="${business.applicationId}"></i>
+        </th>
+        </tr>
+
+        <th>类别： <i th:text="${business.lbVal}"></i></th>
+        </tr>
+        <th>注册号： <i th:text="${business.zchVal}"></i></th>
+        </tr>
+        <th>联系人名称： <i th:text="${business.applicationNumName}"></i></th>
+        </tr>
+        <th>联系电话： <i th:text="${business.applicationNumTel}"></i></th>
+        </tr>
+        <th>电子邮箱： <i th:text="${business.applicationNumMail}"></i></th>
+        </tr>
+        <th>附加代理费： <i th:text="${business.commission} /100"></i></th>
+        </tr>
+        <th>签合同时间： <i th:text="${business.sTime}"></i></th>
+        </tr>
+        </thead>
+    </table>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button type="reset" class="layui-btn layui-btn-primary" onclick="javascript:history.back(-1);">返回</button>
+        </div>
+    </div>
+</div>
+<script>
+
+</script>
+</body>
+
+</html>

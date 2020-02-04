@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+
+<head th:replace="public :: head">
+</head>
+
+<body>
+<div class="cBody">
+    <table class="layui-table">
+        <thead>
+        <tr>
+            <th>开票用户</th>
+            <th>状态</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="p : ${invoice}">
+            <td th:text="${p.userName}"></td>
+            <td th:if="${p.state} == '1'" style="color: red">待审核</td>
+            <td th:if="${p.state} == '2'" style="color: #0000FF;">已审核</td>
+            <td th:if="${p.state} == '3'" style="color: #00FF00">已邮寄</td>
+            <td>
+                <button class="layui-btn  layui-btn-xs" th:if="${p.state} == '1'" th:data-id="${p.id}"
+                        onclick="updateBut(this)">审核
+                </button>
+                <button class="layui-btn  layui-btn-xs" th:if="${p.state} == '2'" th:data-id="${p.id}"
+                        onclick="look_But(this)">查看
+                </button>
+                <button class="layui-btn  layui-btn-xs" th:if="${p.state} == '3'" th:data-id="${p.id}"
+                        onclick="look_But(this)">查看
+                </button>
+                <button data-method="notice" class="layui-btn layui-btn-xs layerDemo" th:if="${p.state} == '2'"
+                        th:data-id="${p.id}">填写快递单号
+                </button>
+            </td>
+        </tr>
+
+        </tbody>
+    </table>
+
+</div>
+<script>
+    var orderId;
+
+    function updateBut(e) {
+        var id = $(e).data("id");
+        location.href = "/invoice/vive?id=" + id
+    }
+
+    function look_But(e) {
+        var id = $(e).data("id");
+        location.href = "/invoice/look?id=" + id
+    }
+
+    layui.use('layer', function () { //独立版的layer无需执行这一句
+        var $ = layui.jquery, layer = layui.layer; //独立版的layer无需执行这一句
+        //触发事件
+        var active = {
+            notice: function () {
+                //示范一个公告层
+                layer.open({
+                    type: 1
+                    ,
+                    title: false //不显示标题栏
+                    ,
+                    closeBtn: false
+                    ,
+                    area: '300px;'
+                    ,
+                    shade: 0.8
+                    ,
+                    id: 'LAY_layuipro' //设定一个id，防止重复弹出
+                    ,
+                    btn: ['确定', '取消']
+                    ,
+                    btnAlign: 'c'
+                    ,
+                    moveType: 1 //拖拽模式，0或者1
+                    ,
+                    content: '<div style="padding: 20px; background-color: white;"><input id="orderId" placeholder="请输入快递单号" type="text" style="width: 100%;border: 0;height: 30px;padding: 10px;"></div>'
+                    ,
+                    success: function (layero) {
+
+                        var btn = layero.find('.layui-layer-btn');
+                        $('.layui-layer-btn0').click(function () {
+                            var val = $('#orderId').val();
+                            location.href = "/invoice/SFkt/?id=" + orderId + "&order=" + val;
+
+                        })
+
+                    }
+                });
+            }
+        };
+
+        $('.layerDemo').on('click', function () {
+            orderId = $(this).data('id');
+            var othis = $(this), method = othis.data('method');
+            active[method] ? active[method].call(this, othis) : '';
+        });
+
+    });
+</script>
+</body>
+
+</html>

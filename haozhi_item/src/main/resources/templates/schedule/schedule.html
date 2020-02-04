@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<head th:replace="default :: head">
+</head>
+
+<body>
+    <div class="Box">
+        <!-- 本月 -->
+        <div class="progress_top">
+            <ul>
+                <li>
+                    <p class="progress_Txt">本月新增单数</p>
+                    <p class="progress_Txt2 one-txt-cut" th:text="${numDto.newXzNum}">800</p>
+                </li>
+                <li>
+                    <p class="progress_Txt">本月完成单数</p>
+                    <p class="progress_Txt2 one-txt-cut" th:text="${numDto.newWcNum}">800</p>
+                </li>
+                <li>
+                    <p class="progress_Txt">累计完成单数</p>
+                    <p class="progress_Txt2 one-txt-cut" th:text="${numDto.wcNum}">800</p>
+                </li>
+            </ul>
+        </div>
+        <!-- 我的订单 -->
+        <div class="progress_myorder">
+            <h1 class="progress_Tit">我的订单</h1>
+            <ul>
+                <li>
+                    <a href="/api/progress/myOrder?type=1">
+                        <div class="progress_Img">
+                            <img th:src="@{/image/28_icon.png}" alt="">
+                            <!-- 数量 -->
+                            <div class="progress_num" th:text="${numDto.dfNum}">20</div>
+                        </div>
+                        <p class="progress_Txt3">待付款</p>
+                    </a>
+
+                </li>
+                <li>
+                    <a href="/api/progress/myOrder?type=2">
+                        <div class="progress_Img">
+                            <img th:src="@{/image/29_icon.png}" alt="">
+                            <!-- 数量 -->
+                            <div class="progress_num" th:text="${numDto.dsNum}">99</div>
+                        </div>
+                        <p class="progress_Txt3">待审核</p>
+                    </a>
+                </li>
+                <li>
+                    <a href="/api/progress/myOrder?type=3">
+                        <div class="progress_Img">
+                            <img th:src="@{/image/30_icon.png}" alt="">
+                            <!-- 数量 -->
+                            <div class="progress_num" th:text="${numDto.wcNum}">2</div>
+                        </div>
+                        <p class="progress_Txt3">已确认</p>
+                    </a>
+                </li>
+                <li>
+                    <a href="/api/progress/myOrder?type=4">
+                        <div class="progress_Img">
+                            <img th:src="@{/image/31_icon.png}" alt="">
+                            <!-- 数量 -->
+                            <div class="progress_num" th:text="${numDto.tNum}">2</div>
+                        </div>
+                        <p class="progress_Txt3">已退款</p>
+                    </a>
+                </li>
+                <li style="width:4.54rem;">
+                    <a href="/api/progress/myOrder?type=0">
+                        <div class="progress_Img">
+                            <img th:src="@{/image/32_icon.png}" alt="">
+                            <!-- 数量 -->
+                            <div class="progress_num" th:text="${numDto.allNum}">2</div>
+                        </div>
+                        <p class="progress_Txt3">全部订单</p>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <!-- 底部 -->
+        <div class="footer">
+            <ul>
+                <a th:href="@{/index}">
+                    <li>
+                        <div class="footer_Img"><img th:src="@{/image/7_icon2.png}" alt=""></div>
+                        <p class="footer_Txt" >首页</p>
+                    </li>
+                </a>
+                <a th:href="@{/team}">
+                    <li>
+                        <div class="footer_Img"><img th:src="@{/image/8_icon.png}" alt=""></div>
+                        <p class="footer_Txt">团队管理</p>
+                    </li>
+                </a>
+                <a th:href="@{/progress}">
+                    <li>
+                        <div class="footer_Img"><img th:src="@{/image/9_icon2.png}" alt=""></div>
+                        <p class="footer_Txt" style="color:#ED291B">进度查询</p>
+                    </li>
+                </a>
+                <a th:href="@{/personal}">
+                    <li>
+                        <div class="footer_Img"><img th:src="@{/image/10_icon.png}" alt=""></div>
+                        <p class="footer_Txt">我的</p>
+                    </li>
+                </a>
+            </ul>
+        </div>
+    </div>
+    <script>
+
+    </script>
+</body>
+
+</html>

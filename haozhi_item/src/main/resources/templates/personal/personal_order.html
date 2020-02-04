@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<head th:replace="default :: head">
+</head>
+
+<body>
+    <div class="Box">
+        <!-- 列表 -->
+        <div class="my_orderList" style="margin-bottom:1.2rem;">
+            <ul>
+                <li th:each="order : ${order}">
+                    <div class="my_orderBox">
+                        <p class="my_oTxt" th:text="订单号：+ ${order.id}">订单号：364877789666</p>
+                        <div class="personal_orImg"><img th:src="@{/image/51_icon.png}" alt=""></div>
+                    </div>
+                    <div class="my_orderBox2">
+                        <div class="my_oTit" th:text="${order.title}">商标注册业务</div>
+                        <div class="my_oTxt4" th:text="${order.sbName}">国内注册 快捷注册</div>
+                        <div class="my_orderBox3">
+                            <div class="my_oTxt4">服务费：<span th:text="'¥'+${order.doubleFwPrice}">¥300.00</span></div>
+                            <div class="my_oTxt4">官费：<span th:text="'¥'+${order.doubleGfPrice}">¥300.00</span></div>
+                        </div>
+                        <div class="my_orderBox4">
+                            <p class="my_oTime" th:text="${order.sTime}">2019.10.10 12:33:25</p>
+                            <p class="my_oPrice" th:text="${order.doublePrice}">合计：¥1200.00</p>
+                        </div>
+                    </div>
+                </li>
+<!--                <li>
+                    <div class="my_orderBox">
+                        <p class="my_oTxt">订单号：364877789666</p>
+                        <div class="personal_orImg"><img src="../image/51_icon.png" alt=""></div>
+                    </div>
+                    <div class="my_orderBox2">
+                        <div class="my_oTit">商标注册业务</div>
+                        <div class="my_oTxt4">国内注册 快捷注册</div>
+                        <div class="my_orderBox3">
+                            <div class="my_oTxt4">服务费：<span>¥300.00</span></div>
+                            <div class="my_oTxt4">官费：<span>¥300.00</span></div>
+                            <div class="my_oTxt5">x2</div>
+                        </div>
+                        <div class="my_orderBox4">
+                            <p class="my_oTime">2019.10.10 12:33:25</p>
+                            <p class="my_oPrice">合计：¥1200.00</p>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <div class="my_orderBox">
+                        <p class="my_oTxt">订单号：364877789666</p>
+                        <div class="personal_orImg"><img src="../image/51_icon.png" alt=""></div>
+                    </div>
+                    <div class="my_orderBox2">
+                        <div class="my_oTit">商标注册业务</div>
+                        <div class="my_oTxt4">国内注册 快捷注册</div>
+                        <div class="my_orderBox3">
+                            <div class="my_oTxt4">服务费：<span>¥300.00</span></div>
+                            <div class="my_oTxt4">官费：<span>¥300.00</span></div>
+                            <div class="my_oTxt5">x2</div>
+                        </div>
+                        <div class="my_orderBox4">
+                            <p class="my_oTime">2019.10.10 12:33:25</p>
+                            <p class="my_oPrice">合计：¥1200.00</p>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <div class="my_orderBox">
+                        <p class="my_oTxt">订单号：364877789666</p>
+                        <div class="personal_orImg"><img src="../image/51_icon.png" alt=""></div>
+                    </div>
+                    <div class="my_orderBox2">
+                        <div class="my_oTit">商标注册业务</div>
+                        <div class="my_oTxt4">国内注册 快捷注册</div>
+                        <div class="my_orderBox3">
+                            <div class="my_oTxt4">服务费：<span>¥300.00</span></div>
+                            <div class="my_oTxt4">官费：<span>¥300.00</span></div>
+                            <div class="my_oTxt5">x2</div>
+                        </div>
+                        <div class="my_orderBox4">
+                            <p class="my_oTime">2019.10.10 12:33:25</p>
+                            <p class="my_oPrice">合计：¥1200.00</p>
+                        </div>
+                    </div>
+                </li>-->
+            </ul>
+        </div>
+        <div class="order_btn invoice_btn">确定</div>
+    </div>
+    <script>
+        $('.my_orderList ul li').click(function() {
+            $(this).find('.personal_orImg').find('img').attr('src', '../image/52_icon.png').parents('li').siblings().find('.personal_orImg').find('img').attr('src', '../image/51_icon.png')
+        })
+    </script>
+</body>
+
+</html>

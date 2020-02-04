@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+
+<head th:replace="public :: head">
+</head>
+
+<body>
+<div class="cBody">
+    <form id="addForm" class="layui-form" action="/regard/update" method="post">
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">内容</label>
+            <div class="layui-input-block">
+                <textarea name="regard" th:text="${regard.regard}" placeholder="请输入内容" id="text1"
+                          class="layui-textarea" style="height: 500px;width: 800px;"></textarea>
+            </div>
+            <input type="hidden" name="id" th:value="${regard.id}">
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" lay-submit lay-filter="submitBut">修改</button>
+                <input class="layui-btn layui-btn-primary" onClick="history.go(-1)" value="取消" type="button">
+            </div>
+        </div>
+    </form>
+</div>
+</body>
+
+</html>

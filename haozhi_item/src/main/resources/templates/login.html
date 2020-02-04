@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<head th:replace="default :: head">
+</head>
+
+<body>
+<div class="Box">
+    <!-- 顶部/头像 -->
+    <div class="reg_top">
+        <div class="reg_Img"><img th:src="@{/image/touxiang_img.png}" alt=""></div>
+    </div>
+    <!-- 输入信息 -->
+    <div class="reg_Box">
+        <div>
+            <div class="reg_li">
+                <div class="reg_Img2"><img th:src="@{/image/icon1.png}" alt=""></div>
+                <input type="text" id="name" placeholder="请输入您的姓名">
+            </div>
+            <div class="reg_li">
+                <div class="reg_Img2"><img th:src="@{/image/icon2.png}" alt=""></div>
+                <input type="text" id="email" placeholder="请输入您的邮箱">
+                <input type="hidden" id="wxName" th:value="${wxName}">
+                <input type="hidden" id="wxImage" th:value="${wxImage}">
+                <input type="hidden" id="superId" th:value="${superId}">
+            </div>
+            <div class="reg_li">
+                <div class="reg_Img2"><img th:src="@{/image/icon3.png}" alt=""></div>
+                <input id="phone" type="text" placeholder="请输入您的电话" required="" maxlength="11">
+            </div>
+            <div class="reg_li">
+                <div class="reg_Img2"><img th:src="@{/image/icon4.png}" alt=""></div>
+                <input class="reg_liCode" id="code" type="text" placeholder="请输入验证码">
+                <div class="reg_codeBtn">发送验证码</div>
+            </div>
+        </div>
+        <!-- 是否同意 -->
+        <div class="reg_Box2">
+            <input type="checkbox" name="Agreed">
+            <div class="reg_Txt">阅读并接受<a href="#">《好智企业咨询用户协议》</a></div>
+        </div>
+        <!-- 按钮 -->
+        <div class="reg_btn">登录</div>
+    </div>
+</div>
+<script type="text/javascript">
+    //判断阅读并接受
+    $('.reg_Box2 input').change(function () {
+        if ($(this).attr('checked') === undefined) {
+            $(this).attr('checked', true)
+        } else {
+            $(this).removeAttr('checked')
+        }
+    });
+
+    // 发送验证码
+    var res = /^1[0-9][0-9]\d{8}$/; //手机号正则
+    var time = 60; //时间
+    var Timeout; //计时器
+    var isclick = true; //状态
+    $('.reg_codeBtn').click(function () {
+        if (isclick) {
+            if (res.test($('#phone').val())) {
+                var phone = $('#phone').val();
+                $.ajax({
+                    url: "/api/sms/send",
+                    type: "post",
+                    data: {
+                        tel: phone
+                    },
+                    success: function (ref) {
+                        if (ref.code == 20000) {
+                            mui.toast('发送成功', {
+                                duration: 1600,
+                                type: 'div'
+                            })
+                        }
+                    }
+                })
+                // 表示验证成功
+                isclick = false;
+                var time2 = $(this).text(60 + 's');
+                Timeout = setInterval(function () {
+                    if (time > 0) {
+                        time--;
+                        $('.reg_codeBtn').text(time + 's');
+                    } else {
+                        isclick = true;
+                        clearInterval(Timeout);
+                        $('.reg_codeBtn').innerHTML = '发送验证码';
+                    }
+                }, 1000)
+            } else {
+                mui.toast('手机号错误', {
+                    duration: 1600,
+                    type: 'div'
+                })
+            }
+        }
+    });
+
+
+    $('.reg_btn').click(function () {
+        var name = $('#name').val();
+        var email = $('#email').val();
+        var phone = $('#phone').val();
+        var code = $('#code').val();
+        var wxName = $('#wxName').val();
+        var wxImage = $('#wxImage').val();
+        var superId = $('#superId').val();
+        $.ajax({
+            url: "/api/user/register",
+            type: "post",
+            data: {
+                name: name,
+                tel: phone,
+                mail: email,
+                code: code,
+                wxName: wxName,
+                wxImage: wxImage,
+                superId: superId,
+            },
+            success: function (ref) {
+                if (ref.code == 20000) {
+                    location.href = "/api/login";
+                } else if (ref.code == 20002) {
+                    //手机号存在
+                    mui.toast('手机号已存在', {
+                        duration: 1600,
+                        type: 'div'
+                    })
+                } else if (ref.code == 20003) {
+                    //验证码错误
+                    mui.toast('验证码错误', {
+                        duration: 1600,
+                        type: 'div'
+                    })
+                }
+            }
+        })
+    });
+    $("#phone").on('blur',function(){
+        var t = $("#phone").val();
+            if (!(/^1[3|4|5|8][0-9]\d{8}$/.test(t))) {
+                /*alert("不是完整的11位手机号或者正确的手机号");*/
+                mui.toast('手机号不正确', {
+                    duration: 1600,
+                    type: 'div'
+                })
+                return false;
+            }
+    })
+    var reg = /^([a-zA-Z]|[0-9])(\w|\-)+@[a-zA-Z0-9]+\.([a-zA-Z]{2,4})$/;
+    $("#email").on('blur',function(){
+        var t = $("#email").val();
+        if (!(reg.test(t))) {
+            /*alert("不是完整的11位手机号或者正确的手机号");*/
+            mui.toast('邮箱格式不正确', {
+                duration: 1600,
+                type: 'div'
+            })
+            return false;
+        }
+    })
+</script>
+</body>
+
+</html>

@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<head th:replace="default :: head">
+</head>
+
+<body>
+<div class="Box">
+    <!-- 顶部导航 -->
+    <div class="my_OrderBox">
+        <p>全部订单</p>
+        <p>待付款</p>
+        <p>审核中</p>
+        <p>已确认</p>
+        <p>已退款</p>
+    </div>
+    <!-- 列表 -->
+    <div class="my_orderList">
+        <ul>
+        </ul>
+    </div>
+</div>
+<script>
+    var query = window.location.search.substring(1);
+    var pair = query.split("=")[1];
+    var page = 1;
+    var rows = 6;
+    var data_status = true;
+    var html = '';
+
+
+    if (pair == 0) {
+        $('.my_OrderBox p').eq(0).addClass('my_order_Active')
+    } else if (pair == 1) {
+        $('.my_OrderBox p').eq(1).addClass('my_order_Active')
+    } else if (pair == 2) {
+        $('.my_OrderBox p').eq(2).addClass('my_order_Active')
+    } else if (pair == 3) {
+        $('.my_OrderBox p').eq(3).addClass('my_order_Active')
+    } else if (pair == 4) {
+        $('.my_OrderBox p').eq(4).addClass('my_order_Active')
+    }
+
+    //状态 1代付款 2审核中 3已确认 4已退款 0查询全部订单
+    function get_data(pair, page, rows) {
+        $.ajax({
+            url: "/api/order/all",
+            type: "POST",
+            data: {
+                type: pair,
+                page: page,
+                rows: rows
+            },
+            success: function (res) {
+                if (res.code == 20000) {
+                    if (res.data != '') {
+                        $.each(res.data, function (index, ele) {
+                            var status = "";
+                            var btn = "";
+                            if (ele.state == 2) {
+                                status = '<p class="my_oTxt2">审核中</p>';
+                                btn = '                    <div class="my_oBtn">' +
+                                    '                         <a href="/api/mycan?id=' + ele.id + '">' +
+                                    '                            <div class="my_oBtn1">查看合同</div>' +
+                                    '                        </a>' + '<a href="/api/order/upload?id=' + ele.id + '">' +
+                                    '                             <div class="my_oBtn2">上传资料</div>'
+                                '                        </a>' +
+                                '                        +'
+                                '                    </div>';
+                            } else if (ele.state == 3) {
+                                status = '<p class="my_oTxt6">已确认</p>';
+                                btn = '                    <div class="my_oBtn">' +
+                                    '                         <a href="/api/mycan?id=' + ele.id + '">' +
+                                    '                            <div class="my_oBtn1">查看合同</div>' +
+                                    '                        </a>' +
+                                    '                    </div>';
+                            } else if (ele.state == 1) {
+                                status = '<p class="my_oTxt2">待付款</p>';
+                                btn = '                    <div class="my_oBtn">' +
+                                    '                        <div class="my_oBtn1" id="removeOrder" data-id="' + ele.id + '">取消订单</div>' +
+                                    '                        <a href="/api/mycan?id=' + ele.id + '">' +
+                                    '                            <div class="my_oBtn1">查看合同</div>' +
+                                    '                        </a>' +
+                                    '                        <a href="/api/mycan/pay?id=' + ele.id + '">' +
+                                    '                        <div class="my_oBtn2" ">立即付款</div>' +
+                                    '                        </a>' +
+                                    '                    </div>';
+                            } else if (ele.state == 4) {
+                                status = '<p class="my_oTxt6">已退款</p>';
+                            }
+                            html += '<li>' +
+                                '                    <div class="my_orderBox">' +
+                                '                        <p class="my_oTxt">订单号：' + ele.id + '</p>' +
+                                '                        ' + status +
+                                '                    </div>' +
+                                '                    <div class="my_orderBox2">' +
+                                '                        <div class="my_oTit">' + ele.title + '</div>' +
+                                '                        <div class="my_oTxt4">' + ele.sbName + '</div>' +
+                                '                        <div class="my_orderBox3">' +
+                                '                            <div class="my_oTxt4">服务费：<span>' + ele.doubleFwPrice + '</span></div>' +
+                                '                            <div class="my_oTxt4">官费：<span>' + ele.doubleGfPrice + '</span></div>' +
+                                '                            <div class="my_oTxt5">x' + ele.number + '</div>' +
+                                '                        </div>' +
+                                '                        <div class="my_orderBox4">' +
+                                '                            <p class="my_oTime">' + ele.stime + '</p>' +
+                                '                            <p class="my_oPrice" id="price" data-price="' + ele.doublePrice + '">合计：¥ ' + ele.doublePrice + ' </p>' +
+                                '                        </div>' + btn +
+                                '                    </div>' +
+                                '                </li>';
+                            data_status = true;
+                        });
+                        $('.my_orderList ul').append(html);
+                        html = ''
+                    } else {
+                        data_status = false;
+                        // mui.toast('已经到底了！', {
+                        //     duration: 1600,
+                        //     type: 'div'
+                        // })
+                    }
+
+                }
+                /* $('#pid').click(function () {
+                     let price = $("#price").data('price');
+                     let pid = $("#pid").data('id');
+                     $.ajax({
+                         url: "[[@{/pay}]]",
+                         type: "post",
+                         data: {
+                             bid: pid,
+                             pay: price * 100,
+                         },
+                         success: function (ref) {
+                             if (ref.code == 20000) {
+                                 function onBridgeReady() {
+                                     WeixinJSBridge.invoke(
+                                         'getBrandWCPayRequest', {
+                                             "appId": ref.data.appId, //公众号名称，由商户传入
+                                             "timeStamp": ref.data.timeStamp, //时间戳，自1970年以来的秒数
+                                             "nonceStr": ref.data.nonceStr, //随机串
+                                             "package": ref.data.package,
+                                             "signType": 'MD5', //微信签名方式：
+                                             "paySign": ref.data.sign, //微信签名
+                                         },
+                                         function (res) {
+                                             if (res.err_msg == "get_brand_wcpay_request:ok") {
+                                                 // 使用以上方式判断前端返回,微信团队郑重提示：
+                                                 console.log(res.err_msg)
+                                                 //res.err_msg将在用户支付成功后返回ok，但并不保证它绝对可靠。
+                                             }
+                                         });
+                                 }
+
+                                 if (typeof WeixinJSBridge == "undefined") {
+                                     if (document.addEventListener) {
+                                         document.addEventListener('WeixinJSBridgeReady', onBridgeReady, false);
+                                     } else if (document.attachEvent) {
+                                         document.attachEvent('WeixinJSBridgeReady', onBridgeReady);
+                                         document.attachEvent('onWeixinJSBridgeReady', onBridgeReady);
+                                     }
+                                 } else {
+                                     onBridgeReady();
+                                 }
+                             }
+                         }
+                     })
+                 })*/
+                //取消订单
+                $('#removeOrder').click(function () {
+                    var id = $(this).data('id')
+                    mui.confirm('您确定要删除嘛？', '提示', function (e) {
+                        if (e.index == 1) {
+                            $.ajax({
+                                url: "/api/mycan/delete",
+                                type: "POST",
+                                data: {
+                                    id: id
+                                },
+                                success(res) {
+                                    if (res.code == 20000) {
+                                        window.location.reload();
+                                    }
+                                }
+                            });
+                        } else {
+
+                        }
+                    })
+
+                })
+            }
+        });
+    }
+
+    get_data(pair, page, rows);
+    //滚动事件触发
+    window.onscroll = function (ev) {
+        if (getScrollTop() + getClientHeight() >= getScrollHeight() && data_status) {
+            // 后台数据调用
+            if (data_status === true) {
+                ++page;
+                get_data(pair, page, rows);
+            }
+        } else if (getScrollTop() + getClientHeight() >= getScrollHeight() && !data_status) {
+            mui.toast('已经到底了！', {
+                duration: 1600,
+                type: 'div'
+            })
+        }
+    };
+    $('.my_OrderBox p').click(function () {
+        page = 1;
+        html = '';
+        $('.my_orderList ul').html(html);
+        var index = $(this).index();
+        if (index == 0) {
+            pair = 0;
+            get_data(0, page, rows)
+        } else if (index == 1) {
+            pair = 1;
+            get_data(pair, page, rows)
+        } else if (index == 2) {
+            pair = 2;
+            get_data(pair, page, rows)
+        } else if (index == 3) {
+            pair = 3;
+            get_data(pair, page, rows)
+        } else if (index == 4) {
+            pair = 4;
+            get_data(pair, page, rows)
+        }
+        $(this).addClass('my_order_Active').siblings().removeClass('my_order_Active')
+    });
+</script>
+</body>
+
+</html>

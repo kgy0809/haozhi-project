@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<head th:replace="default :: head">
+</head>
+
+<body>
+    <div class="Box">
+        <div class="order_Box">
+            <!-- 商标注册类型 -->
+            <div class="order_item">
+                <div class="order_Txt">商标注册类型：</div>
+                <div class="order_RBox">
+                    <div class="order_RLi">
+                        <img class="order_Img" src="../image/12_icon.png" alt="">
+                        <p class="order_Txt2">马德里</p>
+                    </div>
+                    <div class="order_RLi">
+                        <img class="order_Img" src="../image/12_icon.png" alt="">
+                        <p class="order_Txt2">逐一国</p>
+                    </div>
+                </div>
+            </div>
+            <!-- 商标类型： -->
+            <div class="order_item">
+                <div class="order_Txt">商标类型：</div>
+                <div class="order_RBox">
+                    <div class="order_RLi2">
+                        <img class="order_Img" src="../image/13_icon.png" alt="">
+                        <p class="order_Txt2">文字</p>
+                    </div>
+                    <div class="order_RLi2">
+                        <img class="order_Img" src="../image/12_icon.png" alt="">
+                        <p class="order_Txt2">图形</p>
+                    </div>
+                </div>
+            </div>
+            <!-- 商标名称 -->
+            <div class="order_item">
+                <div class="order_Txt">商标名称：</div>
+                <input class="order_input" type="text" placeholder="请输入商标名称">
+            </div>
+
+            <!-- 指定颜色 -->
+            <div class="order_item">
+                <div class="order_Txt">是否指定颜色：</div>
+                <div class="order_Img3"><img src="../image/15_icon.png" alt=""></div>
+            </div>
+            <div>
+                <!-- 商标图样 文字-->
+                <div class="order_item2 order_type">
+                    <div class="order_Txt">商标图样：</div>
+                    <div class="order_item2Box">
+                        <div class="order_item2Img"><img src="../image/banner_img.png" alt=""></div>
+                        <div class="order_item2Btn">自动生成</div>
+                    </div>
+                    <div class="order_Txt3">自动生成商标，默认宋体字样从左向右排列</div>
+                </div>
+                <!-- 商标图样 图片 -->
+                <div class="order_item3 order_type">
+                    <div class="order_Txt">商标图样：</div>
+                    <div class="order_item3Box">
+                        <div class="order_Img2">
+                            <img src="../image/14_icon.png" alt="">
+                            <input type="file">
+                        </div>
+                        <p>上传图样应为不大于200k的jpg文件</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <!-- 立即办理 -->
+        <a href="">
+            <div class="order_btn">下一步</div>
+        </a>
+    </div>
+    <script>
+        // 商标注册类型
+        $('.order_RLi').click(function() {
+            var src = $(this).find('.order_Img');
+            if (src.attr('src') == '../image/12_icon.png') {
+                src.attr('src', '../image/13_icon.png').parent('.order_RLi').siblings().find('.order_Img').attr('src', '../image/12_icon.png')
+                console.log($(this).find('.order_Txt2').text());
+            } else {
+                src.attr('src', '../image/12_icon.png')
+            }
+        });
+        // 商标类型
+        $('.order_RLi2').click(function() {
+            var index = $(this).index();
+            $('.order_type').eq(index).show().siblings().hide();
+            var src = $(this).find('.order_Img');
+            if (src.attr('src') == '../image/12_icon.png') {
+                src.attr('src', '../image/13_icon.png').parent('.order_RLi2').siblings().find('.order_Img').attr('src', '../image/12_icon.png');
+            }
+        });
+        // 指定颜色
+        $('.order_Img3').click(function() {
+            var src2 = $(this).find('img');
+            if (src2.attr('src') == "../image/15_icon.png") {
+                src2.attr('src', '../image/16_icon.png');
+            } else {
+                src2.attr('src', '../image/15_icon.png');
+            }
+        });
+    </script>
+</body>
+
+</html>

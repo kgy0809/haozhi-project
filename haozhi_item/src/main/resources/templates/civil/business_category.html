@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<head th:replace="default :: head">
+</head>
+
+<body>
+<div class="Box">
+    <!-- 注意弹框 -->
+    <div class="category_mask">
+        <div class="cat_maskCon">
+            <div class="cat_maskTit">注 意</div>
+            <p class="cat_maskTxt">您选择商品/服务项目不足10项</p>
+
+            <div class="mask_bot">
+                <button class="maks_btn1">继续修改</button>
+                <button class="maks_btn2">确定</button>
+            </div>
+        </div>
+    </div>
+    <!-- 第一级 -->
+    <div class="category_Box">
+        <ul>
+            <li th:each="p : ${menu}" th:data-id="${p.id}">
+                <p class="category_Txt" th:text="${p.name}"></p>
+                <div class="category_Img"><img th:src="@{/image/17_icon.png}" alt=""></div>
+            </li>
+        </ul>
+    </div>
+    <!-- 二三级 -->
+    <div class="category_Box2" style="display:none;">
+        <ul>
+
+            <li>
+                <div class="category_item">
+                    <p class="category_Txt"></p>
+                    <div class="category_Img"><img th:src="@{/image/17_icon.png}" alt=""></div>
+                </div>
+                <div class="cetegory_level3">
+                    <div class="cet_level3Li" data-state="0">
+                        <p></p>
+                        <img th:src="@{/image/12_icon.png}" alt="">
+                    </div>
+                    <div class="cet_level3Li" data-state="0">
+                        <p></p>
+                        <img th:src="@{/image/12_icon.png}" alt="">
+                    </div>
+                    <div class="cet_level3Li" data-state="0">
+                        <p></p>
+                        <img th:src="@{/image/12_icon.png}" alt="">
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <!-- 底部 -->
+    <div class="category_footer" style="display:none;">
+        <p class="catNum">已选 <span>0</span> 小项</p>
+        <div class="category_Price one-txt-cut">合计：<i>¥</i><span>480.88</span></div>
+<!--        <a href="/api/business/three">-->
+        <div class="category_Btn">保存</div>
+<!--        </a>-->
+    </div>
+</div>
+<script>
+    var arrs = [];
+    var arr2 = [];
+    var temp = {};
+    var length;
+    // 点击一级分类
+    $('.category_Box ul li').click(function () {
+        $('.category_Box').hide();
+        $('.category_Box2').show();
+        $('.category_footer').show();
+        var id = $(this).data('id');
+        $.ajax({
+            url: '/api/business/MenusTwo/' + id,
+            type: 'post',
+            dataType: "json",
+            success: function (res) {
+                console.log(res);
+                var html = '';
+                if (res.code == 20000) {
+                    //总计
+                    $('.category_Price span').text(res.data[0].doubleZjPrice);
+                    $.each(res.data, function (index, ele) {
+                        // console.log(ele)
+                        html += '<li>' +
+                            '                    <div class="category_item">' +
+                            '                        <p class="category_Txt">' + ele.menuTwo.name + '</p>' +
+                            '                        <div class="category_Img"><img src="/api/image/17_icon.png" alt=""></div>' +
+                            '                    </div>' + '<div class="cetegory_level3">';
+                        $.each(ele.menuThree, function (index2, ele2) {
+                            html +=
+                                '                        <div class="cet_level3Li" data-state="0" data-id="' + ele2.id + '">' +
+                                '                            <p>' + ele2.name + '</p>' +
+                                '                            <img src="/api/image/12_icon.png" alt="">' +
+
+                                '                    </div>'
+                        });
+                        html += '</div>' + '</li>';
+                    })
+
+                    $('.category_Box2 ul').html(html);
+                    // 二级分类
+                    $('.category_item').click(function () {
+                        $(this).next('.cetegory_level3').toggle();
+                    });
+                    $('.cet_level3Li').click(function () {
+                        var index = $('.cet_level3Li').index();
+                        var id = $(this).data('id');
+                        if ($(this).attr('data-state') == '0') {
+                            $(this).attr('data-state', '1');
+                            $(this).find('p').css('color', '#ED291B')
+                            $(this).find('img').attr('src', "/api/image/13_icon.png");
+                            arrs.push(id);
+                            for(var i = 0;i<arrs.length;i++){
+                                if(!temp[arrs[i]]){
+                                    temp[arrs[i]] = '9';
+                                    arr2.push(arrs[i]);
+                                }
+                            }
+                            length = arr2.length;
+                            $('.catNum span').text(length);
+                            if(length>10){
+                                var TotlePrice = Number($('.category_Price span').text());
+                                TotlePrice += 30
+                                $('.category_Price span').text(parseFloat(TotlePrice).toFixed(2));
+                            }
+                        } else {
+                            $(this).attr('data-state', '0')
+                            $(this).find('p').css('color', '#8C9198')
+                            $(this).find('img').attr('src', '/api/image/12_icon.png')
+                            arr2.forEach(function (item,index,arr) {
+                                if(item == id){
+                                    arrs.splice(index,1);
+                                    arr2.splice(index,1);
+                                    delete temp[item];
+                                }
+                            });
+                            length = arr2.length;
+                            $('.catNum span').text(length);
+                            if(length>=10){
+                                var TotlePrice = Number($('.category_Price span').text());
+                                TotlePrice -= 30
+                                $('.category_Price span').text(parseFloat(TotlePrice).toFixed(2));
+                            }
+                        }
+                    });
+                }
+            }
+        })
+    });
+    //点击保存
+    $('.category_Btn').click(function () {
+        if(length<10){
+            $('.category_mask').show();
+        }else{
+            ajax();
+        }
+    });
+    //确定
+    $('.maks_btn2').click(function () {
+        if(length==0){
+            mui.toast('还未选择小项', {
+                duration: 1600,
+                type: 'div'
+            })
+        }else{
+            ajax()
+        }
+    });
+    $('.maks_btn1').click(function () {
+        $('.category_mask').hide();
+    });
+    //ajax
+    function ajax() {
+        var joinString = arr2.join(',');
+        var price = Number($('.category_Price span').text());
+        $.ajax({
+            url:"/api/business/save/three",
+            type:"post",
+            data:{
+                menuId:joinString,
+                price:price*100
+            },
+            success:function (res) {
+                if(res.code == 20000){
+                    location.href = "/api/business/three"
+                }
+            }
+        })
+    }
+</script>
+</body>
+
+</html>
