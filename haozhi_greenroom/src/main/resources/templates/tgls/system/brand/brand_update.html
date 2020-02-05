@@ -12,7 +12,7 @@
 
 <body>
 <div class="cBody" style="overflow: auto; height: auto;">
-    <form id="addForm" class="layui-form" action="/brand/update/add"method="post">
+    <form id="addForm" class="layui-form" action="/brand/update/add" method="post">
         <div class="layui-form-item">
             <label class="layui-form-label">商标名称</label>
             <div class="layui-input-inline shortInput">
@@ -65,6 +65,17 @@
             </div>
         </div>
         <div class="layui-form-item">
+            <label class="layui-form-label">委托书</label>
+            <div class="layui-input-inline shortInput">
+                <input type="text" name="wordUrl" id="wordUrl" th:value="${hzYw.wordUrl}"
+                       class="layui-input">
+            </div>
+            <div>
+                <a type="button" class="layui-btn" id="test3"><i class="layui-icon"></i>上传委托书
+                </a>
+            </div>
+        </div>
+        <div class="layui-form-item">
             <label class="layui-form-label">封面图片</label>
             <div class="layui-upload-drag" id="goodsPic">
                 <input name="image" type="hidden" id="image" th:value="${hzYw.image}"/>
@@ -76,7 +87,7 @@
         <div class="layui-form-item layui-form-text">
             <label class="layui-form-label">内容</label>
             <div class="layui-input-block">
-            <textarea name="text"  class="layui-textarea" id="LAY_demo2"
+            <textarea name="text" class="layui-textarea" id="LAY_demo2"
                       style="display: none;" th:text="${hzYw.text}"></textarea>
             </div>
         </div>
@@ -118,6 +129,20 @@
                 } else {
                     $("#image").val(res.src);
                     return layer.msg('上传成功');
+                }
+            }
+        });
+        var $ = layui.jquery
+            , upload = layui.upload;
+        //指定允许上传的文件类型
+        upload.render({
+            elem: '#test3'
+            , url: '/brand/add/file' //改成您自己的上传接口
+            , accept: 'file' //普通文件
+            , done: function (res) {
+                if (res.code == 20000){
+                    $("#wordUrl").val(res.data);
+                    returnlayer.msg('上传成功');
                 }
             }
         });
