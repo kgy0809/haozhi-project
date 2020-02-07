@@ -10,10 +10,14 @@ import com.haozhi.item.pojo.*;
 import com.haozhi.item.utils.MoneyUtils;
 import com.haozhi.item.utils.PDFToImgUtil;
 import com.haozhi.item.utils.QiniuUtil;
+import com.haozhi.item.utils.WorderToNewWordUtils;
 import com.haozhi.item.web.controller.textDemo;
 import com.spire.doc.Document;
 import com.spire.doc.FileFormat;
 import com.spire.doc.ToPdfParameterList;
+import org.apache.poi.xwpf.converter.pdf.PdfConverter;
+import org.apache.poi.xwpf.converter.pdf.PdfOptions;
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,10 +26,7 @@ import tk.mybatis.mapper.entity.Example;
 
 import javax.mail.MessagingException;
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 import static com.haozhi.item.utils.CreatePdfInvoice.writeDataToDocument;
 
@@ -243,7 +244,7 @@ public class HzYwService {
     private MailService mailService;
 
     private static final String SUBJECT = "好智企业";
-    private static final String CONTNET = "好智企业傑作";
+    private static final String CONTNET = "好智企业发送";
 
     /**
      * 写入 word数据 转换成 pdf
@@ -263,9 +264,7 @@ public class HzYwService {
          */
         if ("10014".equals(business.getOneId())) {
             Document doc = new Document();
-            InputStream in = HzYwService.class.getResourceAsStream("/static/data/国内商标.docx");
-            String streamString = getStreamString(in);
-            doc.loadFromFile("/www/server/haozhi/国内商标.docx");
+            doc.loadFromFile("/www/server/haozhi/word/008.docx");
 
             if ("1".equals(business.getApplication())) {
                 doc.replace("#qgName", "执照代码", true, true);
@@ -310,7 +309,7 @@ public class HzYwService {
                 doc.close();
                 return invoice;
             } else if ("2".equals(type)) {
-                mailService.sendAttachmentsMail(email, SUBJECT, CONTNET, file.getPath());
+                mailService.sendAttachmentsMail(email, SUBJECT, CONTNET, "/www/server/haozhi/pdf/" + name + ".pdf");
                 file.delete();
                 doc.close();
                 return "email发送成功";
@@ -326,7 +325,7 @@ public class HzYwService {
              * 马德里
              */
             Document doc = new Document();
-            doc.loadFromFile("/www/server/haozhi/马德里商标注册.docx");
+            doc.loadFromFile("/www/server/haozhi/word/009.docx");
 
             if ("1".equals(business.getApplication())) {
                 doc.replace("#qgName", "执照代码", true, true);
@@ -370,7 +369,7 @@ public class HzYwService {
                 doc.close();
                 return invoice;
             } else if ("2".equals(type)) {
-                mailService.sendAttachmentsMail(email, SUBJECT, CONTNET, file.getPath());
+                mailService.sendAttachmentsMail(email, SUBJECT, CONTNET, "/www/server/haozhi/pdf/" + name + ".pdf");
                 file.delete();
                 doc.close();
                 return "email发送成功";
@@ -387,7 +386,7 @@ public class HzYwService {
             if ("10013".equals(business.getOneId()))
                 return null;
             Document doc = new Document();
-            doc.loadFromFile("/www/server/haozhi/国内商标.docx");
+            doc.loadFromFile("/www/server/haozhi/word/001.docx");
             if ("1".equals(business.getApplication())) {
                 doc.replace("#qgName", "执照代码", true, true);
             } else if ("2".equals(business.getApplication())) {
@@ -467,7 +466,7 @@ public class HzYwService {
                 file.delete();
                 return invoice;
             } else if ("2".equals(type)) {
-                mailService.sendAttachmentsMail(email, SUBJECT, CONTNET, file.getPath());
+                mailService.sendAttachmentsMail(email, SUBJECT, CONTNET, "/www/server/haozhi/pdf/" + name + ".pdf");
                 doc.close();
                 file.delete();
                 return "email发送成功";
@@ -502,7 +501,7 @@ public class HzYwService {
         example.createCriteria().andEqualTo("pOrder", business.getId());
         Order order = orderMapper.selectOneByExample(example);
         Document doc = new Document();
-        doc.loadFromFile("/www/server/haozhi/国内商标流程线上004.docx");
+        doc.loadFromFile("/www/server/haozhi/word/004.docx");
 
         //替换文档中以#开头的文本
         doc.replace("#jfGsName", business.getApplicationNumName(), true, true);
@@ -544,7 +543,7 @@ public class HzYwService {
             doc.close();
             return invoice;
         } else if ("2".equals(type)) {
-            mailService.sendAttachmentsMail(email, SUBJECT, CONTNET, file.getPath());
+            mailService.sendAttachmentsMail(email, SUBJECT, CONTNET, "/www/server/haozhi/pdf/" + name + ".pdf");
             file.delete();
             doc.close();
             return "email发送成功";
@@ -577,7 +576,7 @@ public class HzYwService {
         example.createCriteria().andEqualTo("pOrder", business.getId());
         Order order = orderMapper.selectOneByExample(example);
         Document doc = new Document();
-        doc.loadFromFile("/www/server/haozhi/商标案件业务线上005.docx");
+        doc.loadFromFile("/www/server/haozhi/word/005.docx");
 
         //替换文档中以#开头的文本
         doc.replace("#jfGsName", business.getApplicationNumName(), true, true);
@@ -621,7 +620,7 @@ public class HzYwService {
             file.delete();
             return invoice;
         } else if ("2".equals(type)) {
-            mailService.sendAttachmentsMail(email, SUBJECT, CONTNET, file.getPath());
+            mailService.sendAttachmentsMail(email, SUBJECT, CONTNET, "/www/server/haozhi/pdf/" + name + ".pdf");
             file.delete();
             return "email发送成功";
         } else {
@@ -654,14 +653,15 @@ public class HzYwService {
         Example example = new Example(Order.class);
         example.createCriteria().andEqualTo("pOrder", business.getId());
         Order order = orderMapper.selectOneByExample(example);
+
         Document doc = new Document();
-        doc.loadFromFile("C:\\Users\\39495\\Desktop\\haozhi_project\\haozhi_item\\src\\main\\resources\\static\\data\\006.docx",FileFormat.Docx);
-        System.out.println("................." + "执行到了这 没问题----------------------------");
+        doc.loadFromFile("/www/server/haozhi/word/006.docx");
+
         //替换文档中以#开头的文本
-        doc.replace("#jfGsName", business.getApplicationNumName(), true, true);
+        doc.replace("#name", business.getApplicationNumName(), true, true);
         doc.replace("#jfXxdm", business.getApplicationNumName(), true, true);
         doc.replace("#jfName", business.getApplicationNumName(), true, true);
-        doc.replace("#jfEmail", business.getApplicationNumMail(), true, true);
+        doc.replace("#Email", business.getApplicationNumMail(), true, true);
         doc.replace("#jfNum", business.getApplicationNumTel(), true, true);
         doc.replace("#gwName", user.getName(), true, true);
         doc.replace("#gwNum", user.getTel(), true, true);
@@ -690,15 +690,60 @@ public class HzYwService {
         } else if (user.getState().equals("2")) {
             doc.replace("#dlPrice", String.valueOf(hzYw.getVipPrice() / 100 + business.getCommission() / 100), true, true);
         }
-        System.out.println("................." + "执行到了这 没问题");
         //更新域
         doc.isUpdateFields(true);
-        System.out.println("------------------"+"----------------------------");
         String name = idWorker.nextId() + "";
         //保存为PDF格式文档
-        doc.saveToFile("D://" + name + ".pdf",FileFormat.PDF);
-        System.out.println("------------------"+"---------------保存-------------");
-        File file = new File("/www/server/haozhi/pdf/" + name + ".pdf");
+        doc.saveToFile("/www/server/haozhi/pdf/" + name + ".pdf",FileFormat.PDF);
+        doc.close();
+        /*Map<String, String> testMap = new HashMap<String, String>();
+        testMap.put("name", business.getApplicationNumName());
+        testMap.put("jfXxdm", business.getApplicationNumName());
+        testMap.put("jfName", business.getApplicationNumName());
+        testMap.put("Email", business.getApplicationNumMail());
+        testMap.put("jfNum", business.getApplicationNumTel());
+        testMap.put("gwName", user.getName());
+        testMap.put("gwNum", user.getTel());
+        if (order != null) {
+            testMap.put("stime", order.getSTime());
+        } else {
+            testMap.put("stime", business.getSTime());
+        }
+        testMap.put("num", String.valueOf(business.getNumber()));
+        HzYw hzYw = hzYwRepository.selectByPrimaryKey(business.getOneId());
+        testMap.put("sb1", hzYw.getName());
+        testMap.put("sbName", business.getSTime());
+        if (hzYw.getSjName().equals("1")) {
+            String abcName = "软著代理";
+            testMap.put("abcName", abcName);
+        } else if (hzYw.getSjName().equals("2")) {
+            String abcName = "软著撰写+代理";
+            testMap.put("abcName", abcName);
+        }
+        testMap.put("gfPrice", String.valueOf(hzYw.getGfPrice() / 100));
+
+        testMap.put("zjPrice", String.valueOf(business.getPrice() * business.getNumber() / 100 + business.getCommission() / 100));
+        testMap.put("zjtPrice", String.valueOf(business.getPrice() * business.getNumber() / 100 + business.getCommission() / 100));
+        testMap.put("dxZjPrice", MoneyUtils.change(Double.parseDouble(String.valueOf(business.getPrice() * business.getNumber() / 100 + business.getCommission() / 100))));
+        if (user.getState().equals("1")) {
+            testMap.put("dlPrice", String.valueOf(hzYw.getHyPrice() / 100));
+        } else if (user.getState().equals("2")) {
+            testMap.put("dlPrice", String.valueOf(hzYw.getVipPrice() / 100 + business.getCommission() / 100));
+        }
+
+        List<String[]> testList = new ArrayList<String[]>();
+        WorderToNewWordUtils.changWord(inputUrl, outputUrl, testMap, testList);*/
+
+   /*     XWPFDocument document;
+        InputStream doc = new FileInputStream(outputUrl);
+        document = new XWPFDocument(doc);
+        PdfOptions options = PdfOptions.create();
+        OutputStream out = new FileOutputStream("/www/server/haozhi/pdf/"+name+".pdf");
+        PdfConverter.getInstance().convert(document, out, options);
+        doc.close();
+        out.close();*/
+
+        File file = new File("/www/server/haozhi/pdf/"+name+".pdf");
 
         if ("1".equals(type)) {
             QiniuUtil qiniuUtil = new QiniuUtil();
@@ -707,16 +752,14 @@ public class HzYwService {
             file.delete();
             return invoice;
         } else if ("2".equals(type)) {
-            mailService.sendAttachmentsMail(email, SUBJECT, CONTNET, file.getPath());
+            mailService.sendAttachmentsMail(email, SUBJECT, CONTNET, "/www/server/haozhi/pdf/" + name + ".pdf");
             doc.close();
             file.delete();
             return "email发送成功";
         }
         PDFToImgUtil pdfToImgUtil = new PDFToImgUtil();
-        int pdfNum = pdfToImgUtil.getPDFNum("/www/server/haozhi/pdf/" + name + ".pdf");
-        System.out.println("读取到了页数"+pdfNum);
-        String png = pdfToImgUtil.PDFToImg(name, "/www/server/haozhi/pdf/" + name + ".pdf", pdfNum, "png");
-        doc.close();
+        int pdfNum = pdfToImgUtil.getPDFNum("/www/server/haozhi/pdf/"+name+".pdf");
+        String png = pdfToImgUtil.PDFToImg(name, "/www/server/haozhi/pdf/"+name+".pdf", pdfNum, "png");
         file.delete();
         return png;
     }
@@ -744,7 +787,7 @@ public class HzYwService {
         Order order = orderMapper.selectOneByExample(example);
 
         Document doc = new Document();
-        doc.loadFromFile("/www/server/haozhi/007.docx");
+        doc.loadFromFile("/www/server/haozhi/word/007.docx");
 
         //替换文档中以#开头的文本
         doc.replace("#jfGsName", business.getApplicationNumName(), true, true);
@@ -785,7 +828,7 @@ public class HzYwService {
             file.delete();
             return invoice;
         } else if ("2".equals(type)) {
-            mailService.sendAttachmentsMail(email, SUBJECT, CONTNET, file.getPath());
+            mailService.sendAttachmentsMail(email, SUBJECT, CONTNET, "/www/server/haozhi/pdf/" + name + ".pdf");
             doc.close();
             file.delete();
             return "email发送成功";

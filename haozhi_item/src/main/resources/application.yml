@@ -22,11 +22,18 @@ spring:
         max-wait: -1
   mail:
     host: smtp.163.com  # 邮箱配置
-    username: kgy0809@163.com  #  你的163邮箱
-    password: Aa19970809  # 注意这里不是邮箱密码，而是SMTP授权密码
+    username: haozhizixun@163.com  #  你的163邮箱
+    password: cl1314520  # 注意这里不是邮箱密码，而是SMTP授权密码
     protocol: smtp
     default-encoding: UTF-8
-    port: 25
+    port: 465
+    smtp:
+      auth: true
+      socketFactory:
+        port: 465
+    starttls:
+      enable: false
+      required: fasle
 mybatis:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl

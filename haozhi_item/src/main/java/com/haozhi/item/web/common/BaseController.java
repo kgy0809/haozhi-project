@@ -10,28 +10,27 @@ import javax.servlet.http.HttpSession;
 
 public class BaseController {
 
-	@Autowired
-	protected HttpServletRequest request;
+    @Autowired
+    protected HttpServletRequest request;
 
-	@Autowired
-	protected HttpServletResponse response;
+    @Autowired
+    protected HttpServletResponse response;
 
-	@Autowired
-	protected HttpSession session;
+    @Autowired
+    protected HttpSession session;
 
-	@Autowired
-	private UserService userService;
+    @Autowired
+    private UserService userService;
 
-
-	/**
-	 * 获取当前登录用户
-	 */
-	protected User getUser() {
-		Object object = session.getAttribute("loginUser");
-		/*User user = userService.queryById("1223555329359482880");*/
-		if(object != null) {
-			return (User) object;
-		}
-		return null;
-	}
+    /**
+     * 获取当前登录用户
+     */
+    protected User getUser() {
+        Object object = session.getAttribute("loginUser");
+        /*User user = userService.queryById("1223555329359482880");*/
+        if (object != null) {
+            return (User) object;
+        }
+        return null;
+    }
 }
