@@ -217,7 +217,9 @@ public class HzYwService {
     }
 
     public void updateEtc(String twoId, BusinessTwo businessTwo) {
-        businessTwo.setId(twoId);
+        if (twoId != null) {
+            businessTwo.setId(twoId);
+        }
         businessTwoMapper.updateByPrimaryKeySelective(businessTwo);
     }
 
@@ -251,7 +253,7 @@ public class HzYwService {
      */
     public String downloadContract(String twoId, User user, String type, String email, String id) throws MessagingException, IOException {
         BusinessTwo business = null;
-        if (id != null && !id.equals("")) {
+        if (id != null && !("").equals(id)) {
             business = businessTwoMapper.selectByPrimaryKey(id);
         } else {
             business = businessTwoMapper.selectByPrimaryKey(twoId);
@@ -492,7 +494,7 @@ public class HzYwService {
      */
     public String flowDownloadContract(String flowId, User user, String type, String email, String id) throws IOException, MessagingException {
         BusinessTwo business = null;
-        if (id != null && !id.equals("")) {
+        if (id != null && !("").equals(id)) {
             business = businessTwoMapper.selectByPrimaryKey(id);
         } else {
             business = businessTwoMapper.selectByPrimaryKey(flowId);
@@ -567,7 +569,7 @@ public class HzYwService {
      */
     public String caseDownloadContract(String caseId, User user, String type, String email, String id) throws MessagingException, IOException {
         BusinessTwo business = null;
-        if (id != null && !id.equals("")) {
+        if (id != null && !("").equals(id)) {
             business = businessTwoMapper.selectByPrimaryKey(id);
         } else {
             business = businessTwoMapper.selectByPrimaryKey(caseId);
@@ -645,7 +647,7 @@ public class HzYwService {
      */
     public String softDownloadContract(String softId, User user, String type, String email, String id) throws MessagingException, IOException {
         BusinessTwo business = null;
-        if (id != null && !id.equals("")) {
+        if (id != null && !("").equals(id)) {
             business = businessTwoMapper.selectByPrimaryKey(id);
         } else {
             business = businessTwoMapper.selectByPrimaryKey(softId);
@@ -777,7 +779,7 @@ public class HzYwService {
      */
     public String copyrightDownloadContract(String copyrightId, User user, String type, String email, String id) throws MessagingException, IOException {
         BusinessTwo business = null;
-        if (id != null && !id.equals("")) {
+        if (id != null && !("").equals(id)) {
             business = businessTwoMapper.selectByPrimaryKey(id);
         } else {
             business = businessTwoMapper.selectByPrimaryKey(copyrightId);

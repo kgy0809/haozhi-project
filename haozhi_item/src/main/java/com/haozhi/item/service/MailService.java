@@ -13,6 +13,7 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import java.io.File;
+import java.util.Properties;
 
 /**
  * @author kgy
@@ -82,7 +83,6 @@ public class MailService {
         helper.setSubject(subject);
         helper.setText(contnet, true);
         helper.setFrom(from);
-
         FileSystemResource file = new FileSystemResource(new File(filePath));
         String fileName = file.getFilename();
         helper.addAttachment(fileName, file);

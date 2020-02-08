@@ -95,8 +95,8 @@ public class CopyrightController extends BaseController {
     public String etc(Map<String, Object> map) {
         String twoId = (String) session.getAttribute("copyrightId");
         BusinessTwo etc = hzYwService.etc(twoId);
-        map.put("etc", etc);
         etc.setId(null);
+        map.put("etc", etc);
         return "copyright/my_copyright_contract";
     }
 

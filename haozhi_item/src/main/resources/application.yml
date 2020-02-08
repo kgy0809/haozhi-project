@@ -26,14 +26,26 @@ spring:
     password: cl1314520  # 注意这里不是邮箱密码，而是SMTP授权密码
     protocol: smtp
     default-encoding: UTF-8
+    # 其它参数
+    properties:
+      mail:
+        smtp:
+          # 如果是用 SSL 方式，需要配置如下属性,使用qq邮箱的话需要开启
+          ssl:
+            trust: smtp.163.com
+            auth: true
+            enable: true
+            required: true
+            # 邮件接收时间的限制，单位毫秒
+            timeout: 10000
+            # 连接时间的限制，单位毫秒
+            connectiontimeout: 10000
+            # 邮件发送时间的限制，单位毫秒
+            writetimeout: 10000
+            socketFactory:
+              port: 465
+              class: javax.net.ssl.SSLSocketFactory
     port: 465
-    smtp:
-      auth: true
-      socketFactory:
-        port: 465
-    starttls:
-      enable: false
-      required: fasle
 mybatis:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl

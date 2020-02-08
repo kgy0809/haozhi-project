@@ -122,8 +122,8 @@ public class SoftController extends BaseController {
     public String etc(Map<String, Object> map) {
         String twoId = (String) session.getAttribute("softId");
         BusinessTwo etc = hzYwService.etc(twoId);
-        map.put("etc", etc);
         etc.setId(null);
+        map.put("etc", etc);
         return "soft/my_soft_contract";
     }
 

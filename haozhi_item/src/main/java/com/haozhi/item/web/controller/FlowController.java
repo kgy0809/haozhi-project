@@ -98,8 +98,8 @@ public class FlowController extends BaseController {
     public String etc(Map<String, Object> map) {
         String twoId = (String) session.getAttribute("flowId");
         BusinessTwo etc = hzYwService.etc(twoId);
-        map.put("etc", etc);
         etc.setId(null);
+        map.put("etc", etc);
         return "flow/my_flow_contract";
     }
 

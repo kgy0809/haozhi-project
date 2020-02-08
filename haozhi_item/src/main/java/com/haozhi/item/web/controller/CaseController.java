@@ -97,8 +97,8 @@ public class CaseController extends BaseController {
     public String etc(Map<String, Object> map) {
         String twoId = (String) session.getAttribute("caseId");
         BusinessTwo etc = hzYwService.etc(twoId);
-        map.put("etc", etc);
         etc.setId(null);
+        map.put("etc", etc);
         return "case/my_case_contract";
     }
 

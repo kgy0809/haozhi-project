@@ -68,6 +68,7 @@
                     </div>
                     <div class="my_MaskLi">
                         <p>电子邮箱:</p>
+                        <input type="hidden" id="etc_id" name="id" th:value="${etc.id}">
                         <input type="text" name="applicationNumMail" th:value="${etc.applicationNumMail}" placeholder="请输入电子邮箱">
                     </div>
                 </div>
@@ -157,11 +158,14 @@
             }
         })
     });
+    let etc_id = $('#etc_id').val();
     $.ajax({
         url: "/api/case/downloadContractCN",
         type: "POST",
+        data:{
+            id: etc_id
+        },
         success(res) {
-            console.log(res)
             if (res.code == 20000) {
                 $('.mui-loading').hide();
                 var url = res.data;

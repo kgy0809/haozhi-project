@@ -68,7 +68,7 @@
                     </div>
                     <div class="my_MaskLi">
                         <p>电子邮箱:</p>
-                        <input type="hidden" id="etc_id" th:value="${etc.id}">
+                        <input type="hidden" id="etc_id" name="id" th:value="${etc.id}">
                         <input type="text" name="applicationNumMail" th:value="${etc.applicationNumMail}" placeholder="请输入电子邮箱">
                     </div>
                 </div>
@@ -158,12 +158,12 @@
             }
         })
     });
-    var etc_id = $('#etc_id').val();
+    let etc_id = $('#etc_id').val();
     $.ajax({
         url: "/api/business/downloadContractCN",
         type: "POST",
         data:{
-          id:etc_id
+          id: etc_id
         },
         success(res) {
             if (res.code == 20000) {
