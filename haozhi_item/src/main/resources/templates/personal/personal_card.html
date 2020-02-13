@@ -22,25 +22,25 @@
                 <ul>
                     <li>
                         <p>持卡人</p>
-                        <input type="text" name="name" placeholder="请输入持卡人姓名">
+                        <input type="text" required autocomplete="off" name="name" placeholder="请输入持卡人姓名">
                     </li>
                     <li>
                         <p>卡号</p>
-                        <input type="text" name="bankId" placeholder="请输入卡号">
+                        <input type="text" id="bank" required autocomplete="off" name="bankId" placeholder="请输入卡号">
                     </li>
                     <li>
                         <p>银行名称</p>
-                        <input type="text" name="bankName" placeholder="请输入银行名称">
+                        <input type="text" required autocomplete="off" name="bankName" placeholder="请输入银行名称">
                     </li>
                     <li>
                         <p>手机号</p>
-                        <input type="text" name="num" placeholder="请输入手机号">
+                        <input type="number" id="phone" required autocomplete="off" name="num" placeholder="请输入手机号">
                     </li>
                 </ul>
             </div>
             <div class="my_ContractBtn">
                 <button class="my_ContractEditor" type="submit">取消</button>
-                <button class="my_ContractDownLoad" type="submit">确定</button>
+                <button class="my_ContractDownLoad" id="btn" type="submit">确定</button>
             </div>
         </form>
     </div>
@@ -94,43 +94,51 @@
     var page = 1;
     var rows = 10;
     var html = ""
+
     //请求明细
-    function priceAjax(page,rows){
+    function priceAjax(page, rows) {
         $.ajax({
-            url:"/api/personal/monthOrder",
-            type:"POST",
-            success(res){
-                if(res.code == 20000){
-                    $.each(res.data,function (index,ele) {
+            url: "/api/personal/monthOrder",
+            type: "POST",
+            success(res) {
+                if (res.code == 20000) {
+                    $.each(res.data, function (index, ele) {
                         var stateHtml = "";
-                        if(ele.state == 1){
-                            stateHtml = '<div class="card_Txt4" data-id="'+ele.id+'">申请提现</div>'
-                        }else if(ele.state == 2){
+                        if (ele.state == 1) {
+                            stateHtml = '<div class="card_Txt4" data-id="' + ele.id + '">申请提现</div>'
+                        } else if (ele.state == 2) {
                             stateHtml = '<div class="card_Txt3">结算中</div>'
-                        }else if(ele.state == 3){
+                        } else if (ele.state == 3) {
                             stateHtml = '<div class="card_Txt5">提现完成</div>'
                         }
-                        html+='<li>'+
-                            '                    <div class="card_Txt">'+ele.time+'</div>'+
-                            '                    <div class="card_Txt" style="width:38%;">¥'+ele.doublePrice+'</div>'+
-                            '                    <div class="card_state">'+stateHtml+
-                            '                    </div>'+
+                        html += '<li>' +
+                            '                    <div class="card_Txt">' + ele.time + '</div>' +
+                            '                    <div class="card_Txt" style="width:38%;">¥' + ele.doublePrice + '</div>' +
+                            '                    <div class="card_state">' + stateHtml +
+                            '                    </div>' +
                             '                </li>';
                     })
                     $('.card_List ul').append(html);
                 }
                 $('.card_Txt4').click(function () {
                     var id = $(this).data('id')
-                    mui.confirm('您确定要提现嘛？', '提示', function(e) {
+                    mui.confirm('您确定要提现嘛？', '提示', function (e) {
                         if (e.index == 1) {
                             $.ajax({
-                                url:"/api/personal/requestWithdrawal",
-                                type:"POST",
-                                data:{
-                                    id:id
+                                url: "/api/personal/requestWithdrawal",
+                                type: "POST",
+                                data: {
+                                    id: id
                                 },
-                                success(res){
-                                    $('.withdrawal_mask').show();
+                                success(res) {
+                                    if (res.code==20000){
+                                        $('.withdrawal_mask').show();
+                                    }if (res.code == 20002){
+                                        mui.toast('请您先绑定银行卡在来提现', {
+                                            duration: 1600,
+                                            type: 'div'
+                                        });
+                                    }
                                 }
                             });
                         } else {
@@ -141,7 +149,8 @@
             }
         })
     }
-    priceAjax(page,rows)
+
+    priceAjax(page, rows)
     // 弹框
     $('.add_card').click(function () {
         $('.drawal_Mask').show();
@@ -155,6 +164,7 @@
         $('.withdrawal_mask').hide();
         location.reload();
     });
+
     // 卡号 *
     function cardNum(text) {
         var str = text;
@@ -162,6 +172,31 @@
         $('.bank_CardNum').text(str2);
     };
     cardNum($('.bank_CardNum').text());
+
+    $("#phone").on('blur', function () {
+        var phone = $("#phone").val();
+        if (!(/^1[3|4|5|8][0-9]\d{8}$/.test(phone))) {
+            mui.toast('手机号不正确', {
+                duration: 1600,
+                type: 'div'
+            });
+            $('#phone').focus();
+            return false;
+        }
+    });
+    function bank(){
+        $("#bank").on('blur', function () {
+            var bank = $("#bank").val();
+            if (!(/^([1-9]{1})(\d{14}|\d{18})$/.test(bank))) {
+                mui.toast('银行卡号不正确', {
+                    duration: 1600,
+                    type: 'div'
+                });
+                $('#bank').focus();
+                return false;
+            }
+        });
+    }
 </script>
 </body>
 

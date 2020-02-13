@@ -3,6 +3,8 @@ package com.haozhi.item.web.controller;
 import com.google.zxing.WriterException;
 import com.haozhi.common.constants.StatusCode;
 import com.haozhi.common.dto.ResultDTO;
+import com.haozhi.item.dao.AccountMapper;
+import com.haozhi.item.dao.BankMapper;
 import com.haozhi.item.dao.VipTimeMapper;
 import com.haozhi.item.dto.NumDto;
 import com.haozhi.item.pojo.*;
@@ -18,6 +20,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import tk.mybatis.mapper.entity.Example;
 
 import java.io.IOException;
 import java.util.Date;
@@ -40,6 +43,12 @@ public class PersonalController extends BaseController {
     private UserService userService;
     @Autowired
     private VipTimeMapper vipTimeMapper;
+
+    @Autowired
+    private BankMapper bankMapper;
+
+    @Autowired
+    private AccountMapper accountMapper;
 
     /**
      * 我的页面查询  会 计算会员的到期时间
@@ -68,7 +77,7 @@ public class PersonalController extends BaseController {
                  * vip 到期时间
                  */
                 map.put("svipTime", vipTime.getSexpireTime());
-            }else {
+            } else {
                 userService.updateState(user.getId());
             }
         }
@@ -98,10 +107,19 @@ public class PersonalController extends BaseController {
      * @param user
      */
     @RequestMapping(value = "/update/settings", method = RequestMethod.POST)
-    public String personalUpdateSettings(User user) {
+    @ResponseBody
+    public ResultDTO personalUpdateSettings(User user) {
         user.setId(getUser().getId());
+        User oldUser = userService.queryById(getUser().getId());
+        if (!oldUser.getTel().equals(user.getTel())){
+            List<User> tel = userService.querytel(user.getTel());
+            if (tel != null && tel.size() > 0)
+                return new ResultDTO(true, StatusCode.LOGINERROR, "手机号已经存在");
+            if (!userService.querySms(user.getCode(), user.getTel()))
+                return new ResultDTO(true, StatusCode.ACCESSERROR, "验证码错误");
+        }
         userService.updateSettings(user);
-        return "redirect:/personal";
+        return new ResultDTO(true, StatusCode.OK, "修改成功");
     }
 
     /**
@@ -199,7 +217,7 @@ public class PersonalController extends BaseController {
             @RequestParam(value = "page", defaultValue = "1") Integer page,
             @RequestParam(value = "rows", defaultValue = "10") Integer rows
     ) {
-        List<Invoice> invoices = userService.personalInvoice(type, page, rows,getUser());
+        List<Invoice> invoices = userService.personalInvoice(type, page, rows, getUser());
         /*if (invoices == null) {
             return new ResultDTO(true, StatusCode.OK, "type传入错误");
         }*/
@@ -270,9 +288,22 @@ public class PersonalController extends BaseController {
         return new ResultDTO(true, StatusCode.OK, "查询成功", accounts);
     }
 
+    /**
+     * 提现点击
+     *
+     * @param id
+     * @return
+     */
     @RequestMapping(value = "requestWithdrawal", method = RequestMethod.POST)
     @ResponseBody
     public ResultDTO requestWithdrawal(String id) {
+        Account account = accountMapper.selectByPrimaryKey(id);
+        Example example = new Example(Bank.class);
+        example.createCriteria().andEqualTo("userId", account.getUserId());
+        List<Bank> banks = bankMapper.selectByExample(example);
+        if (banks.size() == 0) {
+            return new ResultDTO(true, StatusCode.LOGINERROR, "请先绑定银行卡");
+        }
         userService.requestWithdrawal(id);
         return new ResultDTO(true, StatusCode.OK, "提现修改成功");
     }

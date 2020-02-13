@@ -2,7 +2,9 @@ package com.haozhi.item.web.controller;
 
 import com.haozhi.common.constants.StatusCode;
 import com.haozhi.common.dto.ResultDTO;
+import com.haozhi.item.dao.InvitationMapper;
 import com.haozhi.item.dto.NewDto;
+import com.haozhi.item.pojo.Invitation;
 import com.haozhi.item.pojo.User;
 import com.haozhi.item.service.TeamService;
 import com.haozhi.item.service.UserService;
@@ -31,6 +33,8 @@ public class TeamController extends BaseController {
     private TeamService teamService;
     @Autowired
     private UserService userService;
+    @Autowired
+    private InvitationMapper invitationMapper;
 
     @RequestMapping
     public String team(Map<String, Object> map) {
@@ -55,17 +59,20 @@ public class TeamController extends BaseController {
     public ResultDTO searchList(
             @RequestParam(name = "type") String type,
             @RequestParam(name = "name", required = false) String name,
-            @RequestParam(name = "date", required = false) String date,
+            @RequestParam(name = "date1", required = false) String date1,
+            @RequestParam(name = "date2", required = false) String date2,
             @RequestParam(value = "page", defaultValue = "1") Integer page,
             @RequestParam(value = "rows", defaultValue = "20") Integer rows
     ) {
-        List<User> list = teamService.searchList(type, name, date, getUser().getId(), page, rows);
+        List<User> list = teamService.searchList(type, name, date1,date2, getUser().getId(), page, rows);
         return new ResultDTO(true, StatusCode.OK, "查询成功", list);
     }
 
     @RequestMapping("new")
     public String Invitation(Map<String, Object> map) {
         map.put("superId",getUser().getId());
+        List<Invitation> invitations = invitationMapper.selectAll();
+        map.put("list",invitations.get(0));
         return "new";
     }
 

@@ -6,8 +6,13 @@
 
 <body>
 <div class="Box">
+    <div class="bus_detail">
+        <!-- 富文本 -->
+        <div class="bus_Txt5" th:utext="${list.name}">
+
+        </div>
+    </div>
     <div class="new_Text">
-        这是内容
         <input type="hidden" id="superId" th:value="${superId}">
     </div>
     <div class="new_share"><img th:src="@{/image/share_bg.png}" alt=""></div>

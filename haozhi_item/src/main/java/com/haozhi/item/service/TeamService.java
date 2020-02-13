@@ -11,9 +11,7 @@ import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
@@ -30,22 +28,27 @@ public class TeamService {
     @Autowired
     private OrderMapper orderMapper;
 
-    public List<User> searchList(String type, String name, String date, String oneId, Integer page, Integer rows) {
+    public List<User> searchList(String type, String name, String date1,String date2, String oneId, Integer page, Integer rows) {
         if ("1".equals(type)) {
-            if ((name == null || "".equals(name)) && (date == null || "".equals(date))) {
+            if ((name == null || "".equals(name)) && (date1 == null || "".equals(date1))) {
                 Example example = new Example(User.class);
                 example.createCriteria().andEqualTo("superId", oneId);
                 PageHelper.startPage(page, rows);
                 List<User> users = userRepository.selectByExample(example);
                 return users;
             }
-            Example ex = new Example(User.class);
+           /* Example ex = new Example(User.class);
             ex.createCriteria().andEqualTo("superId", oneId);
-            /* ex.createCriteria().andEqualTo("time",date).andEqualTo("name",name);*/
-            ex.and().orEqualTo("time", date).orEqualTo("name", name);
-            return userRepository.selectByExample(ex);
+            *//* ex.createCriteria().andEqualTo("time",date).andEqualTo("name",name);*//*
+            ex.and().orEqualTo("time", date1).orEqualTo("name", name);*/
+            Map<String,Object> map = new HashMap<>();
+            map.put("oneId",oneId);
+            map.put("name",name);
+            map.put("date1",date1);
+            map.put("date2",date2);
+            return userRepository.findByNameAndAge(map);
         } else {
-            if ((name == null || "".equals(name)) && (date == null || "".equals(date))) {
+            if ((name == null || "".equals(name)) && (date1 == null || "".equals(date1))) {
                 Example example = new Example(User.class);
                 example.createCriteria().andEqualTo("superId", oneId);
                 /**
@@ -69,11 +72,13 @@ public class TeamService {
              */
             List<User> users = userRepository.selectByExample(example);
             List listData = new ArrayList();
+            Map<String,Object> map = new HashMap<>();
             users.forEach(user -> {
-                Example ea = new Example(User.class);
-                ea.createCriteria().andEqualTo("superId", user.getId());
-                ea.and().orEqualTo("time", date).orEqualTo("name", name);
-                listData.add(userRepository.selectByExample(ea));
+                map.put("oneId",user.getId());
+                map.put("name",name);
+                map.put("date1",date1);
+                map.put("date2",date2);
+                listData.add(userRepository.findByNameAndAge(map));
             });
             return listData;
         }

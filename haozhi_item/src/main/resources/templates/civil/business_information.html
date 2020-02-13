@@ -15,14 +15,14 @@
     </div>
     <!-- 商标名称 -->
     <div class="information_item2">
-    <div class="information_Tit">商标名称</div>
+        <div class="information_Tit">商标名称</div>
 
-    <div class="information_Box">
-        <div class="information_Txt" th:text="${p.sbName}">商标图样</div>
-        <div class="information_Img" th:if="${p.sbType} == '1'" th:text="${p.sbName}"></div>
-        <div class="information_Img2" th:if="${p.sbType} == '2'"><img th:src="${p.sbImage}" alt=""></div>
+        <div class="information_Box">
+            <div class="information_Txt" th:text="${p.sbName}">商标图样</div>
+            <div class="information_Img" th:if="${p.sbType} == '1'" th:text="${p.sbName}"></div>
+            <div class="information_Img2" th:if="${p.sbType} == '2'"><img th:src="${p.sbImage}" alt=""></div>
+        </div>
     </div>
-</div>
     <!-- 商标类别 -->
     <div class="information_item3">
         <h1 class="applicant_Txt" style="margin-bottom:0.26rem;">商标类别</h1>
@@ -60,9 +60,9 @@
     </div>
     <!-- 支付 -->
     <div class="information_pay">
-        <div class="applicant_Box5" style="margin-top:0;">
+        <div class="applicant_Box5" style="margin-top:0;" data-id="0">
             <img class="applicant_Img2" th:src="@{/image/20_icon.png}" alt="">
-            <div class="applicant_Txt4">我已阅读并同意<a href="#">《知识产权代理服务合同》</a></div>
+            <div class="applicant_Txt4">我已阅读并同意<a href="/api/knowledge">《知识产权代理服务合同》</a></div>
         </div>
         <!-- 支付按钮 -->
         <div class="information_btn">
@@ -73,18 +73,29 @@
 </div>
 <script>
     // 阅读同意
+    let csd = 0;
     $('.applicant_Box5').click(function () {
         if ($(this).find('img').attr('src') == '/api/image/20_icon.png') {
-            $(this).find('img').attr('src', '/api/image/21_icon.png')
+            $(this).find('img').attr('src', '/api/image/21_icon.png');
+            $(this).attr('data-id', 1);
+            csd = $(this).data('id');
         } else {
-            $(this).find('img').attr('src', '/api/image/20_icon.png')
+            $(this).find('img').attr('src', '/api/image/20_icon.png');
+            $(this).attr('data-id', 0);
+            csd = 0;
         }
     });
     $('.information_Ok').click(function () {
         let price = $("#price").text();
         let text = $("#text").val();
         let pid = $("#pid").val();
-
+        if (csd === 0){
+            mui.toast('请您先阅读协议', {
+                duration: 1600,
+                type: 'div'
+            });
+            return false;
+        }
         $.ajax({
             url: "[[@{/pay}]]",
             type: "post",
@@ -95,8 +106,6 @@
             },
             success: function (ref) {
                 if (ref.code == 20000) {
-                    console.log(ref)
-
                     function onBridgeReady() {
                         WeixinJSBridge.invoke(
                             'getBrandWCPayRequest', {
@@ -135,6 +144,13 @@
         let price = $("#price").text();
         let text = $("#text").val();
         let pid = $("#pid").val();
+        if (csd === 0){
+            mui.toast('请您先阅读协议', {
+                duration: 1600,
+                type: 'div'
+            });
+            return false;
+        }
         $.ajax({
             url: "/api/pay/xxPayOrder",
             type: "post",

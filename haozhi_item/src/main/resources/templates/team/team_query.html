@@ -14,8 +14,12 @@
     <!-- 查询 -->
     <div class="query_search">
         <div class="query_li">
-            <p class="query_Txt2">查询日期</p>
-            <div class="query_time"></div>
+            <p class="query_Txt2">开始日期</p>
+            <div class="query_time1"></div>
+        </div>
+        <div class="query_li">
+            <p class="query_Txt2">结束日期</p>
+            <div class="query_time2"></div>
         </div>
         <div class="query_li">
             <p class="query_Txt2">业务员</p>
@@ -45,14 +49,15 @@
 <script>
     $(function () {
         var type = 1;
-        var dateData;
+        var dateData1;
+        var dateData2;
         var nameData;
         var page = 1;
         var rows = 20;
         var html = '';
         var data_status = true;
-        // 日期
-        $(".query_time").click(function () {
+        // 日期1
+        $(".query_time1").click(function () {
             var dtPicker = new mui.DtPicker({
                 type: 'date'
             });
@@ -61,7 +66,20 @@
                 var m = selectItems.m.text; //获取选择的月
                 var d = selectItems.d.text; //获取选择的日
                 var date = y + "-" + m + "-" + d;
-                $(".query_time").text(date);
+                $(".query_time1").text(date);
+            })
+        });
+        // 日期2
+        $(".query_time2").click(function () {
+            var dtPicker = new mui.DtPicker({
+                type: 'date'
+            });
+            dtPicker.show(function (selectItems) {
+                var y = selectItems.y.text; //获取选择的年
+                var m = selectItems.m.text; //获取选择的月
+                var d = selectItems.d.text; //获取选择的日
+                var date = y + "-" + m + "-" + d;
+                $(".query_time2").text(date);
             })
         });
         // 导航
@@ -74,11 +92,13 @@
             page = 1;
             html = '';
             $('.query_List ul').html(html);
-            $('.query_time').text('');
+            $('.query_time1').text('');
+            $('.query_time2').text('');
             $('.query_people').val('');
-            dateData = '';
+            dateData1 = '';
+            dateData2 = '';
             nameData = '';
-            ajax(dateData,nameData,type)
+            ajax(dateData1,dateData2,nameData,type)
         });
         //点击二级
         $('.query_nav2').click(function () {
@@ -86,29 +106,33 @@
             page = 1;
             html = '';
             $('.query_List ul').html(html);
-            $('.query_time').text('');
+            $('.query_time1').text('');
+            $('.query_time2').text('');
             $('.query_people').val('');
-            dateData = '';
+            dateData1 = '';
+            dateData2 = '';
             nameData = '';
-            ajax(dateData,nameData,type,page,rows)
+            ajax(dateData1,dateData2,nameData,type,page,rows)
         });
         //点击搜索
         $('.query_btn').click(function () {
             page = 1;
             html = '';
             $('.query_List ul').html(html);
-            dateData = $('.query_time').text();
+            dateData1 = $('.query_time1').text();
+            dateData2 = $('.query_time2').text();
             nameData = $('.query_people').val();
-            ajax(dateData,nameData,type,page,rows)
+            ajax(dateData1,dateData2,nameData,type,page,rows)
         });
         //ajax
-        function ajax(dateData,nameData,type,page,rows) {
+        function ajax(dateData1,dateData2,nameData,type,page,rows) {
             $.ajax({
                 url: "/api/team/search",
                 type: 'POST',
                 data: {
                     type:type,
-                    date: dateData,
+                    date1: dateData1,
+                    date2: dateData2,
                     name: nameData,
                     page:page,
                     rows:rows
@@ -155,7 +179,7 @@
                 }
             })
         }
-        ajax(dateData,nameData,type,page,rows);
+        ajax(dateData1,dateData2,nameData,type,page,rows);
 
         //滚动事件触发
         window.onscroll = function (ev) {

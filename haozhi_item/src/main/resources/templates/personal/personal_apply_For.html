@@ -4,7 +4,7 @@
 <head th:replace="default :: head">
 </head>
 <style>
-    .drawal_Mask{
+    .drawal_Mask {
         display: none;
     }
 </style>
@@ -26,7 +26,8 @@
                             <div class="my_oTit" th:text="${order.title}">商标注册业务</div>
                             <div class="my_oTxt4" th:text="${order.sbName}">国内注册 快捷注册</div>
                             <div class="my_orderBox3">
-                                <div class="my_oTxt4">服务费：<span th:text="'¥'+${order.doubleFwPrice}">¥300.00</span></div>
+                                <div class="my_oTxt4">服务费：<span th:text="'¥'+${order.doubleFwPrice}">¥300.00</span>
+                                </div>
                                 <div class="my_oTxt4">官费：<span th:text="'¥'+${order.doubleGfPrice}">¥300.00</span></div>
                             </div>
                             <div class="my_orderBox4">
@@ -45,7 +46,7 @@
                     <input id="typeOf" type="hidden" name="type" value="1">
                     <div class="apply_Txt">抬头类型：</div>
                     <div class="order_RBox">
-                        <div class="order_RLi2" style="margin-left:0" data-id="1">
+                        <div class="order_RLi2" id="order_RLi2" style="margin-left:0" data-id="1">
                             <img class="order_Img" style="width:0.24rem;height:0.24rem;" th:src="@{/image/13_icon.png}"
                                  alt="">
                             <p class="order_Txt2">企业申请</p>
@@ -59,23 +60,25 @@
                 </li>
                 <li>
                     <div class="apply_Txt">发票抬头:<span>*</span></div>
-                    <input class="apply_input" name="fpName" type="text" placeholder="请填写发票抬头">
+                    <input class="apply_input" required autocomplete="off" name="fpName" type="text"
+                           placeholder="请填写发票抬头">
                 </li>
-                <li>
+                <li id="sh">
                     <div class="apply_Txt">税号:<span>*</span></div>
-                    <input class="apply_input" name="duty" type="text" placeholder="请填写纳税人识别号">
+                    <input class="apply_input" required autocomplete="off" name="duty" type="text"
+                           placeholder="请填写纳税人识别号">
                 </li>
                 <li>
-                    <div class="apply_Txt">备注说明:<span>*</span></div>
-                    <input class="apply_input" name="remark" type="text" placeholder="请填写备注说明">
+                    <div class="apply_Txt">备注说明:<span></span></div>
+                    <input class="apply_input" name="remark" type="text" placeholder="没有可忽略不填">
                 </li>
                 <li>
-                    <div class="apply_Txt">地址和电话:<span>*</span></div>
-                    <input class="apply_input" name="addrAndTel" type="text" placeholder="请填写地址和电话">
+                    <div class="apply_Txt">地址和电话:<span></span></div>
+                    <input class="apply_input" name="addrAndTel" type="text" placeholder="没有可忽略不填">
                 </li>
                 <li>
-                    <div class="apply_Txt">开户行和帐号:<span>*</span></div>
-                    <input class="apply_input" name="bankAndAddr" type="text" placeholder="请填写开户行和帐号">
+                    <div class="apply_Txt">开户行和帐号:<span></span></div>
+                    <input class="apply_input" name="bankAndAddr" type="text" placeholder="没有可忽略不填">
                 </li>
             </ul>
         </div>
@@ -99,15 +102,18 @@
             <ul>
                 <li>
                     <div class="apply_Txt">姓名:<span>*</span></div>
-                    <input name="name" class="apply_input" type="text" placeholder="请填写收件人姓名">
+                    <input name="name" required autocomplete="off" class="apply_input" type="text"
+                           placeholder="请填写收件人姓名">
                 </li>
                 <li>
                     <div class="apply_Txt">电话:<span>*</span></div>
-                    <input name="tel" class="apply_input" type="text" placeholder="请填写收件人电话">
+                    <input name="tel" required autocomplete="off" class="apply_input" id="phone" type="number"
+                           placeholder="请填写收件人电话">
                 </li>
                 <li>
                     <div class="apply_Txt">地址:<span>*</span></div>
-                    <input name="address" class="apply_input" type="text" placeholder="请填写收件人地址">
+                    <input name="address" required autocomplete="off" class="apply_input" type="text"
+                           placeholder="请填写收件人地址">
                 </li>
             </ul>
         </div>
@@ -122,50 +128,73 @@
     var orderPrice = 0;
     // 个人申请/企业申请
     $('.order_RLi2').click(function () {
+        $('#sh').hide();
         var index = $(this).index();
         $('#typeOf').val($(this).data('id'));
-        console.log(id)
         $('.applicant_Box').eq(index).show().siblings().hide();
         var src = $(this).find('.order_Img');
         if (src.attr('src') == '/api/image/12_icon.png') {
             src.attr('src', '/api/image/13_icon.png').parent('.order_RLi2').siblings().find('.order_Img').attr('src', '/api/image/12_icon.png');
         }
     });
+    $('#order_RLi2').click(function () {
+        $('#sh').show();
+    });
     $('.apply_clickShow').click(function () {
         $('.drawal_Mask').show();
-    })
-    $('.my_orderList ul li').click(function() {
+    });
+    $('.my_orderList ul li').click(function () {
         var index = $(this).index;
         var img = $(this).find('.personal_orImg').find('img');
-        if(img.attr('src') == '/api/image/51_icon.png'){
+        if (img.attr('src') == '/api/image/51_icon.png') {
             img.attr('src', '/api/image/52_icon.png');
-            var id =$(this).find('.my_oTxt').data('id');
+            var id = $(this).find('.my_oTxt').data('id');
             var price = $(this).find('.my_oPrice').text();
-            orderPrice+= Number(price);
+            orderPrice += Number(price);
             orderIdArr.push(id)
-
-        }else{
+        } else {
             img.attr('src', '/api/image/51_icon.png');
-            var price =$(this).find('.my_oPrice').text();
-            orderPrice-= Number(price);
-            orderIdArr.splice(index,1)
+            var price = $(this).find('.my_oPrice').text();
+            orderPrice -= Number(price);
+            orderIdArr.splice(index, 1)
         }
-        console.log(orderPrice)
         var joinOrder = orderIdArr.join(',');
         $('#orderId').val(String(joinOrder))
     });
     $('.invoice_btn').click(function () {
-        if(orderIdArr.length == 0){
+        if (orderIdArr.length == 0) {
             mui.toast('请选择开票订单！', {
                 duration: 1600,
                 type: 'div'
             })
-        }else{
+        } else {
             $('.drawal_Mask').hide();
-            $('#apply_price').val(parseFloat(orderPrice).toFixed(2) * 100)
+            $('#apply_price').val(parseFloat(orderPrice).toFixed(2) * 100);
             $('.apply_Txt2').text(parseFloat(orderPrice).toFixed(2))
         }
-    })
+    });
+    $("#phone").on('blur', function () {
+        var t = $("#phone").val();
+        if (!(/^1[3|4|5|8][0-9]\d{8}$/.test(t))) {
+            mui.toast('手机号不正确', {
+                duration: 1600,
+                type: 'div'
+            });
+            $('#phone').focus();
+            return false;
+        }
+    });
+
+    $('.order_btn').click(function () {
+        let order_id = $('#orderId').val();
+        if (order_id === ''){
+            mui.toast('请先选择开票！', {
+                duration: 1600,
+                type: 'div'
+            });
+            return false;
+        }
+    });
 </script>
 </body>
 

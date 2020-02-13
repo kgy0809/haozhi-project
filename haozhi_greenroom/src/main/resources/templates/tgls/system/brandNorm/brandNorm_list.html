@@ -6,14 +6,14 @@
 
 <body>
 <div class="cBody">
-    <form id="addForm" class="layui-form" action="/regard/update" method="post">
+    <form id="addForm" class="layui-form" action="/brandnorm/update" method="post">
         <div class="layui-form-item layui-form-text">
             <label class="layui-form-label">内容</label>
             <div class="layui-input-block">
-                <textarea name="regard" th:text="${regard.regard}" placeholder="请输入内容" id="LAY_demo1"
+                <textarea name="name" th:text="${list.name}" placeholder="请输入内容" id="LAY_demo1"
                           class="layui-textarea" style="display: none;"></textarea>
             </div>
-            <input type="hidden" name="id" th:value="${regard.id}">
+            <input type="hidden" name="id" th:value="${list.id}">
         </div>
 
         <div class="layui-form-item">

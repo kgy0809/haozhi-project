@@ -6,34 +6,55 @@
 
 <body>
 <div class="Box">
-    <form action="/api/personal/update/settings" method="post">
-        <!-- 个人设置 -->
-        <div class="setting_item">
-            <ul>
-                <li>
-                    <p class="setting_Txt">姓名：</p>
-                    <input class="setting_input" type="text" name="name" th:value="${user.name}">
-                </li>
-                <li>
-                    <p class="setting_Txt">邮箱：</p>
-                    <input class="setting_input" type="text" name="mail" th:value="${user.mail}">
-                </li>
-                <li>
-                    <p class="setting_Txt">绑定手机：</p>
-                    <input class="setting_input" type="text" name="tel" th:value="${user.tel}">
-                </li>
-                <li>
-                    <p class="setting_Txt">所有城市：</p>
-                    <div class="settimg_address" th:text="${user.city}==''?'请选择地址':${user.city}">请选择地址</div>
-                    <input id="address_name" type="hidden" name="city" value="">
-                    <div class="setting_Img"><img src="../image/34_icon.png" alt=""></div>
-                </li>
-            </ul>
-        </div>
-        <button class="order_btn" style="margin:0.46rem auto 0.24rem;width:2.6rem;">确定修改</button>
-    </form>
+    <!-- 个人设置 -->
+    <div class="setting_item">
+        <ul>
+            <li>
+                <p class="setting_Txt">姓名：</p>
+                <input class="setting_input" required autocomplete="off" id="name" type="text"
+                       th:value="${user.name}">
+            </li>
+            <li>
+                <p class="setting_Txt">邮箱：</p>
+                <input class="setting_input" required autocomplete="off" type="text" id="email"
+                       th:value="${user.mail}">
+            </li>
+            <li>
+                <p class="setting_Txt">绑定手机：</p>
+                <input type="hidden" id="telent" th:value="${user.tel}">
+                <input class="setting_input" required autocomplete="off" type="text" id="tel"
+                       th:value="${user.tel}">
+            </li>
+            <li id="yzm">
+                <p class="setting_Txt">验证码：</p>
+                <div style="display: flex;justify-content: space-between;">
+                    <input style="width: 3rem" class="setting_input" type="text" placeholder="请输入验证码" id="code">
+                    <div class="reg_codeBtn">发送验证码</div>
+                </div>
+            </li>
+            <li>
+                <p class="setting_Txt">所在城市：</p>
+                <div class="settimg_address" th:text="${user.city}==''?'请选择地址':${user.city}">请选择地址</div>
+                <input id="address_name" type="hidden" th:value="${user.city}">
+                <div class="setting_Img"><img src="../image/34_icon.png" alt=""></div>
+            </li>
+        </ul>
+    </div>
+    <div class="order_btn" style="margin:0.46rem auto 0.24rem;width:2.6rem;">确定修改</div>
 </div>
 <script>
+    $(function () {
+        $('#yzm').hide();
+        $("#tel").bind('input propertychange', function (e) {
+            let telent = $('#telent').val();
+            if (telent === $(this).val()) {
+                $('#yzm').hide();
+            } else {
+                $('#yzm').show();
+            }
+        })
+    });
+
     //mui 地址
     var city_picker = new mui.PopPicker({
         layer: 3
@@ -46,6 +67,116 @@
                 $(".settimg_address").html((items[0] || {}).text + " " + (items[1] || {}).text + ' ' + (items[2] || {}).text);
             });
         }, 200);
+    });
+    var reg = /^([a-zA-Z]|[0-9])(\w|\-)+@[a-zA-Z0-9]+\.([a-zA-Z]{2,4})$/;
+    $("#email").on('blur', function () {
+        var email = $("#email").val();
+        if (!(reg.test(email))) {
+            mui.toast('邮箱格式不正确', {
+                duration: 1600,
+                type: 'div'
+            });
+            $('#email').focus();
+            return false;
+        }
+    })
+    // 发送验证码
+    var res = /^1[0-9][0-9]\d{8}$/; //手机号正则
+    var time = 60; //时间
+    var Timeout; //计时器
+    var isclick = true; //状态
+    $('.reg_codeBtn').click(function () {
+        if (isclick) {
+            if (res.test($('#tel').val())) {
+                var phone = $('#tel').val();
+                $.ajax({
+                    url: "/api/sms/send",
+                    type: "post",
+                    data: {
+                        tel: phone
+                    },
+                    success: function (ref) {
+                        if (ref.code == 20000) {
+                            mui.toast('发送成功', {
+                                duration: 1600,
+                                type: 'div'
+                            })
+                        }
+                    }
+                });
+                // 表示验证成功
+                isclick = false;
+                var time2 = $(this).text(60 + 's');
+                Timeout = setInterval(function () {
+                    if (time > 0) {
+                        time--;
+                        $('.reg_codeBtn').text(time + 's');
+
+                    } else {
+                        isclick = true;
+                        clearInterval(Timeout);
+                        $('.reg_codeBtn').html('发送验证码');
+                        time = 60;
+                    }
+                }, 1000)
+            } else {
+                mui.toast('手机号错误', {
+                    duration: 1600,
+                    type: 'div'
+                })
+            }
+        }
+    });
+
+    $("#tel").on('blur', function () {
+        var t = $("#tel").val();
+        if (!(/^1[3|4|5|8][0-9]\d{8}$/.test(t))) {
+            mui.toast('手机号不正确', {
+                duration: 1600,
+                type: 'div'
+            });
+            $('#tel').focus();
+            return false;
+        }
+    });
+    $('.order_btn').click(function () {
+        var name = $('#name').val();
+        var email = $('#email').val();
+        var tel = $('#tel').val();
+        var code = $('#code').val();
+        var city = $('#address_name').val();
+        $.ajax({
+            url: "/api/personal/update/settings",
+            type: "post",
+            data: {
+                name: name,
+                tel: tel,
+                mail: email,
+                code: code,
+                city: city,
+            },
+            success: function (ref) {
+                if (ref.code == 20000) {
+                    location.href = "/api/personal";
+                    mui.toast('修改成功', {
+                        duration: 1600,
+                        type: 'div'
+                    })
+                } else if (ref.code == 20002) {
+                    //手机号存在
+                    mui.toast('手机号已存在', {
+                        duration: 1600,
+                        type: 'div'
+                    })
+                } else if (ref.code == 20003) {
+                    //验证码错误
+                    mui.toast('验证码错误', {
+                        duration: 1600,
+                        type: 'div'
+                    })
+                }
+            }
+        })
     });
 </script>
 </body>

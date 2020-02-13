@@ -15,18 +15,18 @@
         <div>
             <div class="reg_li">
                 <div class="reg_Img2"><img th:src="@{/image/icon1.png}" alt=""></div>
-                <input type="text" id="name" placeholder="请输入您的姓名">
+                <input type="text" required autocomplete="off" id="name" placeholder="请输入您的姓名">
             </div>
             <div class="reg_li">
                 <div class="reg_Img2"><img th:src="@{/image/icon2.png}" alt=""></div>
-                <input type="text" id="email" placeholder="请输入您的邮箱">
+                <input type="text" required autocomplete="off" id="email" placeholder="请输入您的邮箱">
                 <input type="hidden" id="wxName" th:value="${wxName}">
                 <input type="hidden" id="wxImage" th:value="${wxImage}">
                 <input type="hidden" id="superId" th:value="${superId}">
             </div>
             <div class="reg_li">
                 <div class="reg_Img2"><img th:src="@{/image/icon3.png}" alt=""></div>
-                <input id="phone" type="text" placeholder="请输入您的电话" required="" maxlength="11">
+                <input id="phone" required autocomplete="off" type="number" placeholder="请输入您的电话" required="" maxlength="11">
             </div>
             <div class="reg_li">
                 <div class="reg_Img2"><img th:src="@{/image/icon4.png}" alt=""></div>
@@ -37,7 +37,7 @@
         <!-- 是否同意 -->
         <div class="reg_Box2">
             <input type="checkbox" name="Agreed">
-            <div class="reg_Txt">阅读并接受<a href="#">《好智企业咨询用户协议》</a></div>
+            <div class="reg_Txt">阅读并接受<a href="/api/user/agreement">《好智企业咨询用户协议》</a></div>
         </div>
         <!-- 按钮 -->
         <div class="reg_btn">登录</div>
@@ -76,7 +76,7 @@
                             })
                         }
                     }
-                })
+                });
                 // 表示验证成功
                 isclick = false;
                 var time2 = $(this).text(60 + 's');
@@ -87,7 +87,8 @@
                     } else {
                         isclick = true;
                         clearInterval(Timeout);
-                        $('.reg_codeBtn').innerHTML = '发送验证码';
+                        $('.reg_codeBtn').html('发送验证码') ;
+                        time = 60;
                     }
                 }, 1000)
             } else {
@@ -142,23 +143,23 @@
     $("#phone").on('blur',function(){
         var t = $("#phone").val();
             if (!(/^1[3|4|5|8][0-9]\d{8}$/.test(t))) {
-                /*alert("不是完整的11位手机号或者正确的手机号");*/
                 mui.toast('手机号不正确', {
                     duration: 1600,
                     type: 'div'
-                })
+                });
+                $('#phone').focus();
                 return false;
             }
-    })
+    });
     var reg = /^([a-zA-Z]|[0-9])(\w|\-)+@[a-zA-Z0-9]+\.([a-zA-Z]{2,4})$/;
     $("#email").on('blur',function(){
-        var t = $("#email").val();
-        if (!(reg.test(t))) {
-            /*alert("不是完整的11位手机号或者正确的手机号");*/
+        var email = $("#email").val();
+        if (!(reg.test(email))) {
             mui.toast('邮箱格式不正确', {
                 duration: 1600,
                 type: 'div'
-            })
+            });
+            $('#email').focus();
             return false;
         }
     })
