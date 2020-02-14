@@ -39,8 +39,8 @@ public class AccountController {
     @RequestMapping(method = RequestMethod.GET)
     public String deposit(Map<String, Object> map) {
         Example example = new Example(Account.class);
+        example.setOrderByClause("time desc");
         example.createCriteria().andNotEqualTo("state", "1");
-        example.setOrderByClause("state asc");
         List<Account> accounts = accountMapper.selectByExample(example);
         List<Account> list = new ArrayList<>();
         for (Account account : accounts) {

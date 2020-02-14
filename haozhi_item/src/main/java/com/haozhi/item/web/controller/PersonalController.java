@@ -58,7 +58,7 @@ public class PersonalController extends BaseController {
      */
     @RequestMapping
     public String personal(Map<String, Object> map) {
-        User user = getUser();
+        User user = userService.queryById(getUser().getId());
         if (user.getState().equals("2")) {
             VipTime vipTime = vipTimeMapper.selectByPrimaryKey(user.getVipTimeId());
             /**
@@ -174,10 +174,11 @@ public class PersonalController extends BaseController {
      * @return
      */
     @RequestMapping("add")
-    public String personalAdd(Bank bank) {
+    @ResponseBody
+    public ResultDTO personalAdd(Bank bank) {
         bank.setUserId(getUser().getId());
         userService.personalAdd(bank);
-        return "redirect:/personal/card";
+        return new ResultDTO(true,StatusCode.OK,"添加成功");
     }
 
     @RequestMapping("each")
@@ -194,9 +195,10 @@ public class PersonalController extends BaseController {
      * @return
      */
     @RequestMapping("update")
-    public String personalUpdate(Bank bank) {
+    @ResponseBody
+    public ResultDTO personalUpdate(Bank bank) {
         userService.personalUpdate(bank);
-        return "redirect:/personal/card";
+        return new ResultDTO(true,StatusCode.OK,"修改成功");
     }
 
     @RequestMapping("personalInvoice")

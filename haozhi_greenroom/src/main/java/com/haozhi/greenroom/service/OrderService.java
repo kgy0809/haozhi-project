@@ -37,6 +37,7 @@ public class OrderService {
 
     public List<Order> queryOrder() {
         Example example = new Example(Order.class);
+        example.setOrderByClause("time desc");
         example.createCriteria().andEqualTo("xxPayStart", "1");
         example.and().andEqualTo("state", "1").orEqualTo("state", "2");
         return orderMapper.selectByExample(example);
@@ -48,6 +49,7 @@ public class OrderService {
 
     public List<Order> queryWxOrder() {
         Example example = new Example(Order.class);
+        example.setOrderByClause("time desc");
         example.createCriteria().andEqualTo("xxPayStart", "2");
         example.and().andEqualTo("state", "2");
         return orderMapper.selectByExample(example);
@@ -67,12 +69,14 @@ public class OrderService {
 
     public List<Order> queryYshOrder() {
         Example example = new Example(Order.class);
+        example.setOrderByClause("time desc");
         example.createCriteria().andEqualTo("state", "3");
         return orderMapper.selectByExample(example);
     }
 
     public List<Order> queryYtkOrder() {
         Example example = new Example(Order.class);
+        example.setOrderByClause("time desc");
         example.createCriteria().andEqualTo("state", "4");
         return orderMapper.selectByExample(example);
     }
@@ -107,7 +111,7 @@ public class OrderService {
             /**
              * 修改自己的金额
              */
-            user.setBalance((int) (user.getBalance() - commission * 0.93));
+            user.setBalance((int) (user.getBalance() - commission * 0.06));
             userRepository.updateByPrimaryKeySelective(user);
 
             Integer fwPrice = order.getFwPrice();
@@ -145,13 +149,21 @@ public class OrderService {
         }
     }
 
+
+    public void updateShOrder(String id) {
+        Order order = new Order();
+        order.setId(id);
+        order.setState(3);
+        orderMapper.updateByPrimaryKeySelective(order);
+    }
+
     public void updateOrder(String id) {
         Order order = orderMapper.selectByPrimaryKey(id);
         if (order != null) {
             /**
              * 支付成功修改订单的状态
              */
-            order.setState(3);
+            order.setState(2);
             orderMapper.updateByPrimaryKeySelective(order);
             BusinessTwo businessTwo = businessTwoMapper.selectByPrimaryKey(order.getPOrder());
             Integer commission = businessTwo.getCommission();
@@ -163,12 +175,12 @@ public class OrderService {
             monthOrder.setUserId(userId);
             monthOrder.setTime(new Date());
             monthOrder.setState("1");
-            monthOrder.setPrice((int) (commission * 0.93));
+            monthOrder.setPrice((int) (commission * 0.06));
             monthOrderMapper.insert(monthOrder);
             /**
              * 修改自己的金额
              */
-            user.setBalance((int) (user.getBalance() + commission * 0.93));
+            user.setBalance((int) (user.getBalance() + commission * 0.06));
             userRepository.updateByPrimaryKeySelective(user);
 
             Integer fwPrice = order.getFwPrice();
@@ -206,4 +218,6 @@ public class OrderService {
             }
         }
     }
+
+
 }

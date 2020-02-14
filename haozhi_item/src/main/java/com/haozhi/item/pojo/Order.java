@@ -44,6 +44,8 @@ public class Order {
     private String contract;//合同
     private Date invoiceTime;//开票日期
     private String xxPayStart;//是否线下支付
+    @Transient
+    private String vipState;//购买vip约定
 
     public void setPrice(Integer price) {
         this.doublePrice = price / 100 + "." + price % 100 / 10 + price % 100 % 10;

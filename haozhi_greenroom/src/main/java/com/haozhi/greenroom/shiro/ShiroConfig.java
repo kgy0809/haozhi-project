@@ -51,7 +51,7 @@ public class ShiroConfig {
         //2.设置安全管理器
         shiroFilterFactoryBean.setSecurityManager(securityManager);
         //3.通用配置（跳转登陆页面，为授权跳转的页面）
-        shiroFilterFactoryBean.setLoginUrl("/login");
+        shiroFilterFactoryBean.setLoginUrl("/login/aunt");
         shiroFilterFactoryBean.setUnauthorizedUrl("/frame");
         //注销跳转页面
         LogoutFilter logoutFilter = new LogoutFilter();

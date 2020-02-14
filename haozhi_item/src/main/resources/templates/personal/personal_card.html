@@ -17,32 +17,30 @@
     </div>
     <!-- 绑定银行卡弹框 -->
     <div class="drawal_Mask">
-        <form action="/api/personal/add/" method="post">
-            <div class="drawal_MaskCon">
-                <ul>
-                    <li>
-                        <p>持卡人</p>
-                        <input type="text" required autocomplete="off" name="name" placeholder="请输入持卡人姓名">
-                    </li>
-                    <li>
-                        <p>卡号</p>
-                        <input type="text" id="bank" required autocomplete="off" name="bankId" placeholder="请输入卡号">
-                    </li>
-                    <li>
-                        <p>银行名称</p>
-                        <input type="text" required autocomplete="off" name="bankName" placeholder="请输入银行名称">
-                    </li>
-                    <li>
-                        <p>手机号</p>
-                        <input type="number" id="phone" required autocomplete="off" name="num" placeholder="请输入手机号">
-                    </li>
-                </ul>
-            </div>
-            <div class="my_ContractBtn">
-                <button class="my_ContractEditor" type="submit">取消</button>
-                <button class="my_ContractDownLoad" id="btn" type="submit">确定</button>
-            </div>
-        </form>
+        <div class="drawal_MaskCon">
+            <ul>
+                <li>
+                    <p>持卡人</p>
+                    <input type="text" required autocomplete="off" id="name" placeholder="请输入持卡人姓名">
+                </li>
+                <li>
+                    <p>卡号</p>
+                    <input type="text" id="bank" required autocomplete="off" name="bankId" placeholder="请输入卡号">
+                </li>
+                <li>
+                    <p>银行名称</p>
+                    <input type="text" required autocomplete="off" id="bankName" placeholder="请输入银行名称">
+                </li>
+                <li>
+                    <p>手机号</p>
+                    <input type="number" id="phone" required autocomplete="off" name="num" placeholder="请输入手机号">
+                </li>
+            </ul>
+        </div>
+        <div class="my_ContractBtn">
+            <button class="my_ContractEditor" type="submit" onclick="javascript:history.back(-1)";>取消</button>
+            <button class="my_ContractDownLoad" id="btn" type="submit">确定</button>
+        </div>
     </div>
     <!-- 信息 -->
     <div class="drawal_Box">
@@ -93,7 +91,7 @@
 <script>
     var page = 1;
     var rows = 10;
-    var html = ""
+    var html = "";
 
     //请求明细
     function priceAjax(page, rows) {
@@ -111,6 +109,9 @@
                         } else if (ele.state == 3) {
                             stateHtml = '<div class="card_Txt5">提现完成</div>'
                         }
+                        if (ele.doublePrice === "0.00") {
+                            stateHtml = '<div></div>'
+                        }
                         html += '<li>' +
                             '                    <div class="card_Txt">' + ele.time + '</div>' +
                             '                    <div class="card_Txt" style="width:38%;">¥' + ele.doublePrice + '</div>' +
@@ -121,7 +122,7 @@
                     $('.card_List ul').append(html);
                 }
                 $('.card_Txt4').click(function () {
-                    var id = $(this).data('id')
+                    var id = $(this).data('id');
                     mui.confirm('您确定要提现嘛？', '提示', function (e) {
                         if (e.index == 1) {
                             $.ajax({
@@ -131,9 +132,10 @@
                                     id: id
                                 },
                                 success(res) {
-                                    if (res.code==20000){
+                                    if (res.code == 20000) {
                                         $('.withdrawal_mask').show();
-                                    }if (res.code == 20002){
+                                    }
+                                    if (res.code == 20002) {
                                         mui.toast('请您先绑定银行卡在来提现', {
                                             duration: 1600,
                                             type: 'div'
@@ -150,7 +152,7 @@
         })
     }
 
-    priceAjax(page, rows)
+    priceAjax(page, rows);
     // 弹框
     $('.add_card').click(function () {
         $('.drawal_Mask').show();
@@ -168,10 +170,72 @@
     // 卡号 *
     function cardNum(text) {
         var str = text;
-        var str2 = '****' + ' ' + '****' + ' ' + '****' + ' ' + str.substr(12);
-        $('.bank_CardNum').text(str2);
+        if (str.length >= 16) {
+            var str2 = '****' + ' ' + '****' + ' ' + '****' + ' ' + str.substr(12);
+            $('.bank_CardNum').text(str2);
+        }
+        if (str.length >= 19) {
+            var str3 = '*****' + ' ' + '*****' + ' ' + '*****' + ' ' + str.substr(15);
+            $('.bank_CardNum').text(str3);
+        } else {
+            var str4 = '****' + ' ' + '****' + ' ' + '****' + ' ' + str.substr(12);
+            $('.bank_CardNum').text(str4);
+        }
     };
     cardNum($('.bank_CardNum').text());
+
+    $('.my_ContractDownLoad').click(function () {
+        let name = $('#name').val();
+        let bank = $('#bank').val();
+        let bankName = $('#bankName').val();
+        let phone = $('#phone').val();
+
+        if (name === '') {
+            mui.toast('请输入姓名', {
+                duration: 1600,
+                type: 'div'
+            });
+            return false;
+        }
+        if (bankName === '') {
+            mui.toast('请输入银行名称', {
+                duration: 1600,
+                type: 'div'
+            });
+            return false;
+        }
+
+        if (!(/^1[3|4|5|8][0-9]\d{8}$/.test(phone))) {
+            mui.toast('手机号不正确', {
+                duration: 1600,
+                type: 'div'
+            });
+            return false;
+        }
+        if (!(/^([1-9]{1})(\d{15}|\d{18})$/.test(bank))) {
+            mui.toast('银行卡号不正确', {
+                duration: 1600,
+                type: 'div'
+            });
+            return false;
+        }
+
+        $.ajax({
+            url: "/api/personal/add",
+            type: "post",
+            data: {
+                name: name,
+                bankId: bank,
+                bankName: bankName,
+                num: phone
+            },
+            success: function (ref) {
+                if (ref.code == 20000) {
+                    location.href = "/api/personal/card";
+                }
+            }
+        })
+    })
 
     $("#phone").on('blur', function () {
         var phone = $("#phone").val();
@@ -184,19 +248,19 @@
             return false;
         }
     });
-    function bank(){
-        $("#bank").on('blur', function () {
-            var bank = $("#bank").val();
-            if (!(/^([1-9]{1})(\d{14}|\d{18})$/.test(bank))) {
-                mui.toast('银行卡号不正确', {
-                    duration: 1600,
-                    type: 'div'
-                });
-                $('#bank').focus();
-                return false;
-            }
-        });
-    }
+
+    $("#bank").on('blur', function () {
+        var bank = $("#bank").val();
+        if (!(/^([1-9]{1})(\d{15}|\d{18})$/.test(bank))) {
+            mui.toast('银行卡号不正确', {
+                duration: 1600,
+                type: 'div'
+            });
+            $('#bank').focus();
+            return false;
+        }
+    });
+
 </script>
 </body>
 

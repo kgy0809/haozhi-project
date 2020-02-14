@@ -37,7 +37,10 @@
                     <div class="bus_item3Box">
                         <div class="bus_Txt">官&nbsp;&nbsp;&nbsp;费：<span
                                 th:text="${p.gfPrice}== -1 ? '国外费用单独确认': ${p.doubleGfPrice}">300.00</span></div>
-                        <div class="bus_Txt2">【包含10个商品】</div>
+                        <div class="bus_Txt2" th:if="${p.id}==10010">【包含10个商品】</div>
+                        <div class="bus_Txt2" th:if="${p.id}==10011">【包含10个商品】</div>
+                        <div class="bus_Txt2" th:if="${p.id}==10012">【包含10个商品】</div>
+                        <div class="bus_Txt2" th:if="${p.id}==10013">【包含10个商品】</div>
                     </div>
                 </div>
                 <!-- 合计 -->

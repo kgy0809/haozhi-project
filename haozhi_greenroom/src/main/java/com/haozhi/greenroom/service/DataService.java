@@ -6,6 +6,7 @@ import com.haozhi.greenroom.pojo.DataInof;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Service;
+import tk.mybatis.mapper.entity.Example;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -26,7 +27,9 @@ public class DataService {
     private IdWorker idWorker;
 
     public List<DataInof> queryData() {
-        return dataMapper.selectAll();
+        Example example = new Example(DataInof.class);
+        example.setOrderByClause("time desc");
+        return dataMapper.selectByExample(example);
     }
 
     public DataInof queryDataById(String id) {

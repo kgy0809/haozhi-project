@@ -37,31 +37,35 @@ public class OrderService {
     public List<Order> allOrder(String type,Integer page,Integer rows,String userId) {
         if ("0".equals(type)){
             Example example = new Example(Order.class);
-            example.setOrderByClause("state asc");
+            example.setOrderByClause("time desc");
             example.createCriteria().andEqualTo("userId",userId);
             PageHelper.startPage(page,rows);
             List<Order> orders = orderMapper.selectByExample(example);
             return orders;
         }else if ("1".equals(type)){
             Example example = new Example(Order.class);
+            example.setOrderByClause("time desc");
             example.createCriteria().andEqualTo("userId",userId).andEqualTo("state",type);
             PageHelper.startPage(page,rows);
             List<Order> orders = orderMapper.selectByExample(example);
             return orders;
         }else if ("2".equals(type)){
             Example example = new Example(Order.class);
+            example.setOrderByClause("time desc");
             example.createCriteria().andEqualTo("userId",userId).andEqualTo("state",type);
             PageHelper.startPage(page,rows);
             List<Order> orders = orderMapper.selectByExample(example);
             return orders;
         }else if ("3".equals(type)){
             Example example = new Example(Order.class);
+            example.setOrderByClause("time desc");
             example.createCriteria().andEqualTo("userId",userId).andEqualTo("state",type);
             PageHelper.startPage(page,rows);
             List<Order> orders = orderMapper.selectByExample(example);
             return orders;
         }else if ("4".equals(type)){
             Example example = new Example(Order.class);
+            example.setOrderByClause("time desc");
             example.createCriteria().andEqualTo("userId",userId).andEqualTo("state",type );
             PageHelper.startPage(page,rows);
             List<Order> orders = orderMapper.selectByExample(example);

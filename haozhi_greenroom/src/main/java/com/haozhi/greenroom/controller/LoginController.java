@@ -49,15 +49,7 @@ public class LoginController {
             subject.login(token);
             session.setAttribute("loginUser", username);
             List<Menu> menuOne = menuService.queryMenu();
-/*            List<Menu> menuOneTwo = menuService.queryMenu(1);
-            List<Menu> menuTwoTwo = menuService.queryMenu(2);
-            List<Menu> menuThreeTwo = menuService.queryMenu(3);
-            List<Menu> menuFourTwo = menuService.queryMenu(4);*/
             map.put("menu",menuOne);
-/*            map.put("menuOneTwo",menuOneTwo);*/
-    /*        map.put("menuTwoTwo",menuTwoTwo);
-            map.put("menuThreeTwo",menuThreeTwo);
-            map.put("menuFourTwo",menuFourTwo);*/
             return "frame";
         } catch (Exception uae) {
             map.put("msg", "用户名或密码错误！");

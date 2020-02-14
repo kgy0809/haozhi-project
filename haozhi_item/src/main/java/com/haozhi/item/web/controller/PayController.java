@@ -138,4 +138,67 @@ public class PayController extends BaseController {
         return new ResultDTO(true,StatusCode.OK,"线下支付订单创建成功");
     }
 
+    /**
+     * 订单回调 vip
+     * @param request
+     * @param response
+     * @throws IOException
+     */
+    @PostMapping(value = "notify/vip")
+    public void notifyVip(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        boolean flag = false;
+        ServletInputStream is = null;
+        InputStreamReader isr = null;
+        BufferedReader br = null;
+        try {
+            is = request.getInputStream();
+            isr = new InputStreamReader(is);
+            br = new BufferedReader(isr);
+            StringBuilder stb = new StringBuilder();
+            String s = "";
+            while ((s = br.readLine()) != null) {
+                stb.append(s);
+            }
+            Map<String, String> notifyMap = WXPayUtil.xmlToMap(stb.toString());//将微信发的xml转map
+//            Document document = DocumentHelper.parseText(stb.toString());
+//            String return_code = "";
+//            List<Element> returnCodeList = document.selectNodes("//return_code");
+//            for (Element element : returnCodeList) {
+//                return_code = element.getText();
+//            }
+            if (notifyMap.get("return_code").equals("SUCCESS") || notifyMap.get("return_code").equals("01")) {    //返回成功
+                if (notifyMap.get("result_code").equals("SUCCESS") || notifyMap.get("result_code").equals("01")) {
+                    String out_trade_no = notifyMap.get("out_trade_no");//商户订单号
+
+                    // TODO 处理订单
+                    if (StringUtils.isNotBlank(out_trade_no)) {
+                        //修改支付状态为已支状态                  appOrderServiceImpl.updateC(out_trade_no);
+                        payService.queryOrderVip(out_trade_no);
+                    }
+                    flag = true;
+                }
+            }
+        } catch (Exception e) {
+            flag = false;
+        } finally {
+            try {
+                if (is != null) {
+                    is.close();
+                }
+                if (isr != null) {
+                    isr.close();
+                }
+                if (br != null) {
+                    br.close();
+                }
+            } catch (IOException e) {
+                flag = true;
+            }
+        }
+        if (flag) {
+            response.getWriter().println("<xml><return_code><![CDATA[SUCCESS]]></return_code><return_msg><![CDATA[OK]]></return_msg></xml>");
+        } else {
+            response.getWriter().println("<xml><return_code><![CDATA[FAIL]]></return_code><return_msg><![CDATA[return_code_err]]></return_msg></xml>");
+        }
+    }
 }

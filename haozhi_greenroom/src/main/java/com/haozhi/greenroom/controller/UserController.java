@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import tk.mybatis.mapper.entity.Example;
 
 import java.util.List;
 import java.util.Map;
@@ -39,8 +40,15 @@ public class UserController {
     public PageResultDTO queryUser(@RequestParam(value = "page", defaultValue = "1") Integer page,
                                    @RequestParam(value = "rows", defaultValue = "10") Integer rows) {
         PageHelper.startPage(page,rows);
-        List<SystemUser> systemUsers = systemUserMapper.selectAll();
+        Example example = new Example(SystemUser.class);
+        example.setOrderByClause("time desc");
+        List<SystemUser> systemUsers = systemUserMapper.selectByExample(example);
         PageInfo<SystemUser> systemUserPageInfo = new PageInfo<>(systemUsers);
         return new PageResultDTO(systemUserPageInfo.getTotal(),systemUserPageInfo.getList());
+    }
+
+    @RequestMapping("tz")
+    public String userTz() {
+        return "tgls/qdAPI";
     }
 }

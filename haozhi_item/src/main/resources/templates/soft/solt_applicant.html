@@ -70,20 +70,23 @@
         <!-- 阅读同意 -->
         <div class="applicant_Box5" data-id="0">
             <img class="applicant_Img2" src="../image/20_icon.png" alt="">
-            <div class="applicant_Txt4">我已阅读并同意<a href="#">《知识产权代理服务合同》</a></div>
+            <div class="applicant_Txt4">我已阅读并同意<a href="/api/knowledge">《知识产权代理服务合同》</a></div>
         </div>
     </div>
     <div class="appli_submit order_btn" data-id="3" style="margin:0.46rem auto 0.24rem;">下一步</div>
 </div>
 <script>
     // 阅读同意
+    let csd = 0;
     $('.applicant_Box5').click(function () {
         if ($(this).find('img').attr('src') == '../image/20_icon.png') {
             $(this).find('img').attr('src', '../image/21_icon.png')
             $(this).attr('data-id', 1);
+            csd = $(this).data('id');
         } else {
             $(this).find('img').attr('src', '../image/20_icon.png')
             $(this).attr('data-id', 0);
+            csd = 0;
         }
     });
     //委托书下载
@@ -111,10 +114,46 @@
         var email = $('#email').val(); //邮箱
         var dlf_Price = $('#dlf_Price').val(); //代理费
         var sl_Num = $('#sl_Num').val(); //代理费
+
+        if (sl_Num === ''){
+            mui.toast('请输入数量', {
+                duration: 1600,
+                type: 'div'
+            });
+            return false;
+        }
+        if (lxrName === ''){
+            mui.toast('请输入联系人', {
+                duration: 1600,
+                type: 'div'
+            });
+            return false;
+        }
+        if (phone === ''){
+            mui.toast('请输入手机号', {
+                duration: 1600,
+                type: 'div'
+            });
+            return false;
+        }
+        if (email === ''){
+            mui.toast('请输入邮箱', {
+                duration: 1600,
+                type: 'div'
+            });
+            return false;
+        }
         if(dlf_Price == ""){
             dlf_Price = 0
         }
         var type = $(this).data('id');
+        if (csd === 0){
+            mui.toast('请您先阅读协议', {
+                duration: 1600,
+                type: 'div'
+            });
+            return false;
+        }
         //保存数据
         $.ajax({
             url: "/api/soft/save",
@@ -138,7 +177,29 @@
             }
         })
     });
-
+    $("#phone").on('blur',function(){
+        var t = $("#phone").val();
+        if (!(/^1[3|4|5|8][0-9]\d{8}$/.test(t))) {
+            mui.toast('手机号不正确', {
+                duration: 1600,
+                type: 'div'
+            });
+            $('#phone').focus();
+            return false;
+        }
+    });
+    var reg = /^([a-zA-Z]|[0-9])(\w|\-)+@[a-zA-Z0-9]+\.([a-zA-Z]{2,4})$/;
+    $("#email").on('blur',function(){
+        var email = $("#email").val();
+        if (!(reg.test(email))) {
+            mui.toast('邮箱格式不正确', {
+                duration: 1600,
+                type: 'div'
+            });
+            $('#email').focus();
+            return false;
+        }
+    });
 </script>
 </body>
 

@@ -24,26 +24,6 @@
         </tr>
         </thead>
         <tbody>
-        <!--<tr th:each="p : ${order}">
-            <td th:text="${p.userId}"></td>
-            <td th:text="${p.id}"></td>
-            <td th:text="${p.title}"></td>
-            <td th:text="${p.sbName}"></td>
-            <td th:text="${p.doubleFwPrice}"></td>
-            <td th:text="${p.doubleGfPrice}"></td>
-            <td th:text="${p.number}"></td>
-            <td th:text="${p.doublePrice}"></td>
-            <td th:text="${p.remark}"></td>
-            <td th:text="${p.sTime}"></td>
-            <td style="color: red">支付待审核</td>
-            <td>
-                <button class="layui-btn  layui-btn-xs" th:data-id="${p.id}"
-                        onclick="update_But(this)">审核
-                </button>
-                <button class="layui-btn  layui-btn-xs" th:data-id="${p.id}" onclick="look_But(this)">查看
-                </button>
-            </td>
-        </tr>-->
 
         </tbody>
     </table>
@@ -63,6 +43,20 @@
                 success(res) {
                     var html = '';
                     $.each(res.rows, function (index, ele) {
+                        let zfState = '';
+                        let zfBtn = '';
+                        if (ele.state === 1){
+                            zfState = '            <td style="color: red">支付待确认</td>';
+                            zfBtn =                             '                <button class="layui-btn  layui-btn-xs" data-id="'+ele.id+'"'+
+                                '                        onclick="update_But(this)">确认'+
+                                '                </button>';
+                        }else if (ele.state === 2){
+                            zfState = '            <td style="color: green">支付待审核</td>';
+                            zfBtn =                             '                <button class="layui-btn  layui-btn-xs" data-id="'+ele.id+'"'+
+                                '                        onclick="update_Sh_But(this)">审核'+
+                                '                </button>';
+                        }
+
                         html += ' <tr>'+
                             '            <td>'+ele.userId+'</td>'+
                             '            <td >'+ele.id+'</td>'+
@@ -74,11 +68,9 @@
                             '            <td >'+ele.doublePrice+'</td>'+
                             '            <td >'+ele.remark+'</td>'+
                             '            <td >'+ele.stime+'</td>'+
-                            '            <td style="color: red">支付待审核</td>'+
+                            zfState+
                             '            <td>'+
-                            '                <button class="layui-btn  layui-btn-xs" data-id="'+ele.id+'"'+
-                            '                        onclick="update_But(this)">审核'+
-                            '                </button>'+
+                            zfBtn               +
                             '                <button class="layui-btn  layui-btn-xs" data-id="'+ele.id+'" onclick="look_But(this)">查看'+
                             '                </button>'+
                             '            </td>'+
@@ -112,6 +104,11 @@
         function update_But(e) {
             var id = $(e).data("id");
             location.href = "/order/xx/update?id=" + id;
+        }
+
+        function update_Sh_But(e) {
+            var id = $(e).data("id");
+            location.href = "/order/xx/update/sh?id=" + id;
         }
 
         function look_But(e) {

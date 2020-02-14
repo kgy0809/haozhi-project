@@ -331,6 +331,9 @@ public class UserService {
     @Autowired
     private StringRedisTemplate redisTemplate;
 
+    @Autowired
+    private VipTimeMapper vipTimeMapper;
+
     /**
      * 短信验证码  验证
      *
@@ -371,6 +374,12 @@ public class UserService {
         User user = new User();
         user.setState("1");
         user.setId(id);
+        user.setVipTimeId("");
         userRepository.updateByPrimaryKeySelective(user);
+        user = userRepository.selectByPrimaryKey(id);
+        VipTime vipTime = new VipTime();
+        vipTime.setState("2");
+        vipTime.setId(user.getVipTimeId());
+        vipTimeMapper.updateByPrimaryKeySelective(vipTime);
     }
 }

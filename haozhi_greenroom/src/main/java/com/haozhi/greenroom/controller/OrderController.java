@@ -72,9 +72,20 @@ public class OrderController {
     @RequestMapping("xx/update")
     public String xxUpdate(String id) {
         orderService.updateOrder(id);
-
         return "redirect:/order/xx";
     }
+    /**
+     * 修改线下审核
+     *
+     * @return
+     */
+    @RequestMapping("xx/update/sh")
+    public String xxShUpdate(String id) {
+        orderService.updateShOrder(id);
+        return "redirect:/order/xx";
+    }
+
+
 
     /**
      * 查看 xx

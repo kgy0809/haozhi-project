@@ -37,6 +37,7 @@ public class VipTime {
      * vip id
      */
     private String vipId;
+    private String state;
 
     public void setExpireTime(Date time) {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");

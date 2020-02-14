@@ -9,7 +9,6 @@ import java.util.UUID;
 
 public class WXPayOrder {
 
-
     private static Map<String, String> data;
     private static MyConfig config;
     private static WXPay wxPay;
@@ -18,6 +17,7 @@ public class WXPayOrder {
 
     private static final String PRODUCT_NAME = "好智（天津）企业管理咨询有限责任公司";
     private static final String NOTIFY_URL = "http://haozhiqiye.haozhizixun.com/api/pay/notify";
+    private static final String NOTIFY_URL_VIP = "http://haozhiqiye.haozhizixun.com/api/pay/notify/vip";
 
     public WXPayOrder(Order order) {
         this.order = order;
@@ -52,7 +52,11 @@ public class WXPayOrder {
             /**
              * 通知地址
              */
-            data.put("notify_url", NOTIFY_URL);
+            if ("10086".equals(order.getVipState())) {
+                data.put("notify_url", NOTIFY_URL_VIP);
+            } else {
+                data.put("notify_url", NOTIFY_URL);
+            }
             /**
              * 交易类型
              */
