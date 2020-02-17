@@ -40,9 +40,9 @@ public class ExcelUtil {
      * @throws Exception
      */
     public static <T> ByteArrayOutputStream exportExcel(List<T> dataList, Class<T> dataEntityClass, String templateName, int titleRowNum) throws Exception {
-        if (dataList == null || dataList.size() == 0) {
+   /*     if (dataList == null || dataList.size() == 0) {
             throw new Exception("数据为空");
-        }
+        }*/
         XSSFWorkbook workbook = null;
         try {
             // 读取excel模板文件

@@ -6,34 +6,24 @@ import javax.persistence.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-/**
- * @author kgy
- * @version 1.0
- * @date 2020/1/8 13:26
- */
 @Data
-@Table(name = "haozhi_month_order")
-public class MonthOrder {
-
+@Table(name = "haozhi_vip_order")
+public class VipOrder {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
+    private Integer price;
+    private String openid;
+    private String userId;
     private Date time;
+    private Integer count;
+    private String state;
     @Transient
     private String sTime;
-    private String userId;
-    private String state;
-    private String orderId;
-    private Integer price;
     @Transient
     private String userName;
-    @Transient
-    private String doublePrice;
 
-    public void setPrice(Integer price) {
-        this.doublePrice = price / 100 + "." + price % 100 / 10 + price % 100 % 10;
-        this.price = price;
-    }
+
     public void setTime(Date time) {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         this.sTime = simpleDateFormat.format(time);

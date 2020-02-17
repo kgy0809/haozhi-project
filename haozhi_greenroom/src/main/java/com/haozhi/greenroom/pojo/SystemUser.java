@@ -27,6 +27,8 @@ public class SystemUser {
     private String superId;
     private Date time;
     @Transient
+    private Date timeVip;
+    @Transient
     private String sTime;
     private String city;
     @Transient
@@ -47,9 +49,16 @@ public class SystemUser {
      * 个人余额
      */
     private Integer balance;
+    /**
+     * vip id
+     */
+    private String vipTimeId;
 
     @Transient
     private String doubleBalance;
+
+    @Transient
+    private String vipTime;
 
     public void setBalance(Integer balance) {
         this.doubleBalance = balance / 100 + "." + balance % 100 / 10 + balance % 100 % 10;
@@ -57,8 +66,14 @@ public class SystemUser {
     }
 
     public void setTime(Date time) {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
         this.sTime = simpleDateFormat.format(time);
         this.time = time;
+    }
+
+    public void setTimeVip(Date timeVip) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        this.vipTime = simpleDateFormat.format(timeVip);
+        this.timeVip = timeVip;
     }
 }

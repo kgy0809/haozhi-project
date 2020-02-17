@@ -84,7 +84,6 @@
                     //总计
                     $('.category_Price span').text(res.data[0].doubleZjPrice);
                     $.each(res.data, function (index, ele) {
-                        // console.log(ele)
                         html += '<li>' +
                             '                    <div class="category_item">' +
                             '                        <p class="category_Txt">' + ele.menuTwo.name + '</p>' +
@@ -99,7 +98,7 @@
                                 '                    </div>'
                         });
                         html += '</div>' + '</li>';
-                    })
+                    });
 
                     $('.category_Box2 ul').html(html);
                     // 二级分类

@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -65,24 +66,31 @@ public class OrderController {
     }
 
     /**
-     * 修改线下
+     * 修改线下（确认付款）
      *
      * @return
      */
-    @RequestMapping("xx/update")
-    public String xxUpdate(String id) {
+    @RequestMapping(value = "xx/update",method = RequestMethod.GET)
+    @ResponseBody
+    public Map<String,Object> xxUpdate(String id) {
         orderService.updateOrder(id);
-        return "redirect:/order/xx";
+        Map<String, Object> map = new HashMap<>();
+        map.put("msg", "成功");
+        return map;
     }
+
     /**
      * 修改线下审核
      *
      * @return
      */
-    @RequestMapping("xx/update/sh")
-    public String xxShUpdate(String id) {
+    @RequestMapping(value = "xx/update/sh",method = RequestMethod.GET)
+    @ResponseBody
+    public Map<String,Object> xxShUpdate(String id) {
         orderService.updateShOrder(id);
-        return "redirect:/order/xx";
+        Map<String, Object> map = new HashMap<>();
+        map.put("msg", "成功");
+        return map;
     }
 
 
@@ -161,10 +169,13 @@ public class OrderController {
      *
      * @return
      */
-    @RequestMapping("wx/update")
-    public String wxUpdate(String id) {
+    @RequestMapping(value = "wx/update",method = RequestMethod.GET)
+    @ResponseBody
+    public Map<String,Object> wxUpdate(String id) {
         orderService.wxUpdate(id);
-        return "redirect:/order/wx";
+        Map<String, Object> map = new HashMap<>();
+        map.put("msg", "成功");
+        return map;
     }
 
     /**
@@ -226,9 +237,12 @@ public class OrderController {
      *
      * @return
      */
-    @RequestMapping("tk")
-    public String tkUpdate(String id) {
+    @RequestMapping(value = "tk",method = RequestMethod.GET)
+    @ResponseBody
+    public Map<String,Object> tkUpdate(String id) {
         orderService.tkUpdate(id);
-        return "redirect:/order/wx";
+        Map<String, Object> map = new HashMap<>();
+        map.put("msg", "成功");
+        return map;
     }
 }

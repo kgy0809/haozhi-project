@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+
+<head th:replace="public :: head">
+</head>
+
+<body>
+
+<div class="cBody">
+    <div class="layui-form-item">
+        <div style="float: right;width: 70%;">
+            <div class="layui-input-inline" style="width: 30%;margin-right: 10px;">
+                <input type="text" name="id" id="uid" value="" placeholder="输入用户ID" class="layui-input">
+            </div>
+
+            <div class="layui-input-inline" style="width: 30%;margin-right: 10px;">
+                <input type="text" name="name" id="orderId" value="" placeholder="输入订单ID" class="layui-input">
+            </div>
+            <div class="layui-input-inline">
+                <input type="text" id="time1" value="" placeholder="输入开始时间" class="layui-input">
+            </div>
+            <div class="layui-input-inline">
+                <input type="text" id="time2" value="" placeholder="输入结束时间" class="layui-input">
+            </div>
+            <button class="layui-btn" lay-submit="" lay-filter="formDemo" id="Btn_Ss">搜索</button>
+        </div>
+    </div>
+    <table class="layui-table">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>用户ID</th>
+            <th>姓名</th>
+            <th>订单ID</th>
+            <th>时间</th>
+            <th>金额</th>
+        </tr>
+        </thead>
+        <tbody>
+
+        </tbody>
+    </table>
+
+    <!-- layUI 分页模块 -->
+    <div id="pages"></div>
+    <script>
+        ajaxFun(1, 10);
+        var uid = '';
+        var time1 = '';
+        var time2 = '';
+        var orderId = '';
+        $('#Btn_Ss').click(function () {
+            uid = $('#uid').val();
+            time1 = $('#time1').val();
+            time2 = $('#time2').val();
+            orderId = $('#orderId').val();
+            ajaxFun(1, 10);
+        });
+
+        function ajaxFun(page, rows) {
+            $.ajax({
+                url: "/user/view",
+                type: 'post',
+                data: {
+                    page: page,
+                    rows: rows,
+                    uid: uid,
+                    time1: time1,
+                    time2: time2,
+                    orderId: orderId
+                },
+                success(res) {
+                    var html = '';
+                    $.each(res.rows, function (index, ele) {
+                        html += '<tr>' +
+                            '            <td>' + ele.id + '</td>' +
+                            '            <td>' + ele.userId + '</td>' +
+                            '            <td>' + ele.userName + '</td>' +
+                            '            <td>' + ele.orderId + '</td>' +
+                            '            <td>' + ele.stime + '</td>' +
+                            '            <td>' + ele.price / 100 + '</td>' +
+                            '        </tr>';
+                    });
+                    $('tbody').empty().html(html);
+                    listPage(res.total, page);
+                }
+            })
+        }
+
+        function listPage(total, page) {
+            layui.use('laypage', function () {
+                var laypage = layui.laypage;
+                var limits = Math.ceil(total / 10);
+                //总页数大于页码总数
+                laypage.render({
+                    elem: 'pages'
+                    , count: total,
+                    limit: 10,
+                    curr: page
+                    , layout: ['count', 'prev', 'page', 'next']
+                    , jump: function (obj, first) {
+                        if (!first) {
+                            ajaxFun(obj.curr, 10);
+                        }
+                    }
+                });
+            });
+        }
+
+        layui.use(['laydate'], function () {
+            var laydate = layui.laydate;
+            laydate.render({
+                elem: '#time1'//指定元素
+            });
+            laydate.render({
+                elem: '#time2'//指定元素
+            });
+        });
+    </script>
+</div>
+</body>
+
+</html>

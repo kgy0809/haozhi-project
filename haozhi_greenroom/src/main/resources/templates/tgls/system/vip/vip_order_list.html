@@ -16,10 +16,10 @@
                 <input type="text" name="name" id="id" value="" placeholder="输入订单ID" class="layui-input">
             </div>
             <div class="layui-input-inline">
-                <input type="text" name="phone" id="time1" value="" placeholder="输入开始时间" class="layui-input">
+                <input type="text"  id="time1" value="" placeholder="输入开始时间" class="layui-input">
             </div>
             <div class="layui-input-inline">
-                <input type="text" name="phone" id="time2" value="" placeholder="输入结束时间" class="layui-input">
+                <input type="text"  id="time2" value="" placeholder="输入结束时间" class="layui-input">
             </div>
             <button class="layui-btn" lay-submit="" lay-filter="formDemo" id="Btn_Ss">搜索</button>
         </div>
@@ -27,15 +27,12 @@
     <table class="layui-table">
         <thead>
         <tr>
-            <th>提现ID</th>
-            <th>提现用户</th>
-            <th>提现金额</th>
-            <th>提现ID</th>
-            <th>提现时间</th>
-            <th>银行卡号</th>
-            <th>银行名称</th>
-            <th>状态</th>
-            <th>操作</th>
+            <th>订单ID</th>
+            <th>用户ID</th>
+            <th>用户昵称</th>
+            <th>金额</th>
+            <th>使用优惠券数量</th>
+            <th>下单时间</th>
         </tr>
         </thead>
         <tbody>
@@ -56,12 +53,12 @@
         id = $('#id').val();
         time1 = $('#time1').val();
         time2 = $('#time2').val();
-        ajaxFun();
+        ajaxFun(1, 10);
     });
 
     function ajaxFun(page, rows) {
         $.ajax({
-            url: "/deposit",
+            url: "/viporder",
             type: 'post',
             data: {
                 page: page,
@@ -74,27 +71,13 @@
             success(res) {
                 var html = '';
                 $.each(res.rows, function (index, ele) {
-                    var state_Html;
-                    var btn_Html;
-                    if (ele.state === '2') {
-                        state_Html = '            <td style="color: red">' + "待审核" + '</td>';
-                        btn_Html = '                <button class="layui-btn layui-btn-xs" data-id="' + ele.id + '" onclick="updateBut(this)">审核</button>';
-                    } else {
-                        state_Html = '            <td style="color: #00FF00">' + "已完成" + '</td>';
-                        btn_Html = '                <button class="layui-btn layui-btn-xs">已完成</button>';
-                    }
                     html += '<tr>' +
-                        '            <td>' + ele.uid + '</td>' +
-                        '            <td>' + ele.userId + '</td>' +
-                        '            <td>' + ele.price + '</td>' +
                         '            <td>' + ele.id + '</td>' +
+                        '            <td>' + ele.userId + '</td>' +
+                        '            <td>' + ele.userName + '</td>' +
+                        '            <td>' + ele.price / 100 + '</td>' +
+                        '            <td>' + ele.count + '</td>' +
                         '            <td>' + ele.stime + '</td>' +
-                        '            <td>' + ele.bankId + '</td>' +
-                        '            <td>' + ele.bankName + '</td>' +
-                        state_Html +
-                        '            <td>' +
-                        btn_Html +
-                        '            </td>' +
                         '        </tr>';
                 });
                 $('tbody').empty().html(html);

@@ -63,13 +63,19 @@
                 success(res) {
                     var html = '';
                     $.each(res.rows, function (index, ele) {
+                        let gf_Price ;
+                        if (ele.doubleGfPrice === '0.0-1'){
+                            gf_Price = '            <td>'+'国外费用单独确认'+'</td>';
+                        }else {
+                            gf_Price = '            <td>'+ele.doubleGfPrice+'</td>';
+                        }
                         html += ' <tr>'+
                             '            <td>'+ele.userId+'</td>'+
                             '            <td >'+ele.id+'</td>'+
                             '            <td>'+ele.title+'</td>'+
                             '            <td >'+ele.sbName+'</td>'+
                             '            <td >'+ele.doubleFwPrice+'</td>'+
-                            '            <td>'+ele.doubleGfPrice+'</td>'+
+                            gf_Price+
                             '            <td>'+ele.number+'</td>'+
                             '            <td >'+ele.doublePrice+'</td>'+
                             '            <td >'+ele.remark+'</td>'+
@@ -111,8 +117,36 @@
         }
         function update_But(e) {
             var id = $(e).data("id");
+            layui.use(['form', 'laydate'], function () {
+                layer.confirm('确定要审核么？', {
+                    btn: ['确定', '取消'] //按钮
+                }, function () {
+                    $.ajax({
+                        "type": "get",
+                        "dataType": 'json',
+                        "url": "/order/wx/update?id=" + id,
+                        "success": function (res) {
+                            /*layer.msg(res.msg);*/
+                            $(e).parent().parent().remove();
+                            layer.msg('审核成功', {
+                                icon: 1
+                            });
+                        },
+                        error: function (res) {
+
+                        }
+
+                    });
+                }, function () {
+                    layer.msg('取消审核', {
+                        time: 2000 //20s后自动关闭
+                    });
+                });
+            });
+        }/*{
+            var id = $(e).data("id");
             location.href = "/order/wx/update?id=" + id;
-        }
+        }*/
 
         function look_But(e) {
             var id = $(e).data("id");

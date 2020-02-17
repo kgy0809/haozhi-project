@@ -2,31 +2,47 @@
 <html xmlns:th="http://www.w3.org/1999/xhtml">
 
 <head th:replace="public :: head">
-    <style>
-
-    </style>
 </head>
 
 <body>
 
 <div class="cBody">
-    <form id="timeBox" action="/excel/export" method="post">
-        <!--        <div class="layui-form-item" style="margin-bottom: 0;width: 60%">
-                    <label class="layui-form-label">日期</label>
-                    <div class="layui-input-inline shortInput">
-                        <input type="text" class="layui-input" name="time" id="test1" style="width: 100%">
-                    </div>
-                </div>-->
-        <div class="layui-form-item" style="margin-bottom: 0;width: 60%">
-            <label class="layui-form-label">日期</label>
-            <div class="layui-input-inline shortInput">
-                <input type="text" class="layui-input" name="time" id="test1" style="width: 100%">
+    <!--    <form id="timeBox" action="/excel/export" method="post">
+            <div class="layui-form-item" style="margin-bottom: 0;width: 60%">
+                <label class="layui-form-label">日期</label>
+                <div class="layui-input-inline shortInput">
+                    <input type="text" class="layui-input" name="time" id="test1" style="width: 100%">
+                </div>
             </div>
+            <div class="console">
+                <button class="layui-btn" lay-submit lay-filter="formDemo" onclick="insertBut()">用户数据导出</button>
+            </div>
+        </form>-->
+    <div class="layui-form-item">
+        <div style="float: left">
+            <form id="timeBox" action="/excel/export" method="post">
+                <div class="layui-input-inline">
+                    <input type="text" name="time" id="test1" class="layui-input">
+                </div>
+                <div class="layui-input-inline">
+                    <button class="layui-btn" lay-submit lay-filter="formDemo">用户数据导出</button>
+                </div>
+            </form>
         </div>
-        <div class="console">
-            <button class="layui-btn" lay-submit lay-filter="formDemo" onclick="insertBut()">用户数据导出</button>
+        <div style="float: right;">
+            <div class="layui-input-inline" style="width: 30%;margin-right: 10px;">
+                <input type="text" name="id" id="id" value="" placeholder="输入用户ID" class="layui-input">
+            </div>
+
+            <div class="layui-input-inline">
+                <input type="text" name="name" id="name" value="" placeholder="输入姓名" class="layui-input">
+            </div>
+            <div class="layui-input-inline">
+                <input type="text" name="phone" id="phone" value="" placeholder="输入手机号" class="layui-input">
+            </div>
+            <button class="layui-btn" lay-submit="" lay-filter="formDemo" id="Btn_Ss">搜索</button>
         </div>
-    </form>
+    </div>
     <table class="layui-table">
         <thead>
         <tr>
@@ -35,7 +51,8 @@
             <th>手机号</th>
             <th>邮箱</th>
             <th>vip状态</th>
-            <th>上级</th>
+            <th>vip到期时间</th>
+            <th>上级ID</th>
             <th>注册日期</th>
             <th>累计完成单数</th>
             <th>城市</th>
@@ -43,17 +60,7 @@
         </tr>
         </thead>
         <tbody>
-        <!--        <tr th:each="p : ${data}">
-                    <td th:text="${p.name}"></td>
-                    <td th:text="${p.tel}"></td>
-                    <td th:text="${p.mail}"></td>
-                    <td th:text="${p.state} == '1' ? '普通会员' : 'vip'"></td>
-                    <td th:text="${p.superId}"></td>
-                    <td th:text="${p.sTime}"></td>
-                    <td th:text="${p.totalNum}"></td>
-                    <td th:text="${p.city}"></td>
-                    <td th:text="${p.doubleBalance}"></td>
-                </tr>-->
+
 
         </tbody>
     </table>
@@ -62,6 +69,15 @@
     <div id="pages"></div>
     <script>
         ajaxFun(1, 10);
+        var id = '';
+        var name = '';
+        var phone = '';
+        $('#Btn_Ss').click(function () {
+            id = $('#id').val();
+            name = $('#name').val();
+            phone = $('#phone').val();
+            ajaxFun()
+        });
 
         function ajaxFun(page, rows) {
             $.ajax({
@@ -69,14 +85,18 @@
                 type: 'POST',
                 data: {
                     page: page,
-                    rows: rows
+                    rows: rows,
+                    id: id,
+                    name: name,
+                    phone: phone
                 },
                 success(res) {
                     var html = '';
                     $.each(res.rows, function (index, ele) {
                         var stateHtml = '';
-                        if (ele.state == 1) {
-                            stateHtml = "普通会员"
+                        if (ele.state === '1') {
+                            stateHtml = "普通会员";
+                            ele.vipTime = '';
                         } else {
                             stateHtml = "vip"
                         }
@@ -98,6 +118,7 @@
                             '            <td >' + ele.tel + '</td>' +
                             '            <td>' + ele.mail + '</td>' +
                             '            <td >' + stateHtml + '</td>' +
+                            '            <td >' + ele.vipTime + '</td>' +
                             '            <td >' + ele.superId + '</td>' +
                             '            <td>' + ele.stime + '</td>' +
                             '            <td>' + ele.totalNum + '</td>' +
@@ -136,7 +157,26 @@
             laydate.render({
                 elem: '#test1' //指定元素
             });
-        })
+        });
+        /*function insertBut() {
+            var time = $('#test1').val();
+            if (time === ''){
+                lay.msg("请先选择日期");
+                return false;
+            }
+            $.ajax({
+                url:"/excel/export",
+                type:"POST",
+                data:{
+                    time:time
+                },
+                success:function (ref) {
+                  console.log(ref)
+                }
+            })
+
+        }*/
+
     </script>
 </div>
 </body>

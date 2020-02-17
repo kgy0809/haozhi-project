@@ -24,6 +24,8 @@ public class Account {
     private String state;
     private String userId;
     @Transient
+    private String uId;
+    @Transient
     private String bankId;
     @Transient
     private String bankName;
