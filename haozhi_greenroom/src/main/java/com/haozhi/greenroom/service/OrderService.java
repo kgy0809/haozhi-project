@@ -1,14 +1,8 @@
 package com.haozhi.greenroom.service;
 
 import com.haozhi.common.utils.IdWorker;
-import com.haozhi.greenroom.dao.BusinessTwoMapper;
-import com.haozhi.greenroom.dao.HzUserMapper;
-import com.haozhi.greenroom.dao.MonthOrderMapper;
-import com.haozhi.greenroom.dao.OrderMapper;
-import com.haozhi.greenroom.pojo.BusinessTwo;
-import com.haozhi.greenroom.pojo.HzUser;
-import com.haozhi.greenroom.pojo.MonthOrder;
-import com.haozhi.greenroom.pojo.Order;
+import com.haozhi.greenroom.dao.*;
+import com.haozhi.greenroom.pojo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
@@ -34,6 +28,8 @@ public class OrderService {
     private IdWorker idWorker;
     @Autowired
     private MonthOrderMapper monthOrderMapper;
+    @Autowired
+    private HzYwMapper hzYwMapper;
 
     public List<Order> queryOrder() {
         Example example = new Example(Order.class);
@@ -103,20 +99,20 @@ public class OrderService {
              * 删除自己的创建的 完成订单
              */
             Example example = new Example(MonthOrder.class);
-            example.createCriteria().andEqualTo("orderId",id);
-            example.createCriteria().andEqualTo("userId",userId);
-            example.createCriteria().andEqualTo("state","1");
+            example.createCriteria().andEqualTo("orderId", id);
+            example.createCriteria().andEqualTo("userId", userId);
+            example.createCriteria().andEqualTo("state", "1");
             monthOrderMapper.deleteByExample(example);
 
             /**
              * 修改自己的金额
              */
-            user.setBalance((int) (user.getBalance() - commission * 0.06));
+            user.setBalance((int) (user.getBalance() - commission * 0.94));
             userRepository.updateByPrimaryKeySelective(user);
+            HzYw hzYw = hzYwMapper.selectByPrimaryKey(businessTwo.getOneId());
 
-            Integer fwPrice = order.getFwPrice();
-            double one = fwPrice * 0.93 * 0.25;
-            double two = fwPrice * 0.93 * 0.05;
+            double one = hzYw.getVipPrice() * order.getNumber() * 0.93 * 0.25;
+            double two = hzYw.getVipPrice() * order.getNumber() * 0.93 * 0.05;
             HzUser oneUser = userRepository.selectByPrimaryKey(user.getSuperId());
             if (oneUser != null) {
                 if (oneUser.getState().equals("2")) {
@@ -125,9 +121,9 @@ public class OrderService {
                     userRepository.updateByPrimaryKeySelective(oneUser);
 
                     example = new Example(MonthOrder.class);
-                    example.createCriteria().andEqualTo("orderId",id);
-                    example.createCriteria().andEqualTo("userId",oneUser.getId());
-                    example.createCriteria().andEqualTo("state","1");
+                    example.createCriteria().andEqualTo("orderId", id);
+                    example.createCriteria().andEqualTo("userId", oneUser.getId());
+                    example.createCriteria().andEqualTo("state", "1");
                     monthOrderMapper.deleteByExample(example);
                 }
 
@@ -139,16 +135,15 @@ public class OrderService {
                         userRepository.updateByPrimaryKeySelective(twoUser);
 
                         example = new Example(MonthOrder.class);
-                        example.createCriteria().andEqualTo("orderId",id);
-                        example.createCriteria().andEqualTo("userId",twoUser.getId());
-                        example.createCriteria().andEqualTo("state","1");
+                        example.createCriteria().andEqualTo("orderId", id);
+                        example.createCriteria().andEqualTo("userId", twoUser.getId());
+                        example.createCriteria().andEqualTo("state", "1");
                         monthOrderMapper.deleteByExample(example);
                     }
                 }
             }
         }
     }
-
 
     public void updateShOrder(String id) {
         Order order = new Order();
@@ -175,17 +170,20 @@ public class OrderService {
             monthOrder.setUserId(userId);
             monthOrder.setTime(new Date());
             monthOrder.setState("1");
-            monthOrder.setPrice((int) (commission * 0.06));
+            monthOrder.setOrderState("2");
+            monthOrder.setPrice((int) (commission * 0.94));
             monthOrderMapper.insert(monthOrder);
             /**
              * 修改自己的金额
              */
-            user.setBalance((int) (user.getBalance() + commission * 0.06));
+            user.setBalance((int) (user.getBalance() + commission * 0.94));
+            user.setTotalNum(user.getTotalNum() + 1);
             userRepository.updateByPrimaryKeySelective(user);
 
-            Integer fwPrice = order.getFwPrice();
-            double one = fwPrice * 0.93 * 0.25;
-            double two = fwPrice * 0.93 * 0.05;
+            HzYw hzYw = hzYwMapper.selectByPrimaryKey(businessTwo.getOneId());
+
+            double one = hzYw.getVipPrice() * order.getNumber() * 0.93 * 0.25;
+            double two = hzYw.getVipPrice() * order.getNumber() * 0.93 * 0.05;
             HzUser oneUser = userRepository.selectByPrimaryKey(user.getSuperId());
             if (oneUser != null) {
                 if (oneUser.getState().equals("2")) {
@@ -197,6 +195,7 @@ public class OrderService {
                     monthOrder.setUserId(oneUser.getId());
                     monthOrder.setTime(new Date());
                     monthOrder.setState("1");
+                    monthOrder.setOrderState(userId);
                     monthOrder.setPrice((int) one);
                     monthOrderMapper.insert(monthOrder);
                 }
@@ -211,6 +210,7 @@ public class OrderService {
                         monthOrder.setUserId(twoUser.getId());
                         monthOrder.setTime(new Date());
                         monthOrder.setState("1");
+                        monthOrder.setOrderState(userId);
                         monthOrder.setPrice((int) two);
                         monthOrderMapper.insert(monthOrder);
                     }
@@ -218,6 +218,5 @@ public class OrderService {
             }
         }
     }
-
 
 }

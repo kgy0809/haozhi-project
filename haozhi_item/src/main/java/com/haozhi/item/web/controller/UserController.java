@@ -55,9 +55,9 @@ public class UserController extends BaseController {
      * 用户注册查看协议
      */
     @RequestMapping(value = "agreement")
-    public String agreement(Map<Object, String> map) {
+    public String agreement(Map<Object, Object> map) {
         List<RegisterAgreement> registerAgreements = registerAgreementMapper.selectAll();
-        map.put("text",registerAgreements.get(0).toString());
+        map.put("list",registerAgreements.get(0));
         return "register_agreement";
     }
 }

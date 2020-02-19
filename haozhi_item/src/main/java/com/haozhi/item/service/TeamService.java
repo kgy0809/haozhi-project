@@ -1,9 +1,11 @@
 package com.haozhi.item.service;
 
 import com.github.pagehelper.PageHelper;
+import com.haozhi.item.dao.MonthOrderMapper;
 import com.haozhi.item.dao.OrderMapper;
 import com.haozhi.item.dao.UserRepository;
 import com.haozhi.item.dto.NewDto;
+import com.haozhi.item.pojo.MonthOrder;
 import com.haozhi.item.pojo.Order;
 import com.haozhi.item.pojo.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,29 +26,61 @@ public class TeamService {
 
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private MonthOrderMapper monthOrderMapper;
 
     @Autowired
     private OrderMapper orderMapper;
 
-    public List<User> searchList(String type, String name, String date1,String date2, String oneId, Integer page, Integer rows) {
+    public List<User> searchList(String type, String name, String date1, String date2, String oneId, Integer page, Integer rows) {
         if ("1".equals(type)) {
             if ((name == null || "".equals(name)) && (date1 == null || "".equals(date1))) {
                 Example example = new Example(User.class);
                 example.createCriteria().andEqualTo("superId", oneId);
                 PageHelper.startPage(page, rows);
                 List<User> users = userRepository.selectByExample(example);
+                Integer priceAll = 0;
+                for (User user : users) {
+                    Example ord = new Example(MonthOrder.class);
+                    ord.createCriteria().andEqualTo("userId", oneId).andEqualTo("orderState", user.getId());
+                    List<MonthOrder> monthOrders = monthOrderMapper.selectByExample(ord);
+                    if (monthOrders.size() != 0) {
+                        for (MonthOrder monthOrder : monthOrders) {
+                            Integer price = monthOrder.getPrice();
+                            priceAll += price;
+                        }
+                    }
+                    user.setBalance(priceAll);
+                    priceAll = 0;
+                }
+
                 return users;
             }
            /* Example ex = new Example(User.class);
             ex.createCriteria().andEqualTo("superId", oneId);
             *//* ex.createCriteria().andEqualTo("time",date).andEqualTo("name",name);*//*
             ex.and().orEqualTo("time", date1).orEqualTo("name", name);*/
-            Map<String,Object> map = new HashMap<>();
-            map.put("oneId",oneId);
-            map.put("name",name);
-            map.put("date1",date1);
-            map.put("date2",date2);
-            return userRepository.findByNameAndAge(map);
+            Map<String, Object> map = new HashMap<>();
+            map.put("oneId", oneId);
+            map.put("name", name);
+            map.put("date1", date1);
+            map.put("date2", date2);
+            List<User> byNameAndAge = userRepository.findByNameAndAge(map);
+            Integer priceAll = 0;
+            for (User user : byNameAndAge) {
+                Example ord = new Example(MonthOrder.class);
+                ord.createCriteria().andEqualTo("userId", oneId).andEqualTo("orderState", user.getId());
+                List<MonthOrder> monthOrders = monthOrderMapper.selectByExample(ord);
+                if (monthOrders.size() != 0) {
+                    for (MonthOrder monthOrder : monthOrders) {
+                        Integer price = monthOrder.getPrice();
+                        priceAll += price;
+                    }
+                }
+                user.setBalance(priceAll);
+                priceAll = 0;
+            }
+            return byNameAndAge;
         } else {
             if ((name == null || "".equals(name)) && (date1 == null || "".equals(date1))) {
                 Example example = new Example(User.class);
@@ -61,8 +95,23 @@ public class TeamService {
                     ea.createCriteria().andEqualTo("superId", user.getId());
                     PageHelper.startPage(page, rows);
                     List<User> select = userRepository.selectByExample(ea);
+                    Integer priceAll = 0;
+                    for (User user1 : select) {
+                        Example ord = new Example(MonthOrder.class);
+                        ord.createCriteria().andEqualTo("userId", oneId).andEqualTo("orderState", user1.getId());
+                        List<MonthOrder> monthOrders = monthOrderMapper.selectByExample(ord);
+                        if (monthOrders.size() != 0) {
+                            for (MonthOrder monthOrder : monthOrders) {
+                                Integer price = monthOrder.getPrice();
+                                priceAll += price;
+                            }
+                        }
+                        user1.setBalance(priceAll);
+                        priceAll = 0;
+                    }
                     list.add(select);
                 });
+
                 return list;
             }
             Example example = new Example(User.class);
@@ -72,13 +121,28 @@ public class TeamService {
              */
             List<User> users = userRepository.selectByExample(example);
             List listData = new ArrayList();
-            Map<String,Object> map = new HashMap<>();
+            Map<String, Object> map = new HashMap<>();
             users.forEach(user -> {
-                map.put("oneId",user.getId());
-                map.put("name",name);
-                map.put("date1",date1);
-                map.put("date2",date2);
-                listData.add(userRepository.findByNameAndAge(map));
+                map.put("oneId", user.getId());
+                map.put("name", name);
+                map.put("date1", date1);
+                map.put("date2", date2);
+                List<User> byNameAndAge = userRepository.findByNameAndAge(map);
+                Integer priceAll = 0;
+                for (User user1 : byNameAndAge) {
+                    Example ord = new Example(MonthOrder.class);
+                    ord.createCriteria().andEqualTo("userId", oneId).andEqualTo("orderState", user1.getId());
+                    List<MonthOrder> monthOrders = monthOrderMapper.selectByExample(ord);
+                    if (monthOrders.size() != 0) {
+                        for (MonthOrder monthOrder : monthOrders) {
+                            Integer price = monthOrder.getPrice();
+                            priceAll += price;
+                        }
+                    }
+                    user1.setBalance(priceAll);
+                    priceAll = 0;
+                }
+                listData.add(byNameAndAge);
             });
             return listData;
         }
@@ -109,7 +173,7 @@ public class TeamService {
         List<Integer> listNum = new ArrayList();
         users.forEach(user -> {
             Example orderEx = new Example(Order.class);
-            orderEx.createCriteria().andEqualTo("userId", user.getId()).andEqualTo("state",3).andLike("time","%"+newDate+"%");
+            orderEx.createCriteria().andEqualTo("userId", user.getId()).andEqualTo("state", 3).andLike("time", "%" + newDate + "%");
             List<Order> orders = orderMapper.selectByExample(orderEx);
             orders.forEach(order -> {
                 newPrice.updateAndGet(v -> v + order.getPrice());
@@ -119,7 +183,7 @@ public class TeamService {
             List<User> users1 = userRepository.selectByExample(ea);
             users1.forEach(user1 -> {
                 Example orderEx2 = new Example(Order.class);
-                orderEx2.createCriteria().andEqualTo("userId", user1.getId()).andEqualTo("state",3).andLike("time","%"+newDate+"%");
+                orderEx2.createCriteria().andEqualTo("userId", user1.getId()).andEqualTo("state", 3).andLike("time", "%" + newDate + "%");
                 List<Order> orders1 = orderMapper.selectByExample(orderEx2);
                 orders1.forEach(order -> {
                     newPrice.updateAndGet(v -> v + order.getPrice());

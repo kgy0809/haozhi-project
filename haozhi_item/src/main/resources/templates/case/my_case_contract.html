@@ -126,33 +126,44 @@
     //发送到邮箱
     $('.my_fsBtn').click(function () {
         var val = $('.fsForm input').val();
+        var ids = $('#etc_id').val();
         $.ajax({
             url: "/api/case/downloadContractCN",
             type: "POST",
             data: {
                 type: 2,
-                email:val
+                email:val,
+                id:ids
             },
             success(res) {
                 if (res.code == 20000) {
                     $('.ht_Mask').hide();
+                    mui.toast('发送成功', {
+                        duration: 1600,
+                        type: 'div'
+                    });
                 }
             }
         })
     })
     //下载到手机
     $('.my_htBtn').click(function () {
-
+        var ids = $('#etc_id').val();
         $.ajax({
             url: "/api/case/downloadContractCN",
             type: "POST",
             data: {
-                type: 1
+                type: 1,
+                id:ids
             },
             success(res) {
                 if (res.code == 20000) {
                     $('.ht_Mask').hide();
                     window.open(res.data)
+                    mui.toast('下载成功', {
+                        duration: 1600,
+                        type: 'div'
+                    });
                     // $('.my_htBtn').find('a').attr('src', res.data);
                 }
             }

@@ -14,7 +14,7 @@
         </tr>
         <th>商标名称： <i th:text="${order.title}"></i></th>
         </tr>
-        <th>商标服务： <i th:text="${order.sbName}"></i></th>
+        <th>商标服务：  <i th:if="${business.hzYw.sjName} == '1'">软著代理 &nbsp;</i><i th:if="${business.hzYw.sjName} == '2'">软著代理+撰写 &nbsp;</i><i th:text="${order.sbName}"></i></th>
         </tr>
         <th>服务费： <i th:text="${order.doubleFwPrice}"></i></th>
         </tr>

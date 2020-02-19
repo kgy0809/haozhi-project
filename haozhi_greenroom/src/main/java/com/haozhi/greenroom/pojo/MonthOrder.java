@@ -25,6 +25,7 @@ public class MonthOrder {
     private String state;
     private String orderId;
     private Integer price;
+    private String orderState;
     @Transient
     private String userName;
     @Transient

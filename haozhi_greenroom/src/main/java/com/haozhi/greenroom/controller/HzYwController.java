@@ -62,6 +62,7 @@ public class HzYwController {
     }
 
     @RequestMapping("add/file")
+
     @ResponseBody
     public ResultDTO menu(MultipartFile file) throws Exception {
         String upload = new QiniuUtil().upload(idWorker.nextId() + ""+".doc", file.getBytes());

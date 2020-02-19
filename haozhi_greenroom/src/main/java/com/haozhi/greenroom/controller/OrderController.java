@@ -103,7 +103,6 @@ public class OrderController {
     @RequestMapping("xx/view")
     public String xxView(String id, Map<String, Object> map) {
         Order order = orderService.queryOrderById(id);
-        BusinessTwo business = businessTwoMapper.selectByPrimaryKey(order.getPOrder());
         LastDto lastDto = businessLast(order.getPOrder());
         map.put("order", order);
         map.put("business", lastDto);
@@ -116,6 +115,7 @@ public class OrderController {
         BeanUtils.copyProperties(businessTwo, lastDto);
         String oneId = businessTwo.getOneId();
         HzYw hzYw = hzYwMapper.selectByPrimaryKey(oneId);
+        lastDto.setHzYw(hzYw);
         lastDto.setSqrMessage(hzYw.getName());
         if (businessTwo.getMenuId() != null){
             String[] split = businessTwo.getMenuId().split(",");

@@ -22,6 +22,7 @@ public class MonthOrder {
     private String userId;
     private String state;
     private String orderId;
+    private String orderState;
     private Integer price;
     @Transient
     private String doublePrice;

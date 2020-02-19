@@ -64,7 +64,7 @@ public class Order {
 
 
     public void setTime(Date time) {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
         this.sTime = simpleDateFormat.format(time);
         this.time = time;
     }

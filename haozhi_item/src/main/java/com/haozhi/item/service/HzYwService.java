@@ -698,52 +698,6 @@ public class HzYwService {
         //保存为PDF格式文档
         doc.saveToFile("/www/server/haozhi/pdf/" + name + ".pdf",FileFormat.PDF);
         doc.close();
-        /*Map<String, String> testMap = new HashMap<String, String>();
-        testMap.put("name", business.getApplicationNumName());
-        testMap.put("jfXxdm", business.getApplicationNumName());
-        testMap.put("jfName", business.getApplicationNumName());
-        testMap.put("Email", business.getApplicationNumMail());
-        testMap.put("jfNum", business.getApplicationNumTel());
-        testMap.put("gwName", user.getName());
-        testMap.put("gwNum", user.getTel());
-        if (order != null) {
-            testMap.put("stime", order.getSTime());
-        } else {
-            testMap.put("stime", business.getSTime());
-        }
-        testMap.put("num", String.valueOf(business.getNumber()));
-        HzYw hzYw = hzYwRepository.selectByPrimaryKey(business.getOneId());
-        testMap.put("sb1", hzYw.getName());
-        testMap.put("sbName", business.getSTime());
-        if (hzYw.getSjName().equals("1")) {
-            String abcName = "软著代理";
-            testMap.put("abcName", abcName);
-        } else if (hzYw.getSjName().equals("2")) {
-            String abcName = "软著撰写+代理";
-            testMap.put("abcName", abcName);
-        }
-        testMap.put("gfPrice", String.valueOf(hzYw.getGfPrice() / 100));
-
-        testMap.put("zjPrice", String.valueOf(business.getPrice() * business.getNumber() / 100 + business.getCommission() / 100));
-        testMap.put("zjtPrice", String.valueOf(business.getPrice() * business.getNumber() / 100 + business.getCommission() / 100));
-        testMap.put("dxZjPrice", MoneyUtils.change(Double.parseDouble(String.valueOf(business.getPrice() * business.getNumber() / 100 + business.getCommission() / 100))));
-        if (user.getState().equals("1")) {
-            testMap.put("dlPrice", String.valueOf(hzYw.getHyPrice() / 100));
-        } else if (user.getState().equals("2")) {
-            testMap.put("dlPrice", String.valueOf(hzYw.getVipPrice() / 100 + business.getCommission() / 100));
-        }
-
-        List<String[]> testList = new ArrayList<String[]>();
-        WorderToNewWordUtils.changWord(inputUrl, outputUrl, testMap, testList);*/
-
-   /*     XWPFDocument document;
-        InputStream doc = new FileInputStream(outputUrl);
-        document = new XWPFDocument(doc);
-        PdfOptions options = PdfOptions.create();
-        OutputStream out = new FileOutputStream("/www/server/haozhi/pdf/"+name+".pdf");
-        PdfConverter.getInstance().convert(document, out, options);
-        doc.close();
-        out.close();*/
 
         File file = new File("/www/server/haozhi/pdf/"+name+".pdf");
 
@@ -809,6 +763,7 @@ public class HzYwService {
         doc.replace("#Name", hzYw.getName(), true, true);
         doc.replace("#zjPrice", String.valueOf(business.getPrice() / 100 + business.getCommission() / 100), true, true);
         /*doc.replace("#dxZjPrice", MoneyUtils.change(Double.parseDouble(String.valueOf(business.getPrice() / 100 + business.getCommission() / 100))), true, true);*/
+        doc.replace("#gfPrice", String.valueOf(hzYw.getGfPrice() / 100), true, true);
         if (user.getState().equals("1")) {
             doc.replace("#dlPrice", String.valueOf(hzYw.getHyPrice() / 100), true, true);
         } else if (user.getState().equals("2")) {

@@ -27,9 +27,9 @@ public class BaseController {
      */
     protected User getUser() {
         Object object = session.getAttribute("loginUser");
-        User user = userService.queryById("1223555329359482880");
-        if (user != null) {
-            return user;
+        /*User user = userService.queryById("1227493892644016128");*/
+        if (object != null) {
+            return (User) object;
         }
         return null;
     }

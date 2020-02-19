@@ -362,12 +362,17 @@ public class UserService {
         user.setState("1");
         user.setCoupon(0);
         user.setBalance(0);
-        if (user.getSuperId() != null && !user.getSuperId().equals("")) {
+        user.setTotalNum(0);
+        user.setMonthNum(0);
+        if (!("").equals(user.getSuperId()) && user.getSuperId() != null) {
             User user1 = userRepository.selectByPrimaryKey(user.getSuperId());
             user1.setCoupon(user1.getCoupon() + 1);
             userRepository.updateByPrimaryKeySelective(user1);
+            userRepository.insert(user);
+        } else {
+            user.setSuperId(null);
+            userRepository.insert(user);
         }
-        userRepository.insert(user);
     }
 
     public void updateState(String id) {

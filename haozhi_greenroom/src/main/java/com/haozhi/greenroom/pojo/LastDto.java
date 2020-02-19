@@ -16,6 +16,8 @@ import java.util.List;
 @Data
 public class LastDto {
 
+    private HzYw hzYw;
+
     private String id;
     /**
      * 申请人 信息

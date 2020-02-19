@@ -36,6 +36,7 @@ public class PayService {
     @Autowired
     private MonthOrderMapper monthOrderMapper;
 
+
     @Autowired
     private IdWorker idWorker;
 
@@ -125,17 +126,19 @@ public class PayService {
             monthOrder.setUserId(userId);
             monthOrder.setTime(new Date());
             monthOrder.setState("1");
-            monthOrder.setPrice((int) (commission * 0.06));
+            monthOrder.setOrderState("2");
+            monthOrder.setPrice((int) (commission * 0.94));
             monthOrderMapper.insert(monthOrder);
             /**
              * 修改自己的金额
              */
-            user.setBalance((int) (user.getBalance() + commission * 0.06));
+            user.setBalance((int) (user.getBalance() + commission * 0.94));
+            user.setTotalNum(user.getTotalNum() + 1);
             userRepository.updateByPrimaryKeySelective(user);
+            HzYw hzYw = hzYwRepository.selectByPrimaryKey(businessTwo.getOneId());
 
-            Integer fwPrice = order.getFwPrice();
-            double one = fwPrice * 0.93 * 0.25;
-            double two = fwPrice * 0.93 * 0.05;
+            double one = hzYw.getVipPrice() * order.getNumber() * 0.93 * 0.25;
+            double two = hzYw.getVipPrice() * order.getNumber() * 0.93 * 0.05;
             User oneUser = userRepository.selectByPrimaryKey(user.getSuperId());
             if (oneUser != null) {
                 if (oneUser.getState().equals("2")) {
@@ -148,6 +151,7 @@ public class PayService {
                     monthOrder.setTime(new Date());
                     monthOrder.setState("1");
                     monthOrder.setPrice((int) one);
+                    monthOrder.setOrderState(userId);
                     monthOrderMapper.insert(monthOrder);
                 }
                 User twoUser = userRepository.selectByPrimaryKey(oneUser.getSuperId());
@@ -163,6 +167,7 @@ public class PayService {
                         monthOrder.setTime(new Date());
                         monthOrder.setState("1");
                         monthOrder.setPrice((int) two);
+                        monthOrder.setOrderState(userId);
                         monthOrderMapper.insert(monthOrder);
                     }
                 }
