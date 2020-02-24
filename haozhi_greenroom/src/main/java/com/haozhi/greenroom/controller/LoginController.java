@@ -26,12 +26,12 @@ public class LoginController {
     @Autowired
     private MenuService menuService;
 
-    @RequestMapping
+    @RequestMapping(method = RequestMethod.GET)
     public String login(){
         return "login";
     }
 
-    @RequestMapping(value = "aunt",method = RequestMethod.POST)
+    @RequestMapping(method = RequestMethod.POST)
     public String loginUser(
             @RequestParam("username") String username,
             @RequestParam("password") String password,

@@ -1,15 +1,5 @@
 package com.haozhi.item.web.controller;
 
-import com.haozhi.item.service.HzYwService;
-import org.springframework.util.ClassUtils;
-import org.springframework.util.ResourceUtils;
-
-import java.io.FileNotFoundException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Scanner;
 
 /**
  * @author kgy
@@ -18,8 +8,9 @@ import java.util.Scanner;
  */
 public class textDemo {
     public static void main(String[] args) {
-        String path = textDemo.class.getResource("/static/data/006.docx").getPath();
-        System.out.println(path);
+        String path = "01,02,03,04";
+        String[] split = path.split(",");
+        System.out.println();
     }
     /*    public static void main(String[] args) throws FileNotFoundException {
     // java 代码如何获取当前时间的上一个月的月末时间..

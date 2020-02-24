@@ -41,7 +41,7 @@ public class SoftController extends BaseController {
      */
     @RequestMapping
     public String soft(String id,Map<String ,Object> map){
-        map.put("user",getUser());
+        map.put("user",userService.queryById(getUser().getId()));
         map.put("id",id);
 /*        List list = hzYwService.queryById(id);
         map.put("list",list);*/
@@ -83,7 +83,7 @@ public class SoftController extends BaseController {
         HzYw hzYw = hzYwService.softNumbById(id,getUser());
         session.setAttribute("softId",hzYw.getId());
         map.put("hzYw",hzYw);
-        map.put("user",getUser());
+        map.put("user",userService.queryById(getUser().getId()));
         return "soft/solt_applicant";
     }
 

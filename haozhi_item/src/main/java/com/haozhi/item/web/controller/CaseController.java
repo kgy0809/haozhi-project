@@ -41,7 +41,7 @@ public class CaseController extends BaseController {
      */
     @RequestMapping
     public String indexList(String id, Map<String,Object> map){
-        map.put("user", getUser());
+        map.put("user", userService.queryById(getUser().getId()));
         List<HzYw> list = hzYwService.queryById(id);
         map.put("list", list);
         return "case/case";
@@ -57,7 +57,7 @@ public class CaseController extends BaseController {
         HzYw hzYw = hzYwService.softNumbById(id,getUser());
         session.setAttribute("caseId",hzYw.getId());
         map.put("hzYw",hzYw);
-        map.put("user",getUser());
+        map.put("user",userService.queryById(getUser().getId()));
         return "case/case_applicant";
     }
 

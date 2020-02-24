@@ -186,7 +186,7 @@ public class HzYwService {
         String oneId = businessTwo.getOneId();
         HzYw hzYw = hzYwRepository.selectByPrimaryKey(oneId);
         lastDto.setSqrMessage(hzYw.getName());
-        if (businessTwo.getPrice() == null || businessTwo.getPrice().equals("")) {
+        if (businessTwo.getPrice() == null || ("").equals(businessTwo.getPrice())) {
             if (user.getState().equals("1")) {
                 businessTwo.setPrice(hzYw.getHyPrice());
             } else if (user.getState().equals("2")) {
@@ -194,21 +194,23 @@ public class HzYwService {
             }
         }
         lastDto.setPrice(businessTwo.getPrice() + businessTwo.getCommission());
-        String[] split = businessTwo.getMenuId().split(",");
-        if (split.length > 0) {
-            Menu key = menuMapper.selectByPrimaryKey(split[0]);
-            Menu key1 = menuMapper.selectByPrimaryKey(key.getPid());
-            if (key1 != null) {
-                Menu key2 = menuMapper.selectByPrimaryKey(key1.getPid());
-                lastDto.setOneName(key2.getName());
+        if (businessTwo.getMenuId() != null) {
+            String[] split = businessTwo.getMenuId().split(",");
+            if (split.length > 0) {
+                Menu key = menuMapper.selectByPrimaryKey(split[0]);
+                Menu key1 = menuMapper.selectByPrimaryKey(key.getPid());
+                if (key1 != null) {
+                    Menu key2 = menuMapper.selectByPrimaryKey(key1.getPid());
+                    lastDto.setOneName(key2.getName());
+                }
             }
+            List<Menu> list = new ArrayList<>();
+            for (String s : split) {
+                Menu menu = menuMapper.selectByPrimaryKey(s);
+                list.add(menu);
+            }
+            lastDto.setMenuName(list);
         }
-        List<Menu> list = new ArrayList<>();
-        for (String s : split) {
-            Menu menu = menuMapper.selectByPrimaryKey(s);
-            list.add(menu);
-        }
-        lastDto.setMenuName(list);
         return lastDto;
     }
 
@@ -290,8 +292,8 @@ public class HzYwService {
 
             HzYw hzYw = hzYwRepository.selectByPrimaryKey(business.getOneId());
             if (user.getState().equals("1")) {
-                doc.replace("#dlPrice", String.valueOf(hzYw.getHyPrice() / 100), true, true);
-                doc.replace("#dxZjPrice", MoneyUtils.change(hzYw.getHyPrice() / 100), true, true);
+                doc.replace("#dlPrice", String.valueOf(hzYw.getHyPrice() / 100 + business.getCommission() / 100), true, true);
+                doc.replace("#dxZjPrice", MoneyUtils.change(hzYw.getHyPrice() / 100 + business.getCommission() / 100), true, true);
             } else if (user.getState().equals("2")) {
                 doc.replace("#dlPrice", String.valueOf(hzYw.getVipPrice() / 100 + business.getCommission() / 100), true, true);
                 doc.replace("#dxZjPrice", MoneyUtils.change(hzYw.getVipPrice() / 100 + business.getCommission() / 100), true, true);
@@ -317,8 +319,8 @@ public class HzYwService {
                 return "email发送成功";
             }
             PDFToImgUtil pdfToImgUtil = new PDFToImgUtil();
-            int pdfNum = pdfToImgUtil.getPDFNum("/www/server/haozhi/pdf" + name + ".pdf");
-            String png = pdfToImgUtil.PDFToImg(name, "/www/server/haozhi/pdf" + name + ".pdf", pdfNum, "png");
+            int pdfNum = pdfToImgUtil.getPDFNum("/www/server/haozhi/pdf/" + name + ".pdf");
+            String png = pdfToImgUtil.PDFToImg(name, "/www/server/haozhi/pdf/" + name + ".pdf", pdfNum, "png");
             file.delete();
             doc.close();
             return png;
@@ -352,7 +354,7 @@ public class HzYwService {
             doc.replace("#dxZjPrice", MoneyUtils.change(Double.parseDouble(String.valueOf(business.getPrice() / 100 + business.getCommission() / 100))), true, true);
             HzYw hzYw = hzYwRepository.selectByPrimaryKey(business.getOneId());
             if (user.getState().equals("1")) {
-                doc.replace("#dlPrice", String.valueOf(hzYw.getHyPrice() / 100), true, true);
+                doc.replace("#dlPrice", String.valueOf(hzYw.getHyPrice() / 100 + business.getCommission() / 100), true, true);
             } else if (user.getState().equals("2")) {
                 doc.replace("#dlPrice", String.valueOf(hzYw.getVipPrice() / 100 + business.getCommission() / 100), true, true);
             }
@@ -417,7 +419,7 @@ public class HzYwService {
             doc.replace("#Name", hzYw.getName(), true, true);
             doc.replace("#gfPrice", String.valueOf((hzYw.getGfPrice() / 100)), true, true);
             if (user.getState().equals("1")) {
-                doc.replace("#dlPrice", String.valueOf(hzYw.getHyPrice() / 100), true, true);
+                doc.replace("#dlPrice", String.valueOf(hzYw.getHyPrice() / 100 + business.getCommission() / 100), true, true);
             } else if (user.getState().equals("2")) {
                 doc.replace("#dlPrice", String.valueOf(hzYw.getVipPrice() / 100 + business.getCommission() / 100), true, true);
             }
@@ -522,13 +524,13 @@ public class HzYwService {
         }
         doc.replace("#lb", business.getLbVal(), true, true);
         doc.replace("#gfPrice", String.valueOf(hzYw.getGfPrice() / 100), true, true);
-
+        doc.replace("#abcName", business.getApplicationName(), true, true);
         doc.replace("#zjPrice", String.valueOf(business.getPrice() / 100 + business.getCommission() / 100), true, true);
         doc.replace("#dxZjPrice", MoneyUtils.change(Double.parseDouble(String.valueOf(business.getPrice() / 100 + business.getCommission() / 100))), true, true);
         if (user.getState().equals("1")) {
-            doc.replace("#dlPrice", String.valueOf(hzYw.getHyPrice() / 100), true, true);
+            doc.replace("#dlPrice", String.valueOf(hzYw.getHyPrice() / 100 + business.getCommission() / 100), true, true);
         } else if (user.getState().equals("2")) {
-            doc.replace("#dlPrice", String.valueOf(hzYw.getVipPrice() / 100 + business.getCommission()), true, true);
+            doc.replace("#dlPrice", String.valueOf(hzYw.getVipPrice() / 100 + business.getCommission() / 100), true, true);
         }
 
         //更新域
@@ -603,7 +605,7 @@ public class HzYwService {
         doc.replace("#zjPrice", String.valueOf(business.getPrice() / 100 + business.getCommission() / 100), true, true);
         doc.replace("#dxZjPrice", MoneyUtils.change(Double.parseDouble(String.valueOf(business.getPrice() / 100 + business.getCommission() / 100))), true, true);
         if (user.getState().equals("1")) {
-            doc.replace("#dlPrice", String.valueOf(hzYw.getHyPrice() / 100), true, true);
+            doc.replace("#dlPrice", String.valueOf(hzYw.getHyPrice() / 100 + business.getCommission() / 100), true, true);
         } else if (user.getState().equals("2")) {
             doc.replace("#dlPrice", String.valueOf(hzYw.getVipPrice() / 100 + business.getCommission() / 100), true, true);
         }
@@ -688,7 +690,7 @@ public class HzYwService {
         doc.replace("#zjPrice", String.valueOf(business.getPrice() * business.getNumber() / 100 + business.getCommission() / 100), true, true);
         doc.replace("#dxZjPrice", MoneyUtils.change(Double.parseDouble(String.valueOf(business.getPrice() * business.getNumber() / 100 + business.getCommission() / 100))), true, true);
         if (user.getState().equals("1")) {
-            doc.replace("#dlPrice", String.valueOf(hzYw.getHyPrice() / 100), true, true);
+            doc.replace("#dlPrice", String.valueOf(hzYw.getHyPrice() / 100 + business.getCommission() / 100), true, true);
         } else if (user.getState().equals("2")) {
             doc.replace("#dlPrice", String.valueOf(hzYw.getVipPrice() / 100 + business.getCommission() / 100), true, true);
         }
@@ -696,10 +698,10 @@ public class HzYwService {
         doc.isUpdateFields(true);
         String name = idWorker.nextId() + "";
         //保存为PDF格式文档
-        doc.saveToFile("/www/server/haozhi/pdf/" + name + ".pdf",FileFormat.PDF);
+        doc.saveToFile("/www/server/haozhi/pdf/" + name + ".pdf", FileFormat.PDF);
         doc.close();
 
-        File file = new File("/www/server/haozhi/pdf/"+name+".pdf");
+        File file = new File("/www/server/haozhi/pdf/" + name + ".pdf");
 
         if ("1".equals(type)) {
             QiniuUtil qiniuUtil = new QiniuUtil();
@@ -714,8 +716,8 @@ public class HzYwService {
             return "email发送成功";
         }
         PDFToImgUtil pdfToImgUtil = new PDFToImgUtil();
-        int pdfNum = pdfToImgUtil.getPDFNum("/www/server/haozhi/pdf/"+name+".pdf");
-        String png = pdfToImgUtil.PDFToImg(name, "/www/server/haozhi/pdf/"+name+".pdf", pdfNum, "png");
+        int pdfNum = pdfToImgUtil.getPDFNum("/www/server/haozhi/pdf/" + name + ".pdf");
+        String png = pdfToImgUtil.PDFToImg(name, "/www/server/haozhi/pdf/" + name + ".pdf", pdfNum, "png");
         file.delete();
         return png;
     }
@@ -765,7 +767,7 @@ public class HzYwService {
         /*doc.replace("#dxZjPrice", MoneyUtils.change(Double.parseDouble(String.valueOf(business.getPrice() / 100 + business.getCommission() / 100))), true, true);*/
         doc.replace("#gfPrice", String.valueOf(hzYw.getGfPrice() / 100), true, true);
         if (user.getState().equals("1")) {
-            doc.replace("#dlPrice", String.valueOf(hzYw.getHyPrice() / 100), true, true);
+            doc.replace("#dlPrice", String.valueOf(hzYw.getHyPrice() / 100 + business.getCommission() / 100), true, true);
         } else if (user.getState().equals("2")) {
             doc.replace("#dlPrice", String.valueOf(hzYw.getVipPrice() / 100 + business.getCommission() / 100), true, true);
         }

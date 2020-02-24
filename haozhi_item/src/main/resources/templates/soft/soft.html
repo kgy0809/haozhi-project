@@ -68,8 +68,7 @@
 </div>
 
 <script th:inline="javascript">
-    var user=[[${user}]]
-    console.log(user);
+    var user = [[${user}]]
 </script>
 <script>
 
@@ -79,55 +78,55 @@
         $('.bus_item h1').text($('.bus_TitelList ul li').eq(0).find('span').text())
 
         function ajax(type) {
-            var str=location.href; //取得整个地址栏
+            var str = location.href; //取得整个地址栏
             var url = str.split("?")[1];
-            var url2  = url.split("=")[1];
+            var url2 = url.split("=")[1];
             var id;
-            html ='';
+            html = '';
 
             $.ajax({
-                url:"/api/soft/listId/"+url2+"/"+type,
+                url: "/api/soft/listId/" + url2 + "/" + type,
                 type: 'POST',
                 dataType: "json",
                 async: false,
-                success:function (res) {
-                    if(res.code == 20000){
-                        $.each(res.data,function (index,ele) {
-                            html += '<li class="bus_Lis" data-id='+ ele.id +'><span class="one-txt-cut">' + ele.name + '</span></li>';
+                success: function (res) {
+                    if (res.code == 20000) {
+                        $.each(res.data, function (index, ele) {
+                            html += '<li class="bus_Lis" data-id=' + ele.id + '><span class="one-txt-cut">' + ele.name + '</span></li>';
                         });
-                        $('.bus_banner').find('img').attr('src',res.data[0].image); //图片
+                        $('.bus_banner').find('img').attr('src', res.data[0].image); //图片
                         $('.bus_item p').text(res.data[0].title); //标题
 
                         $('.bus_Txt').eq(1).find('span').text(res.data[0].doubleGfPrice);//官费
                         $('.bus_Txt3').eq(0).find('span').text(res.data[0].bjPrice);//八戒费用
                         $('.bus_Txt3').eq(1).find('span').text(res.data[0].dsPrice);//大师费用
                         $('.bus_Txt5').html(res.data[0].text) //富文本
-                        if(user.state == 1){
+                        if (user.state == 1) {
                             $('.bus_Txt').eq(0).find('span').text(res.data[0].doubleHyPrice);
-                            var Price = parseFloat(Number(res.data[0].doubleHyPrice)+ Number(res.data[0].doubleGfPrice)).toFixed(2);
-                            $('.bus_Txt4').eq(0).find('span').text(Price);
-                        }else if(user.state == 2){
+                            /*var Price = parseFloat(Number(res.data[0].doubleHyPrice) + Number(res.data[0].doubleGfPrice)).toFixed(2);*/
+                            $('.bus_Txt4').eq(0).find('span').text(parseFloat(Number(res.data[0].doubleHyPrice) + Number(res.data[0].doubleGfPrice)).toFixed(2));
+                        } else if (user.state == 2) {
                             $('.bus_Txt').eq(0).find('span').text(res.data[0].doubleVipPrice);
-                            var Price = parseFloat(Number(res.data[0].doubleVipPrice) + Number(res.data[0].doubleGfPrice)).toFixed(2);
-                            $('.bus_Txt4').eq(0).find('span').text(Price);
+                            /*var Price = parseFloat(Number(res.data[0].doubleVipPrice) + Number(res.data[0].doubleGfPrice)).toFixed(2);*/
+                            $('.bus_Txt4').eq(0).find('span').text(parseFloat(Number(res.data[0].doubleVipPrice) + Number(res.data[0].doubleGfPrice)).toFixed(2));
                         }
                         $('.bus_dataUl').html(html);
                         id = $('.bus_Lis ').eq(0).data('id');
                     }
                 }
             });
-            $('.bus_Lis').click(function() {
+            $('.bus_Lis').click(function () {
                 id = $(this).data('id');
                 $(this).addClass('bus_active').siblings().removeClass('bus_active');
                 // ajax(id);
                 $.ajax({
-                    url:'/api/soft/numb/'+id,
-                    type:'post',
+                    url: '/api/soft/numb/' + id,
+                    type: 'post',
                     dataType: "json",
                     async: false,
-                    success:function (res) {
-                        if(res.code == 20000){
-                            $('.bus_banner').find('img').attr('src',res.data.image); //图片
+                    success: function (res) {
+                        if (res.code == 20000) {
+                            $('.bus_banner').find('img').attr('src', res.data.image); //图片
                             $('.bus_item p').text(res.data.title); //标题
 
                             $('.bus_Txt').eq(1).find('span').text(res.data.doubleGfPrice); //官费
@@ -136,24 +135,25 @@
 
                             $('.bus_Txt5').html(res.data.text); //富文本
 
-                            if(user.state == 1){
+                            if (user.state == 1) {
                                 $('.bus_Txt').eq(0).find('span').text(res.data.doubleHyPrice);
-                                var Price = parseFloat(Number(res.data.doubleHyPrice) +Nuber(res.data.doubleGfPrice)).toFixed(2);
-                                $('.bus_Txt4').eq(0).find('span').text(Price);
-                            }else if(user.state == 2){
+                                /*var Price = parseFloat(Number(res.data.doubleHyPrice) + Number(res.data.doubleGfPrice)).toFixed(2);*/
+                                $('.bus_Txt4').eq(0).find('span').text(parseFloat(Number(res.data.doubleHyPrice) + Number(res.data.doubleGfPrice)).toFixed(2));
+                            } else if (user.state == 2) {
                                 $('.bus_Txt').eq(0).find('span').text(res.data.doubleVipPrice);
-                                var Price = parseFloat(Number(res.data.doubleVipPrice) + Number(res.data.doubleGfPrice)).toFixed(2);
-                                $('.bus_Txt4').eq(0).find('span').text(Price);
+                                /*var Price = parseFloat(Number(res.data.doubleVipPrice) + Number(res.data.doubleGfPrice)).toFixed(2);*/
+                                $('.bus_Txt4').eq(0).find('span').text(parseFloat(Number(res.data.doubleVipPrice) + Number(res.data.doubleGfPrice)).toFixed(2));
                             }
                         }
                     }
                 })
             });
             $('.bus_btn').click(function () {
-                location.href="/api/soft/two?id="+id;
+                location.href = "/api/soft/two?id=" + id;
             });
             $('.bus_Lis').eq(0).addClass('bus_active');
         }
+
         ajax(type);
         $('.bus_TitelList ul li').click(function () {
             $(this).addClass('bus_active').siblings().removeClass('bus_active');

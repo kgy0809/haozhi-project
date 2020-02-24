@@ -95,9 +95,7 @@ public class PersonalController extends BaseController {
      */
     @RequestMapping("settings")
     public String personalSettings(Map<String, Object> map) {
-        User user = getUser();
-        User user1 = userService.personalSettings(user.getId());
-        map.put("user", user1);
+        map.put("user", userService.queryById(getUser().getId()));
         return "personal/personal_Settings";
     }
 

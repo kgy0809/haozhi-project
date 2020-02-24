@@ -53,7 +53,7 @@ public class BusinessController extends BaseController {
      */
     @RequestMapping
     public String business(String id, Map<String, Object> map) {
-        map.put("user", getUser());
+        map.put("user", userService.queryById(getUser().getId()));
         List<HzYw> list = hzYwService.queryById(id);
         map.put("list", list);
         return "civil/business";
@@ -99,8 +99,9 @@ public class BusinessController extends BaseController {
             map.put("menu", menus);
             return "civil/business_category";
         } else {
-            map.put("menu", menus);
-            return "civil/business_category2";
+            /*map.put("menu", menus);*/
+            map.put("user", userService.queryById(getUser().getId()));
+            return "civil/business_applicant";
         }
     }
 
@@ -126,7 +127,7 @@ public class BusinessController extends BaseController {
      */
     @RequestMapping(value = "GgTwo/{id}")
     public String businessGgTwo(@PathVariable String id, Map<String, Object> map) {
-        map.put("user", getUser());
+        map.put("user", userService.queryById(getUser().getId()));
         String twoId = (String) session.getAttribute("twoId");
         hzYwService.updateGgTwo(id, twoId);
         return "civil/business_applicant";
@@ -141,7 +142,7 @@ public class BusinessController extends BaseController {
     public String three(Map<String, Object> map) {
         String twoId = (String) session.getAttribute("twoId");
         map.put("id", twoId);
-        map.put("user", getUser());
+        map.put("user", userService.queryById(getUser().getId()));
         return "civil/business_applicant";
     }
 
@@ -188,7 +189,10 @@ public class BusinessController extends BaseController {
     public String businessLast(Map<String, Object> map) {
         String twoId = (String) session.getAttribute("twoId");
         LastDto lastDto = hzYwService.businessLast(twoId, getUser());
+        String oneId = (String) session.getAttribute("oenId");
+        HzYw hzYw = hzYwService.queryGYById(oneId);
         map.put("list", lastDto);
+        map.put("hzYw", hzYw);
         return "civil/business_information";
     }
 

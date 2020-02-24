@@ -51,7 +51,7 @@ public class ShiroConfig {
         //2.设置安全管理器
         shiroFilterFactoryBean.setSecurityManager(securityManager);
         //3.通用配置（跳转登陆页面，为授权跳转的页面）
-        shiroFilterFactoryBean.setLoginUrl("/login/aunt");
+        shiroFilterFactoryBean.setLoginUrl("/login");
         shiroFilterFactoryBean.setUnauthorizedUrl("/frame");
         //注销跳转页面
         LogoutFilter logoutFilter = new LogoutFilter();
@@ -64,7 +64,7 @@ public class ShiroConfig {
          */
         Map<String, String> filterChainDefinitionMap = new LinkedHashMap<>();
         // <!-- authc:所有url都必须认证通过才可以访问; anon:所有url都都可以匿名访问-->
-        filterChainDefinitionMap.put("/login/**", "anon");
+        filterChainDefinitionMap.put("/login", "anon");
         filterChainDefinitionMap.put("/static/**", "anon");
         filterChainDefinitionMap.put("/images/**", "anon");//images
         filterChainDefinitionMap.put("/css/**", "anon");//css

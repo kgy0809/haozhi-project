@@ -41,7 +41,7 @@ public class CopyrightController extends BaseController {
      */
     @RequestMapping
     public String indexList(String id, Map<String,Object> map){
-        map.put("user", getUser());
+        map.put("user", userService.queryById(getUser().getId()));
         List<HzYw> list = hzYwService.queryById(id);
         map.put("list", list);
         return "copyright/right";
@@ -57,7 +57,7 @@ public class CopyrightController extends BaseController {
         HzYw hzYw = hzYwService.softNumbById(id,getUser());
         session.setAttribute("copyrightId",hzYw.getId());
         map.put("hzYw",hzYw);
-        map.put("user",getUser());
+        map.put("user",userService.queryById(getUser().getId()));
         return "copyright/right_applicant";
     }
 

@@ -366,9 +366,14 @@ public class UserService {
         user.setMonthNum(0);
         if (!("").equals(user.getSuperId()) && user.getSuperId() != null) {
             User user1 = userRepository.selectByPrimaryKey(user.getSuperId());
-            user1.setCoupon(user1.getCoupon() + 1);
-            userRepository.updateByPrimaryKeySelective(user1);
-            userRepository.insert(user);
+            if (user1 != null){
+                user1.setCoupon(user1.getCoupon() + 1);
+                userRepository.updateByPrimaryKeySelective(user1);
+                userRepository.insert(user);
+            }else {
+                user.setSuperId(null);
+                userRepository.insert(user);
+            }
         } else {
             user.setSuperId(null);
             userRepository.insert(user);

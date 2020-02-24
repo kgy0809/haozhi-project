@@ -24,7 +24,7 @@
         </div>
     </div>
     <!-- 商标类别 -->
-    <div class="information_item3">
+    <div class="information_item3" th:if="${hzYw.zid} == '10086'">
         <h1 class="applicant_Txt" style="margin-bottom:0.26rem;">商标类别</h1>
         <div class="information_List">
             <p class="one-txt-cut" th:text="${p.oneName}">01 化学原料</p>
@@ -38,7 +38,7 @@
         <h1 class="applicant_Txt" style="margin-bottom:0.26rem;">申请人信息</h1>
         <div class="information_List2">
             <p th:text="${p.application} == '1' ? '企业申请':'个人申请'"></p>
-            <p th:text="${p.application} == '1' ?  '企业申请：'+${p.applicationName} :'个人姓名：'+ ${p.applicationName}"></p>
+            <p th:text="${p.application} == '1' ?  '公司名称：'+${p.applicationName} :'个人姓名：'+ ${p.applicationName}"></p>
 
             <p th:text="${p.application} == '1' ? '统一社会信用代码：'+ ${p.applicationId}:'身份证号：'+ ${p.applicationId}"></p>
         </div>
