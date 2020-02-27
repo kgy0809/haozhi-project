@@ -52,7 +52,11 @@
         <div class="layui-form-item">
             <label class="layui-form-label">官费价格</label>
             <div class="layui-input-inline shortInput">
-                <input type="text" name="gfPrice" th:value="${hzYw.gfPrice}/100"
+                <input type="text" name="gfPrice" th:if="${hzYw.gfPrice} != '-1'" th:value="${hzYw.gfPrice}/100"
+                       class="layui-input">
+                <input type="hidden" name="gfPrice" th:if="${hzYw.gfPrice} == '-1'" value="-1"
+                       class="layui-input">
+                <input type="text" th:if="${hzYw.gfPrice} == '-1'" value="国外费用单独确认"
                        class="layui-input">
             </div>
         </div>
@@ -140,7 +144,7 @@
             , url: '/brand/add/file' //改成您自己的上传接口
             , accept: 'file' //普通文件
             , done: function (res) {
-                if (res.code == 20000){
+                if (res.code == 20000) {
                     $("#wordUrl").val(res.data);
                     returnlayer.msg('上传成功');
                 }

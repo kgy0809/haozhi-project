@@ -36,7 +36,11 @@ public class HzYwService {
     }
 
     public void updateData(HzYw hzYw) {
-        hzYw.setGfPrice(hzYw.getGfPrice() * 100);
+        if (hzYw.getGfPrice() == -1) {
+            hzYw.setGfPrice(-1);
+        } else {
+            hzYw.setGfPrice(hzYw.getGfPrice() * 100);
+        }
         hzYw.setVipPrice(hzYw.getVipPrice() * 100);
         hzYw.setHyPrice(hzYw.getHyPrice() * 100);
         hzYwMapper.updateByPrimaryKeySelective(hzYw);

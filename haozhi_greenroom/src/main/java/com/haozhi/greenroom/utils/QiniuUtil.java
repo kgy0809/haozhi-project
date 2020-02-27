@@ -25,7 +25,7 @@ public class QiniuUtil {
 
     private static final String BUCKETNAME = "haozhi-image" ;
 
-    private static final String FILEDOMAIN = "http://q55l2dpen.bkt.clouddn.com/" ;
+    private static final String FILEDOMAIN = "http://haozhiimage.haozhizixun.com/" ;
 
     private UploadManager manager;
 

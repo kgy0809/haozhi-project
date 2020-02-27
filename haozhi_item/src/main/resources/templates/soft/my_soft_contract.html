@@ -73,8 +73,8 @@
                     </div>
                 </div>
                 <div class="my_MaskBtnBox">
-                    <div type="submit" class="my_MaskBtn1">取消</div>
-                    <button type="submit" class="my_MaskBtn2">确认</button>
+                    <div type="submit" class="my_MaskBtn1" >取消</div>
+                    <button type="submit" class="my_MaskBtn2" >确认</button>
                 </div>
             </div>
         </form>
@@ -103,7 +103,7 @@
     </div>
     <img src="" alt="">
     <div class="my_ContractBtn">
-        <button class="my_ContractEditor">编辑合同</button>
+        <button class="my_ContractEditor" th:if="${etc.stall} != '1'">编辑合同</button>
         <div class="my_ContractDownLoad">下载合同</div>
     </div>
 </div>

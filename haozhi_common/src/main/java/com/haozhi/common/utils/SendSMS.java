@@ -12,8 +12,8 @@ public class SendSMS {
     private String content;
 
     public SendSMS(String mobile) {
-        this.random = (int) ((Math.random() * 1000) + 9999) + "";
-        content = "【好智企业】您的验证码为"+random+"，如非本人操作请忽略本短信！";
+        this.random = (int) ((Math.random() * 1000) + 99999) + "";
+        content = "【好智咨询】您的验证码为"+random+"，如非本人操作请忽略本短信！";
         this.mobile = mobile;
     }
 

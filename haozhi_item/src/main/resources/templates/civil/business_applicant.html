@@ -23,21 +23,21 @@
             <div class="applicant_Box" style="display:block;">
                 <div class="applicant_Li">
                     <div class="applicant_Txt3">公司名称：</div>
-                    <input id="gsName" required autocomplete="off" type="text" placeholder="请输入公司名称">
+                    <input id="gsName" type="text" placeholder="请输入公司名称">
                 </div>
                 <div class="applicant_Li">
                     <div class="applicant_Txt3">统一社会信用代码：</div>
-                    <input id="xymName" required autocomplete="off" type="text" placeholder="请输入统一社会信用代码">
+                    <input id="xymName" type="text" placeholder="请输入统一社会信用代码">
                 </div>
             </div>
             <div class="applicant_Box">
                 <div class="applicant_Li">
                     <div class="applicant_Txt3">个人姓名：</div>
-                    <input id="grName" required autocomplete="off" type="text" placeholder="请输入个人名称">
+                    <input id="grName" type="text" placeholder="请输入个人名称">
                 </div>
                 <div class="applicant_Li">
                     <div class="applicant_Txt3">身份证号：</div>
-                    <input id="sfzName" required autocomplete="off" type="text" placeholder="请输入身份证号">
+                    <input id="sfzName" type="text" placeholder="请输入身份证号">
                 </div>
             </div>
         </div>
@@ -48,15 +48,15 @@
         <div class="applicant_Box2">
             <div class="applicant_Li">
                 <div class="applicant_Txt3">联系人名称：</div>
-                <input id="lxrName" required autocomplete="off" type="text" placeholder="请输入联系人名称">
+                <input id="lxrName" type="text" placeholder="请输入联系人名称">
             </div>
             <div class="applicant_Li">
                 <div class="applicant_Txt3">联系电话：</div>
-                <input id="phone" type="text" required autocomplete="off" placeholder="请输入联系电话">
+                <input id="phone" type="text" placeholder="请输入联系电话">
             </div>
             <div class="applicant_Li">
                 <div class="applicant_Txt3">电子邮箱：</div>
-                <input id="email" type="text" required autocomplete="off" placeholder="请输入电子邮箱">
+                <input id="email" type="text" placeholder="请输入电子邮箱">
             </div>
         </div>
     </div>
@@ -77,7 +77,7 @@
         <h1 class="applicant_Txt">材料下载</h1>
 
         <div class="applicant_Box4">
-            <div class="applicant_Li2">
+            <div class="applicant_Li2" th:if="${businessTwo} != '10013'">
                 <div class="applicant_Img"><img th:src="@{/image/19_icon.png}" alt=""></div>
                 <p class="wts_download" data-id="1">委托书下载</p>
             </div>

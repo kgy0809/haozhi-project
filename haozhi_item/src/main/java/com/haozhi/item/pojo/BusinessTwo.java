@@ -96,6 +96,8 @@ public class BusinessTwo {
     private String doublePrice;
     @Transient
     private String integerPrice;
+    @Transient
+    private String stall;
 
     public void setPrice(Integer price) {
         this.doublePrice = price / 100 + "." + price % 100 / 10 + price % 100 % 10;

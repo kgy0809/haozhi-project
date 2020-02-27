@@ -2,6 +2,7 @@ package com.haozhi.item.web.controller;
 
 import com.haozhi.common.constants.StatusCode;
 import com.haozhi.common.dto.ResultDTO;
+import com.haozhi.item.dao.BusinessTwoMapper;
 import com.haozhi.item.dto.LastDto;
 import com.haozhi.item.dto.MenuDto;
 import com.haozhi.item.pojo.BusinessTwo;
@@ -45,6 +46,9 @@ public class BusinessController extends BaseController {
 
     @Autowired
     private MenuService menuService;
+
+    @Autowired
+    private BusinessTwoMapper businessTwoMapper;
 
     /**
      * 页面的跳转
@@ -141,6 +145,8 @@ public class BusinessController extends BaseController {
     @RequestMapping("three")
     public String three(Map<String, Object> map) {
         String twoId = (String) session.getAttribute("twoId");
+        BusinessTwo businessTwo = businessTwoMapper.selectByPrimaryKey(twoId);
+        map.put("businessTwo",businessTwo.getOneId());
         map.put("id", twoId);
         map.put("user", userService.queryById(getUser().getId()));
         return "civil/business_applicant";

@@ -61,13 +61,19 @@
                 success(res) {
                     var html = '';
                     $.each(res.rows, function (index, ele) {
+                        var gfPrice = '';
+                        if (ele.gfPrice === -1){
+                            gfPrice = '<td>' + "国外费用单独确认" + '</td>' ;
+                        }else {
+                            gfPrice = '<td>' + ele.doubleGfPrice + '</td>' ;
+                        }
                         html += '<tr>' +
                             '            <td>' + ele.name + '</td>' +
                             '            <td>' + ele.doubleHyPrice + '</td>' +
                             '            <td>' + ele.doubleVipPrice + '</td>' +
                             '            <td>' + ele.bjPrice + '</td>' +
                             '            <td>' + ele.dsPrice + '</td>' +
-                            '            <td>' + ele.doubleGfPrice + '</td>' +
+                            gfPrice+
                             '            <td>' +
                             '                <button class="layui-btn layui-btn-xs" data-id="' + ele.id + '" onclick="updateBut(this)">修改</button>' +
                             '            </td>' +
@@ -99,22 +105,6 @@
             });
         }
 
-
-        /*layui.use(['laypage', 'layer'], function () {
-            var laypage = layui.laypage,
-                layer = layui.layer;
-
-            //总页数大于页码总数
-            laypage.render({
-                elem: 'pages'
-                , count: 100,
-                limit:10
-                , layout: ['count', 'prev', 'page', 'next']
-                , jump: function (obj,first) {
-                    console.log(obj)
-                }
-            });
-        });*/
 
     </script>
 </div>

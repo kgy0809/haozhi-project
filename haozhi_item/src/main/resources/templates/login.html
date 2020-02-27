@@ -8,25 +8,25 @@
 <div class="Box">
     <!-- 顶部/头像 -->
     <div class="reg_top">
-        <div class="reg_Img"><img th:src="@{/image/touxiang_img.png}" alt=""></div>
+        <div class="reg_Img"><img th:src="@{/image/login5.png}" alt=""></div>
     </div>
     <!-- 输入信息 -->
     <div class="reg_Box">
         <div>
             <div class="reg_li">
                 <div class="reg_Img2"><img th:src="@{/image/icon1.png}" alt=""></div>
-                <input type="text" required autocomplete="off" id="name" placeholder="请输入您的姓名">
+                <input type="text" id="name" placeholder="请输入您的姓名">
             </div>
             <div class="reg_li">
                 <div class="reg_Img2"><img th:src="@{/image/icon2.png}" alt=""></div>
-                <input type="text" required autocomplete="off" id="email" placeholder="请输入您的邮箱">
+                <input type="text" id="email" placeholder="请输入您的邮箱">
                 <input type="hidden" id="wxName" th:value="${wxName}">
                 <input type="hidden" id="wxImage" th:value="${wxImage}">
                 <input type="hidden" id="superId" th:value="${superId}">
             </div>
             <div class="reg_li">
                 <div class="reg_Img2"><img th:src="@{/image/icon3.png}" alt=""></div>
-                <input id="phone" required autocomplete="off" type="number" placeholder="请输入您的电话" maxlength="11">
+                <input id="phone" type="number" placeholder="请输入您的电话" maxlength="11">
             </div>
             <div class="reg_li">
                 <div class="reg_Img2"><img th:src="@{/image/icon4.png}" alt=""></div>
@@ -51,12 +51,10 @@
             $(this).attr('checked', true)
             $(this).attr('data-id', 1);
             csd = $(this).data('id');
-
         } else {
             $(this).removeAttr('checked')
             $(this).attr('data-id', 0);
             csd = 0
-
         }
     });
 
@@ -109,6 +107,7 @@
 
 
     $('.reg_btn').click(function () {
+        console.log(csd)
         var name = $('#name').val();
         var email = $('#email').val();
         var phone = $('#phone').val();

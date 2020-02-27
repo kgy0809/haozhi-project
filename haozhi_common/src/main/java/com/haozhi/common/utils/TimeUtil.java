@@ -51,6 +51,9 @@ public class TimeUtil {
 	}
 
 	public static void main(String[] args) {
-		System.out.println(System.currentTimeMillis());
+		for (int i = 0; i < 100; i++) {
+		String s = (int) ((Math.random() * 1000) + 99999) + "";
+		System.out.println(s);
+		}
 	}
 }

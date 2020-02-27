@@ -18,7 +18,7 @@
                         <div th:if="${order.power} == ''">
                             <img th:src="@{/image/33_icon.png}" alt="">
                         </div>
-                        <input class="input1" type="file" name="file" id="book" accept=".doc,.docx">
+                        <input class="input1" type="file" name="file" id="book">
                         <input class="input2" type="hidden" name="power" th:value="${order.power}">
                         <input type="hidden" name="id" th:value="${order.id}">
                     </div>
@@ -32,7 +32,7 @@
                         <div th:if="${order.contract} == ''">
                             <img th:src="@{/image/33_icon.png}" alt="">
                         </div>
-                        <input class="input1" type="file" name="file" id="contract" accept=".doc,.docx">
+                        <input class="input1" type="file" name="file" id="contract">
                         <input class="input2" type="hidden" name="contract" th:value="${order.contract}">
                     </div>
                     <p>上传合同</p>

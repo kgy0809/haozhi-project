@@ -41,26 +41,32 @@ public class LookContract extends BaseController {
             return "没有合同";
         } else if (mycan.equals("10086")) {
             BusinessTwo etc = hzYwService.etc(order.getPOrder());
+            etc.setStall("1");
             map.put("etc", etc);
             return "order/my_order_contract";
         } else if (mycan.equals("10087")) {
             BusinessTwo etc = hzYwService.etc(order.getPOrder());
+            etc.setStall("1");
             map.put("etc", etc);
             return "flow/my_flow_contract";
         } else if (mycan.equals("10088")) {
             BusinessTwo etc = hzYwService.etc(order.getPOrder());
+            etc.setStall("1");
             map.put("etc", etc);
             return "order/my_order_contract";
         } else if (mycan.equals("10089")) {
             BusinessTwo etc = hzYwService.etc(order.getPOrder());
+            etc.setStall("1");
             map.put("etc", etc);
             return "case/my_case_contract";
         } else if (mycan.equals("10090")) {
             BusinessTwo etc = hzYwService.etc(order.getPOrder());
+            etc.setStall("1");
             map.put("etc", etc);
             return "soft/my_soft_contract";
         } else if (mycan.equals("10091")) {
             BusinessTwo etc = hzYwService.etc(order.getPOrder());
+            etc.setStall("1");
             map.put("etc", etc);
             return "copyright/my_copyright_contract";
         }

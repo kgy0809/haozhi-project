@@ -103,7 +103,7 @@
     </div>
     <img src="" alt="">
     <div class="my_ContractBtn">
-        <button class="my_ContractEditor">编辑合同</button>
+        <button class="my_ContractEditor" th:if="${etc.stall} != '1'">编辑合同</button>
         <div class="my_ContractDownLoad">下载合同</div>
     </div>
 </div>

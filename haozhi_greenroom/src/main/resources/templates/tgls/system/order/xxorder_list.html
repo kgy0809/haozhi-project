@@ -119,7 +119,7 @@
                         "dataType": 'json',
                         "url": "/order/xx/update?id=" + id,
                         "success": function (res) {
-                            /*layer.msg(res.msg);*/
+                            layer.msg(res.msg);
                             location.reload();
                             layer.msg('确认成功', {
                                 icon: 1
@@ -152,7 +152,7 @@
                         "dataType": 'json',
                         "url": "/order/xx/update/sh?id=" + id,
                         "success": function (res) {
-                            /*layer.msg(res.msg);*/
+                            layer.msg(res.msg);
                             $(e).parent().parent().remove();
                             layer.msg('审核成功', {
                                 icon: 1

@@ -69,6 +69,9 @@ public class OrderService {
             example.createCriteria().andEqualTo("userId",userId).andEqualTo("state",type );
             PageHelper.startPage(page,rows);
             List<Order> orders = orderMapper.selectByExample(example);
+            for (Order order : orders) {
+                order.setDoublePrice(order.getDoubleFwPrice());
+            }
             return orders;
         }
         return null;

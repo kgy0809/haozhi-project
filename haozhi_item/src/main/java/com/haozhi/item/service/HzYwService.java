@@ -247,8 +247,8 @@ public class HzYwService {
     @Autowired
     private MailService mailService;
 
-    private static final String SUBJECT = "好智企业";
-    private static final String CONTNET = "好智企业发送";
+    private static final String SUBJECT = "好智咨询";
+    private static final String CONTNET = "好智咨询发送";
 
     /**
      * 写入 word数据 转换成 pdf
@@ -350,13 +350,14 @@ public class HzYwService {
             } else {
                 doc.replace("#stime", business.getSTime(), true, true);
             }
-            doc.replace("#zjPrice", String.valueOf(business.getPrice() / 100 + business.getCommission() / 100), true, true);
-            doc.replace("#dxZjPrice", MoneyUtils.change(Double.parseDouble(String.valueOf(business.getPrice() / 100 + business.getCommission() / 100))), true, true);
+
             HzYw hzYw = hzYwRepository.selectByPrimaryKey(business.getOneId());
             if (user.getState().equals("1")) {
                 doc.replace("#dlPrice", String.valueOf(hzYw.getHyPrice() / 100 + business.getCommission() / 100), true, true);
+                doc.replace("#dxZjPrice", MoneyUtils.change(hzYw.getHyPrice() / 100 + business.getCommission() / 100), true, true);
             } else if (user.getState().equals("2")) {
                 doc.replace("#dlPrice", String.valueOf(hzYw.getVipPrice() / 100 + business.getCommission() / 100), true, true);
+                doc.replace("#dxZjPrice", MoneyUtils.change(hzYw.getVipPrice() / 100 + business.getCommission() / 100), true, true);
             }
 
             //更新域

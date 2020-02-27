@@ -2,6 +2,7 @@ package com.haozhi.greenroom.controller;
 
 import com.haozhi.greenroom.pojo.Menu;
 import com.haozhi.greenroom.service.MenuService;
+import com.haozhi.greenroom.service.UserService;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.crypto.hash.Md5Hash;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -25,6 +27,8 @@ public class LoginController {
 
     @Autowired
     private MenuService menuService;
+    @Autowired
+    private UserService userService;
 
     @RequestMapping(method = RequestMethod.GET)
     public String login(){
@@ -68,5 +72,34 @@ public class LoginController {
         return "redirect:/login";
     }
 
+    @GetMapping("password")
+    public String password() {
+        return "tgls/modify_password";
+    }
 
+    /**
+     * 修改密码
+     * @param oldPassword
+     * @param newPassword
+     * @param password
+     * @param session
+     * @return
+     */
+    @PostMapping("change")
+    @ResponseBody
+    public Map<String,Object> change(String oldPassword, String newPassword, String password, HttpSession session ) {
+        Map<String, Object> map=new HashMap<>();
+        map.put("code",200);
+        map.put("msg", "修改成功");
+        if (!password.equals(newPassword)) {
+            map.put("code",500);
+            map.put("msg", "两次输入密码不同");
+        }
+        String loginUser = (String) session.getAttribute("loginUser");
+        if (userService.updatePassword(loginUser, oldPassword, password) == 0){
+            map.put("code",500);
+            map.put("msg", "原始密码错误");
+        }
+        return map;
+    }
 }

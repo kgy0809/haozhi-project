@@ -109,7 +109,7 @@ public class PersonalController extends BaseController {
     public ResultDTO personalUpdateSettings(User user) {
         user.setId(getUser().getId());
         User oldUser = userService.queryById(getUser().getId());
-        if (!oldUser.getTel().equals(user.getTel())){
+        if (!oldUser.getTel().equals(user.getTel())) {
             List<User> tel = userService.querytel(user.getTel());
             if (tel != null && tel.size() > 0)
                 return new ResultDTO(true, StatusCode.LOGINERROR, "手机号已经存在");
@@ -176,7 +176,7 @@ public class PersonalController extends BaseController {
     public ResultDTO personalAdd(Bank bank) {
         bank.setUserId(getUser().getId());
         userService.personalAdd(bank);
-        return new ResultDTO(true,StatusCode.OK,"添加成功");
+        return new ResultDTO(true, StatusCode.OK, "添加成功");
     }
 
     @RequestMapping("each")
@@ -196,7 +196,7 @@ public class PersonalController extends BaseController {
     @ResponseBody
     public ResultDTO personalUpdate(Bank bank) {
         userService.personalUpdate(bank);
-        return new ResultDTO(true,StatusCode.OK,"修改成功");
+        return new ResultDTO(true, StatusCode.OK, "修改成功");
     }
 
     @RequestMapping("personalInvoice")
@@ -244,7 +244,10 @@ public class PersonalController extends BaseController {
     }
 
     @RequestMapping("code")
-    public String personalCode() {
+    public String personalCode(Map<String, Object> map) {
+        List<Vip> vips = vipService.queryAll();
+        Vip vip = vips.get(0);
+        map.put("vip", vip);
         return "personal/my_code";
     }
 

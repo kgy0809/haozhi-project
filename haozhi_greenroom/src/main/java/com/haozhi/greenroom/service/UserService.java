@@ -2,6 +2,7 @@ package com.haozhi.greenroom.service;
 
 import com.haozhi.greenroom.dao.UserMapper;
 import com.haozhi.greenroom.pojo.User;
+import org.apache.shiro.crypto.hash.Md5Hash;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,5 +24,17 @@ public class UserService {
         User user = new User();
         user.setUsername(userName);
         return userMapper.selectOne(user);
+    }
+    public int updatePassword(String loginUser, String oldPassword,String password) {
+        User user = new User();
+        user.setUsername(loginUser);
+        User selectOne = userMapper.selectOne(user);
+        String onePassword = selectOne.getPassword();
+        if (onePassword.equals(new Md5Hash(oldPassword,loginUser,3).toString())){
+            User selectUser = selectUser(loginUser);
+            selectUser.setPassword(new Md5Hash(password,loginUser,3).toString());
+            return userMapper.updateByPrimaryKey(selectUser);
+        }
+        return 0;
     }
 }
