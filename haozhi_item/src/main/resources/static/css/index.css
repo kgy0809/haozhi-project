@@ -645,7 +645,7 @@
     height: 0.72rem;
     color: white;
     border: 0;
-    display: flex;
+    display: none;
     display: -webkit-flex;
     align-items: center;
     -webkit-align-items: center;
@@ -655,6 +655,9 @@
     font-size: 0.28rem;
     background: rgba(237, 41, 27, 1);
     border-radius: 0.12rem;
+/*    position: absolute;
+    top:6rem;
+    left:9rem;*/
 }
 
 .order_Txt3 {

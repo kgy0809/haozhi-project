@@ -35,7 +35,7 @@
     <div class="vip_item2">
         <p class="vip_Txt4">每邀请一名新用户注册</p>
         <p class="vip_Txt4"> 即可获得VIP会员购买抵扣券 <i>[[${vip.couponPrice}]]</i> 元优惠券可累加使用！</p>
-        <p class="vip_Txt4">优惠券自动叠加使用</p>
+<!--        <p class="vip_Txt4">优惠券自动叠加使用</p>-->
         <input type="hidden" id="superId" th:value="${user.id}">
         <div class="vip_Txt5"> 邀请 <i>[[${vip.personNum}]]</i> 人即可<span>免费购买VIP月卡</span></div>
     </div>
@@ -110,8 +110,8 @@
     var nonce = "";//生成签名的随机串
     var signature = "";//签名
     var timestamp = "";//时间戳
-    var title = "恭喜你！中奖啦！快戳我查看吧！";
-    var desc = "原来中奖的感觉是那么美好！";
+    var title = "来自好友的转发邀请，点击查看详情。";
+    var desc = "知识产权人财富倍增平台·好智咨询";
     var sharLink = "http://haozhiqiye.haozhizixun.com/api/login?superId=" + superId;
     var imgUrl = "http://wx.qlogo.cn/mmopen/9bqKyBJpXXqRDZEibicPjk5v93ciaqDtysmIVib2WYjdMPngUOWoGFaVBrI57ngBHIGu9gnrpickmHOYib9AOydiaGcNEm3V03hVdvE/64";
     $(document).ready(function () {

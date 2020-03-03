@@ -24,6 +24,10 @@ public class BusinessTwo {
      */
     private String sbName;
     /**
+     * 文字图样
+     */
+    private String imgtext;
+    /**
      * 商标类型 1文字2图形
      */
     private String sbType;

@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import tk.mybatis.mapper.entity.Example;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +36,10 @@ public class DataService {
         //构建请求的分页对象
         //开启分页助手,传入当前页及每页行数
         PageHelper.startPage(page,size);
-        List<DataTextDto> dataTextDtos = dataTextDtoRepository.selectAll();
+        Example example = new Example(DataTextDto.class);
+        example.setOrderByClause(" time desc");
+        List<DataTextDto> dataTextDtos = dataTextDtoRepository.selectByExample(example);
+        /*List<DataTextDto> dataTextDtos = dataTextDtoRepository.selectAll();*/
         return dataTextDtos;
     }
 

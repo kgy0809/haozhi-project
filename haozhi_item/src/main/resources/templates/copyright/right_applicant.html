@@ -36,6 +36,42 @@
         </div>
 
     </div>
+    <!-- 申请人信息 -->
+    <div class="applicant_item">
+        <h1 class="applicant_Txt">申请人信息</h1>
+        <div class="order_RBox">
+            <div class="order_RLi2" style="margin-left:0" data-id="1">
+                <img class="order_Img" style="width:0.24rem;height:0.24rem;" th:src="@{/image/13_icon.png}" alt="">
+                <p class="order_Txt2">企业申请</p>
+            </div>
+            <div class="order_RLi2" data-id="2">
+                <img class="order_Img" style="width:0.24rem;height:0.24rem;" th:src="@{/image/12_icon.png}" alt="">
+                <p class="order_Txt2">个人申请</p>
+            </div>
+        </div>
+        <div>
+            <div class="applicant_Box" style="display:block;">
+                <div class="applicant_Li">
+                    <div class="applicant_Txt3">公司名称：</div>
+                    <input id="gsName" type="text" placeholder="请输入公司名称">
+                </div>
+                <div class="applicant_Li">
+                    <div class="applicant_Txt3">统一社会信用代码：</div>
+                    <input id="xymName" type="text" placeholder="请输入统一社会信用代码">
+                </div>
+            </div>
+            <div class="applicant_Box">
+                <div class="applicant_Li">
+                    <div class="applicant_Txt3">个人姓名：</div>
+                    <input id="grName" type="text" placeholder="请输入个人名称">
+                </div>
+                <div class="applicant_Li">
+                    <div class="applicant_Txt3">身份证号：</div>
+                    <input id="sfzName" type="text" placeholder="请输入身份证号">
+                </div>
+            </div>
+        </div>
+    </div>
     <!-- 申请人联系方式 -->
     <div class="applicant_item2">
         <h1 class="applicant_Txt">申请人联系方式</h1>
@@ -72,12 +108,14 @@
         <!-- 阅读同意 -->
         <div class="applicant_Box5" data-id="0">
             <img class="applicant_Img2" src="../image/20_icon.png" alt="">
-            <div class="applicant_Txt4">我已阅读并同意<a href="/api/knowledge">《知识产权代理服务合同》</a></div>
+            <div class="applicant_Txt4">我已阅读并同意<a href="/api/knowledge">《好智平台收入分配说明》</a></div>
         </div>
     </div>
     <div class="appli_submit order_btn" data-id="3" style="margin:0.46rem auto 0.24rem;">下一步</div>
 </div>
 <script>
+    var applicationId;  //申请类别
+    applicationId = $('.order_RLi2').eq(0).data('id');
     // 阅读同意
     let csd = 0;
     $('.applicant_Box5').click(function () {
@@ -89,6 +127,16 @@
             $(this).find('img').attr('src', '../image/20_icon.png')
             $(this).attr('data-id', 0);
             csd = 0;
+        }
+    });
+    // 个人申请/企业申请
+    $('.order_RLi2').click(function () {
+        applicationId = $(this).data('id');
+        var index = $(this).index();
+        $('.applicant_Box').eq(index).show().siblings().hide();
+        var src = $(this).find('.order_Img');
+        if (src.attr('src') == '/api/image/12_icon.png') {
+            src.attr('src', '/api/image/13_icon.png').parent('.order_RLi2').siblings().find('.order_Img').attr('src', '/api/image/12_icon.png');
         }
     });
     //委托书下载
@@ -111,14 +159,47 @@
         })
     });
     $('.appli_submit').click(function () {
+        var type = $(this).data('id');
+        var BusinessTwo = {};
+        var gsName = $('#gsName').val(); //公司名称
+        var xymName = $('#xymName').val(); //信用码
+        var grName = $('#grName').val(); //  个人
+        var sfzName = $('#sfzName').val(); //身份证
         var lxrName = $('#lxrName').val(); //联系人
         var phone = $('#phone').val(); //手机号
         var email = $('#email').val(); //邮箱
         var sl_Num = $('#sl_Num').val(); //代理费
-        var dlf_Price = $('#dlf_Price').val(); //代理费
 
         if (sl_Num === '') {
             mui.toast('请输入数量', {
+                duration: 1600,
+                type: 'div'
+            });
+            return false;
+        }
+        if (gsName === '' && applicationId === 1){
+            mui.toast('请输入公司名称', {
+                duration: 1600,
+                type: 'div'
+            });
+            return false;
+        }
+        if (xymName === '' && applicationId === 1){
+            mui.toast('请输入信用码', {
+                duration: 1600,
+                type: 'div'
+            });
+            return false;
+        }
+        if (grName === '' && applicationId === 2){
+            mui.toast('请输入姓名', {
+                duration: 1600,
+                type: 'div'
+            });
+            return false;
+        }
+        if (sfzName === '' && applicationId === 2){
+            mui.toast('请输入身份证', {
                 duration: 1600,
                 type: 'div'
             });
@@ -149,7 +230,7 @@
         if (dlf_Price == "") {
             dlf_Price = 0
         }
-        var type = $(this).data('id');
+ /*       var type = $(this).data('id');*/
 
         if (csd === 0) {
             mui.toast('请您先阅读协议', {
@@ -158,17 +239,42 @@
             });
             return false;
         }
-        //保存数据
-        $.ajax({
-            url: "/api/copyright/save",
-            type: "post",
-            data: {
+        if (applicationId == 1) {
+            BusinessTwo = {
+                type: type,
+                application: applicationId,
+                applicationName: gsName,
+                applicationId: xymName,
                 applicationNumName: lxrName,
                 applicationNumTel: phone,
                 applicationNumMail: email,
                 commission: dlf_Price,
                 number: sl_Num,
-            },
+            }
+        } else {
+            BusinessTwo = {
+                type: type,
+                application: applicationId,
+                applicationName: grName,
+                applicationId: sfzName,
+                applicationNumName: lxrName,
+                applicationNumTel: phone,
+                applicationNumMail: email,
+                commission: dlf_Price,
+                number: sl_Num,
+            }
+        }
+        //保存数据
+        $.ajax({
+            url: "/api/copyright/save",
+            type: "post",
+            data: /*{
+                applicationNumName: lxrName,
+                applicationNumTel: phone,
+                applicationNumMail: email,
+                commission: dlf_Price,
+                number: sl_Num,
+            }*/BusinessTwo,
             success: function (res) {
                 if (res.code == 20000) {
                     if (type == 3) {
@@ -204,6 +310,30 @@
             return false;
         }
     });
+    var xymReg = /^[^_IOZSVa-z\W]{2}\d{6}[^_IOZSVa-z\W]{10}$/g;
+    $("#xymName").on('blur',function(){
+        var xymName = $("#xymName").val();
+        if (!(xymReg.test(xymName))) {
+            mui.toast('统一社会信用代码不正确', {
+                duration: 1600,
+                type: 'div'
+            });
+            $('#xymName').focus();
+            return false;
+        }
+    })
+    var sfzReg = /^[1-9]\d{5}(18|19|20|(3\d))\d{2}((0[1-9])|(1[0-2]))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/;
+    $("#sfzName").on('blur',function(){
+        var sfzName = $("#sfzName").val();
+        if (!(sfzReg.test(sfzName))) {
+            mui.toast('身份证不正确', {
+                duration: 1600,
+                type: 'div'
+            });
+            $('#sfzName').focus();
+            return false;
+        }
+    })
 </script>
 </body>
 

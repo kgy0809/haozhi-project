@@ -27,6 +27,10 @@ public class BusinessTwo {
      */
     private String sbType;
     /**
+     * 文字图样
+     */
+    private String imgtext;
+    /**
      * 商标颜色 0不指定 1指定
      */
     private String sbColor;

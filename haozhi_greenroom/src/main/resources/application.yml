@@ -6,7 +6,7 @@ spring:
       max-file-size: 5MB # 限制文件上传的大小
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://localhost:3307/haozhi?characterEncoding=utf-8
+    url: jdbc:mysql://localhost:3307/haozhi?useUnicode=true&&characterEncoding=utf8&useSSL=false&serverTimezone=UTC
     username: db136s1ehvo1yn73
     password: cxz307311SJK
     type: org.apache.commons.dbcp2.BasicDataSource

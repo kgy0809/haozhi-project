@@ -271,7 +271,7 @@ public class UserService {
          * 注册时间大于上个月时间不进行查询
          */
         AtomicReference<Integer> monthPrice = new AtomicReference<>(0);
-        if (i != -1) {
+        if (i == -1) {
             Example accountEx = new Example(Account.class);
             accountEx.createCriteria().andEqualTo("userId", user.getId()).andLike("time", "%" + format + "%");
             List<Account> accounts = accountMapper.selectByExample(accountEx);

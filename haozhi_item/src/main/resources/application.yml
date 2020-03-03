@@ -10,7 +10,7 @@ spring:
     cache: false
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://localhost:3307/haozhi?characterEncoding=utf-8
+    url: jdbc:mysql://localhost:3307/haozhi?useUnicode=true&serverTimezone=GMT%2B8&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&functionsNeverReturnBlobs=true&zeroDateTimeBehavior=convertToNull&allowMultiQueries=true&useSSL=false
     username: db136s1ehvo1yn73
     password: cxz307311SJK
     type: org.apache.commons.dbcp2.BasicDataSource

@@ -116,62 +116,7 @@ public class PayService {
              */
             order.setState(2);
             orderMapper.updateByPrimaryKeySelective(order);
-            BusinessTwo businessTwo = businessTwoMapper.selectByPrimaryKey(order.getPOrder());
-            Integer commission = businessTwo.getCommission();
-            String userId = order.getUserId();
-            User user = userRepository.selectByPrimaryKey(userId);
-            MonthOrder monthOrder = new MonthOrder();
-            monthOrder.setId(idWorker.nextId() + "");
-            monthOrder.setOrderId(out_trade_no);
-            monthOrder.setUserId(userId);
-            monthOrder.setTime(new Date());
-            monthOrder.setState("1");
-            monthOrder.setOrderState("2");
-            monthOrder.setPrice((int) (commission * 0.94));
-            monthOrderMapper.insert(monthOrder);
-            /**
-             * 修改自己的金额
-             */
-            user.setBalance((int) (user.getBalance() + commission * 0.94));
-            user.setTotalNum(user.getTotalNum() + 1);
-            userRepository.updateByPrimaryKeySelective(user);
-            HzYw hzYw = hzYwRepository.selectByPrimaryKey(businessTwo.getOneId());
 
-            double one = hzYw.getVipPrice() * order.getNumber() * 0.93 * 0.25;
-            double two = hzYw.getVipPrice() * order.getNumber() * 0.93 * 0.05;
-            User oneUser = userRepository.selectByPrimaryKey(user.getSuperId());
-            if (oneUser != null) {
-                if (oneUser.getState().equals("2")) {
-                    oneUser.setBalance((int) (oneUser.getBalance() + one));
-                    userRepository.updateByPrimaryKeySelective(oneUser);
-                    monthOrder = new MonthOrder();
-                    monthOrder.setId(idWorker.nextId() + "");
-                    monthOrder.setOrderId(out_trade_no);
-                    monthOrder.setUserId(oneUser.getId());
-                    monthOrder.setTime(new Date());
-                    monthOrder.setState("1");
-                    monthOrder.setPrice((int) one);
-                    monthOrder.setOrderState(userId);
-                    monthOrderMapper.insert(monthOrder);
-                }
-                User twoUser = userRepository.selectByPrimaryKey(oneUser.getSuperId());
-
-                if (twoUser != null) {
-                    if (twoUser.getState().equals("2")) {
-                        twoUser.setBalance((int) (twoUser.getBalance() + two));
-                        userRepository.updateByPrimaryKeySelective(twoUser);
-                        monthOrder = new MonthOrder();
-                        monthOrder.setId(idWorker.nextId() + "");
-                        monthOrder.setOrderId(out_trade_no);
-                        monthOrder.setUserId(twoUser.getId());
-                        monthOrder.setTime(new Date());
-                        monthOrder.setState("1");
-                        monthOrder.setPrice((int) two);
-                        monthOrder.setOrderState(userId);
-                        monthOrderMapper.insert(monthOrder);
-                    }
-                }
-            }
         }
     }
 

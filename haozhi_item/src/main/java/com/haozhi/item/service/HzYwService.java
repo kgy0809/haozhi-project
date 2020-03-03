@@ -398,11 +398,11 @@ public class HzYwService {
                 doc.replace("#qgName", "身份证号", true, true);
             }
             //替换文档中以#开头的文本
-            doc.replace("#jfGsName", business.getApplicationName(), true, true);
+            doc.replace("#jfGsName", business.getApplicationName(), true, true);//名字
+            doc.replace("#jfXxdm", business.getApplicationId(), true, true);//身份证
             doc.replace("#jfName", business.getApplicationNumName(), true, true);
             doc.replace("#jfEmail", business.getApplicationNumMail(), true, true);
             doc.replace("#jfNum", business.getApplicationNumTel(), true, true);
-            doc.replace("#jfXxdm", business.getApplicationId(), true, true);
             doc.replace("#gwName", user.getName(), true, true);
             doc.replace("#gwNum", user.getTel(), true, true);
             doc.replace("#sbName", business.getSbName(), true, true);
@@ -508,8 +508,16 @@ public class HzYwService {
         Document doc = new Document();
         doc.loadFromFile("/www/server/haozhi/word/004.docx");
 
+        if ("1".equals(business.getApplication())) {
+            doc.replace("#qgName", "执照代码", true, true);
+        } else if ("2".equals(business.getApplication())) {
+            doc.replace("#qgName", "身份证号", true, true);
+        }
+
         //替换文档中以#开头的文本
-        doc.replace("#jfGsName", business.getApplicationNumName(), true, true);
+        doc.replace("#jfGsName", business.getApplicationName(), true, true);//名字
+        doc.replace("#jfXxdm", business.getApplicationId(), true, true);//身份证
+        /*doc.replace("#jfGsName", business.getApplicationNumName(), true, true);*/
         doc.replace("#jfName", business.getApplicationNumName(), true, true);
         doc.replace("#jfEmail", business.getApplicationNumMail(), true, true);
         doc.replace("#jfNum", business.getApplicationNumTel(), true, true);
@@ -525,7 +533,7 @@ public class HzYwService {
         }
         doc.replace("#lb", business.getLbVal(), true, true);
         doc.replace("#gfPrice", String.valueOf(hzYw.getGfPrice() / 100), true, true);
-        doc.replace("#abcName", business.getApplicationName(), true, true);
+        doc.replace("#abcName", business.getSbName(), true, true);
         doc.replace("#zjPrice", String.valueOf(business.getPrice() / 100 + business.getCommission() / 100), true, true);
         doc.replace("#dxZjPrice", MoneyUtils.change(Double.parseDouble(String.valueOf(business.getPrice() / 100 + business.getCommission() / 100))), true, true);
         if (user.getState().equals("1")) {
@@ -583,8 +591,16 @@ public class HzYwService {
         Document doc = new Document();
         doc.loadFromFile("/www/server/haozhi/word/005.docx");
 
+        if ("1".equals(business.getApplication())) {
+            doc.replace("#qgName", "执照代码", true, true);
+        } else if ("2".equals(business.getApplication())) {
+            doc.replace("#qgName", "身份证号", true, true);
+        }
+
         //替换文档中以#开头的文本
-        doc.replace("#jfGsName", business.getApplicationNumName(), true, true);
+        doc.replace("#jfGsName", business.getApplicationName(), true, true);//名字
+        doc.replace("#jfXxdm", business.getApplicationId(), true, true);//身份证
+/*        doc.replace("#jfGsName", business.getApplicationNumName(), true, true);*/
         doc.replace("#jfName", business.getApplicationNumName(), true, true);
         doc.replace("#jfEmail", business.getApplicationNumMail(), true, true);
         doc.replace("#jfNum", business.getApplicationNumTel(), true, true);
@@ -600,7 +616,7 @@ public class HzYwService {
             doc.replace("#stime", business.getSTime(), true, true);
         }
         doc.replace("#lb", business.getLbVal(), true, true);
-        doc.replace("#abcName", business.getApplicationName(), true, true);
+        doc.replace("#abcName", business.getSbName(), true, true);
         doc.replace("#gfPrice", String.valueOf(hzYw.getGfPrice() / 100), true, true);
 
         doc.replace("#zjPrice", String.valueOf(business.getPrice() / 100 + business.getCommission() / 100), true, true);
@@ -662,8 +678,16 @@ public class HzYwService {
         Document doc = new Document();
         doc.loadFromFile("/www/server/haozhi/word/006.docx");
 
+        if ("1".equals(business.getApplication())) {
+            doc.replace("#qgName", "执照代码", true, true);
+        } else if ("2".equals(business.getApplication())) {
+            doc.replace("#qgName", "身份证号", true, true);
+        }
+
         //替换文档中以#开头的文本
-        doc.replace("#name", business.getApplicationNumName(), true, true);
+        doc.replace("#name", business.getApplicationName(), true, true);//名字
+        doc.replace("#jfXxdm", business.getApplicationId(), true, true);//身份证
+        /*doc.replace("#name", business.getApplicationNumName(), true, true);*/
         doc.replace("#jfXxdm", business.getApplicationNumName(), true, true);
         doc.replace("#jfName", business.getApplicationNumName(), true, true);
         doc.replace("#Email", business.getApplicationNumMail(), true, true);
@@ -748,8 +772,16 @@ public class HzYwService {
         Document doc = new Document();
         doc.loadFromFile("/www/server/haozhi/word/007.docx");
 
+        if ("1".equals(business.getApplication())) {
+            doc.replace("#qgName", "执照代码", true, true);
+        } else if ("2".equals(business.getApplication())) {
+            doc.replace("#qgName", "身份证号", true, true);
+        }
+
         //替换文档中以#开头的文本
-        doc.replace("#jfGsName", business.getApplicationNumName(), true, true);
+        doc.replace("#jfGsName", business.getApplicationName(), true, true);//名字
+        doc.replace("#jfXxdm", business.getApplicationId(), true, true);//身份证
+/*        doc.replace("#jfGsName", business.getApplicationNumName(), true, true);*/
         doc.replace("#jfXxdm", business.getApplicationNumName(), true, true);
         doc.replace("#jfName", business.getApplicationNumName(), true, true);
         doc.replace("#jfEmail", business.getApplicationNumMail(), true, true);

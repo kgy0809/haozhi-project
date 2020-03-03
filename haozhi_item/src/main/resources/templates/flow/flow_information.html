@@ -12,6 +12,16 @@
             <p class="solt_Txt" style="margin-bottom:0;" th:text="${p.sqrMessage}"></p>
             <input type="hidden" id="pid" th:value="${p.id}">
         </div>
+        <!-- 申请人信息 -->
+        <div class="information_item4">
+            <h1 class="applicant_Txt" style="margin-bottom:0.26rem;">申请人信息</h1>
+            <div class="information_List2">
+                <p th:text="${p.application} == '1' ? '企业申请':'个人申请'"></p>
+                <p th:text="${p.application} == '1' ?  '公司名称：'+${p.applicationName} :'个人姓名：'+ ${p.applicationName}"></p>
+
+                <p th:text="${p.application} == '1' ? '统一社会信用代码：'+ ${p.applicationId}:'身份证号：'+ ${p.applicationId}"></p>
+            </div>
+        </div>
         <!-- 申请人联系方式 -->
         <div class="information_item5">
             <h1 class="applicant_Txt" style="margin-bottom:0.26rem;">申请人联系方式</h1>

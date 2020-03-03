@@ -48,7 +48,7 @@
         <th>注册商标名称： <i th:text="${business.sbName}"></i></th>
         </tr>
 
-        <th th:if="${business.sbType} == '1'">商标类型： <i th:if="${business.sbType} == '1'">文字</i> &nbsp;&nbsp;<i th:text="${business.sbName}"></i></th>
+        <th th:if="${business.sbType} == '1'">商标类型： <i th:if="${business.sbType} == '1'">文字</i> &nbsp;&nbsp;<i th:text="${business.sbName}"></i> &nbsp;&nbsp;&nbsp;&nbsp;图样 <a th:href="${business.imgtext}" th:text="${business.imgtext}"></a></th>
         </tr>
         <th th:if="${business.sbType} == '2'">商标类型： <i th:if="${business.sbType} == '2'">图片</i> &nbsp;&nbsp;<a th:href="${business.sbImage}" th:text="${business.sbName}"></a> </th>
         </tr>

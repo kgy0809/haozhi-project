@@ -43,9 +43,16 @@
                     <div class="order_Txt">商标图样：</div>
                     <div class="order_item2Box">
                         <div class="order_item2Img"></div>
+                        <!--<img class="order_Img2_img2" src="" alt="">-->
+                        <input type="hidden" id="imgText" name="imgtext">
+                        <input type="file" name="file" id="file" style="display:none">
                         <div class="order_item2Btn">自动生成</div>
+                        <div class="order_item2Btn" id="btn2">图样上传</div>
                     </div>
                     <div class="order_Txt3">自动生成商标，默认宋体字样从左向右排列</div>
+                    <div style="font-size: 0.24rem;margin-top: 0.05rem;color: rgba(140, 145, 152, 1);">
+                        非宋体或经设计的字体，请选择图样上传
+                    </div>
                 </div>
                 <!-- 商标图样 图片 -->
                 <div class="order_item3 order_type">
@@ -64,9 +71,9 @@
         </div>
         <div class="order_Txt4"><a href="/api/brandNorm">商标注册申请规范</a></div>
         <!-- 立即办理 -->
-<!--        <a href="business_category.html">-->
-            <button type="submit" class="order_btn">下一步</button>
-<!--        </a>-->
+        <!--        <a href="business_category.html">-->
+        <button type="submit" class="order_btn">下一步</button>
+        <!--        </a>-->
     </form>
 </div>
 <script>
@@ -129,6 +136,39 @@
     $('.order_item2Btn').click(function () {
         var val = $('.order_input').val();
         $('.order_item2Img').text(val);
+    });
+    // 点击div按钮触发input标签
+    $('#btn2').click(function () {
+        console.log(1111)
+        $("#file").trigger("click");
+    })
+
+    $('#file').change(function () {
+        var datas = new FormData($('#form')[0]);
+        $.ajax({
+            url: "/api/business/upload",
+            type: 'POST',
+            data: datas,
+            dataType: 'JSON',
+            cache: false,
+            processData: false,
+            contentType: false,
+            success: function (res) {
+                if (res.code == 20000) {
+                    $("#imgText").val(res.data);
+                    /*$('.order_Img2_img2').attr('src', res.data);*/
+                    mui.toast('上传成功', {
+                        duration: 1600,
+                        type: 'div'
+                    })
+                } else {
+                    mui.toast('上传失败', {
+                        duration: 1600,
+                        type: 'div'
+                    })
+                }
+            }
+        })
     });
 
 </script>

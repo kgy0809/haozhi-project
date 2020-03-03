@@ -72,6 +72,21 @@
         </div>
     </div>
 
+    <div class="ht_Mask">
+        <div class="my_MaskCon">
+            <!--                <h1 class="my_MaskTxt">申请人联系方式</h1>-->
+            <div class="fsForm">
+                <input type="text" id="email2" placeholder="请输入您的邮箱地址">
+                <button type="submit" class="my_MaskBtn2 my_fsBtn" id="btn2" style="width: 100%;height: 0.64rem;">发送到邮箱</button>
+                <p>IOS操作系统不支持下载到手机，请选择发送至邮箱接收委托书。</p>
+            </div>
+            <div class="my_MaskBtnBox">
+                <div type="submit" class="my_MaskBtn1">取消</div>
+                <button type="submit" class="my_MaskBtn2 my_htBtn">下载到手机</button>
+            </div>
+        </div>
+    </div>
+
     <!-- 材料下载 -->
     <div class="applicant_item4">
         <h1 class="applicant_Txt">材料下载</h1>
@@ -91,7 +106,7 @@
         <!-- 阅读同意 -->
         <div class="applicant_Box5" data-id="0">
             <img class="applicant_Img2" th:src="@{/image/20_icon.png}" alt="">
-            <div class="applicant_Txt4">我已阅读并同意<a href="/api/knowledge">《知识产权代理服务合同》</a></div>
+            <div class="applicant_Txt4">我已阅读并同意<a href="/api/knowledge">《知识产权代理分配说明》</a></div>
         </div>
     </div>
     <div class="order_btn appli_submit" data-id="3" style="margin:0.46rem auto 0.24rem;">下一步</div>
@@ -100,24 +115,7 @@
     var applicationId;  //申请类别
     applicationId = $('.order_RLi2').eq(0).data('id');
 
-    $('.wts_download').click(function () {
-        $.ajax({
-            url: "/api/business/downloadOf",
-            type: 'GET',
-            success: function (res) {
-                if (res.code == 20000) {
-                    if (res.data == null) {
-                        mui.toast('此业务内容不可下载', {
-                            duration: 1600,
-                            type: 'div'
-                        })
-                    } else {
-                        location.href = res.data
-                    }
-                }
-            }
-        })
-    });
+
 
     // 个人申请/企业申请
     $('.order_RLi2').click(function () {
@@ -129,6 +127,7 @@
             src.attr('src', '/api/image/13_icon.png').parent('.order_RLi2').siblings().find('.order_Img').attr('src', '/api/image/12_icon.png');
         }
     });
+
     var csd = 0;
     // 阅读同意
     $('.applicant_Box5').click(function () {
@@ -288,6 +287,66 @@
             return false;
         }
     })
+    var sfzReg = /^[1-9]\d{5}(18|19|20|(3\d))\d{2}((0[1-9])|(1[0-2]))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/;
+    $("#sfzName").on('blur',function(){
+        var sfzName = $("#sfzName").val();
+        if (!(sfzReg.test(sfzName))) {
+            mui.toast('身份证不正确', {
+                duration: 1600,
+                type: 'div'
+            });
+            $('#sfzName').focus();
+            return false;
+        }
+    })
+
+    //下载合同
+    $('.wts_download').click(function () {
+        $('.ht_Mask').show();
+    })
+    //发送到邮箱
+    $('.my_fsBtn').click(function () {
+        var val = $('.fsForm input').val();
+        var ids = $('#etc_id').val();
+        $.ajax({
+            url: "/api/business/downloadContractCN",
+            type: "POST",
+            data: {
+                type: 2,
+                email:val,
+                id:ids
+            },
+            success(res) {
+                if (res.code == 20000) {
+                    $('.ht_Mask').hide();
+                    mui.toast('发送成功', {
+                        duration: 1600,
+                        type: 'div'
+                    });
+                }
+            }
+        })
+    })
+    //下载到手机
+    $('.my_htBtn').click(function () {
+        var ids = $('#etc_id').val();
+        $.ajax({
+            url: "/api/business/downloadOf",
+            type: 'GET',
+            success: function (res) {
+                if (res.code == 20000) {
+                    if (res.data == null) {
+                        mui.toast('此业务内容不可下载', {
+                            duration: 1600,
+                            type: 'div'
+                        })
+                    } else {
+                        location.href = res.data
+                    }
+                }
+            }
+        })
+    });
 </script>
 </body>
 
