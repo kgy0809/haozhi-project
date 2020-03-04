@@ -76,6 +76,22 @@ public class CaseController extends BaseController {
         return new ResultDTO(true,StatusCode.OK,"查询成功",wordUrl);
     }
 
+    /**
+     * 发邮件 word 委托书
+     *
+     * @return
+     */
+    @RequestMapping("emile")
+    @ResponseBody
+    public ResultDTO emile(String emile) {
+        String caseId = (String) session.getAttribute("caseId");
+        hzYwService.emile(caseId,emile);
+/*        if (wordUrl == null) {
+            return new ResultDTO(true, StatusCode.OK, "查询成功,没有委托书", null);
+        }*/
+        return new ResultDTO(true, StatusCode.OK, "发送成功");
+    }
+
     @RequestMapping(value = "save",method = RequestMethod.POST)
     @ResponseBody
     public ResultDTO softSave(BusinessTwo businessTwo){

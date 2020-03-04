@@ -190,6 +190,21 @@ public class BusinessController extends BaseController {
         }
         return new ResultDTO(true, StatusCode.OK, "查询成功", wordUrl);
     }
+    /**
+     * 发邮件 word 委托书
+     *
+     * @return
+     */
+    @RequestMapping("emile")
+    @ResponseBody
+    public ResultDTO emile(String emile) {
+        String twoId = (String) session.getAttribute("twoId");
+        hzYwService.emile(twoId,emile);
+/*        if (wordUrl == null) {
+            return new ResultDTO(true, StatusCode.OK, "查询成功,没有委托书", null);
+        }*/
+        return new ResultDTO(true, StatusCode.OK, "发送成功");
+    }
 
     @RequestMapping("last")
     public String businessLast(Map<String, Object> map) {

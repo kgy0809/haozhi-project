@@ -860,5 +860,17 @@ public class HzYwService {
         }
         return null;
     }
+
+    /**
+     * 发送委托书 邮件
+     * @param twoId
+     * @return
+     */
+    public void emile(String twoId,String emile) {
+        BusinessTwo businessTwo = businessTwoMapper.selectByPrimaryKey(twoId);
+        String oneId = businessTwo.getOneId();
+        HzYw hzYw = hzYwRepository.selectByPrimaryKey(oneId);
+        mailService.sendSimpleMail(emile, CONTNET, "委托书下载地址："+hzYw.getWordUrl());
+    }
 }
 
