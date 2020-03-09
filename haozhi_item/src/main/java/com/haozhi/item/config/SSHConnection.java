@@ -6,8 +6,9 @@ import com.jcraft.jsch.Session;
 /**
  * @author NZL
  * @version 1.0
- * @date 2019/12/11 9:47
- */
+ * @date 2019/12/11 9:47*/
+
+
 public class SSHConnection {
     String user = "root";
     // 服务器登录名
@@ -24,9 +25,10 @@ public class SSHConnection {
     int remote_port = 3306;
     // 服务器上数据库端口号
     Session session = null;
-    /**
-     *    建立SSH连接
-     */
+/**
+     *    建立SSH连接*/
+
+
     public void SSHConnection() throws Exception{
         try {
             JSch jsch = new JSch();
@@ -40,9 +42,10 @@ public class SSHConnection {
             // do something
         }
     }
-    /**
-     *    断开SSH连接
-     */
+/**
+     *    断开SSH连接*/
+
+
     public void closeSSH () throws Exception
     {
         this.session.disconnect();

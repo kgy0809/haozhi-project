@@ -3,7 +3,56 @@
 
 <head th:replace="default :: head">
 </head>
+<style>
+    .mui-loading {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        z-index: 100;
+        transform: translate(-50%, -50%);
+        -webkit-transform: translate(-50%, -50%);
+        -ms-transform: translate(-50%, -50%);
+        -moz-transform: translate(-50%, -50%);
+        -o-transform: translate(-50%, -50%);
+    }
 
+    .loadingTxt {
+        font-size: 0.26rem;
+        color: #333333;
+        text-align: center;
+        margin-top: 0.18rem;
+    }
+
+    .pdfImg img {
+        width: 100%;
+    }
+
+    .fsForm {
+        margin: 0.7rem 0.44rem 0.2rem;
+    }
+
+    .fsForm input {
+        height: 0.64rem;
+        background-color: #EEEEEE;
+        font-size: 0.28rem;
+        text-align: center;
+        width: 100%;
+        display: block;
+    }
+
+    .fsForm button {
+        font-size: 0.28rem;
+        color: white;
+        border: 0;
+        margin: 0.4rem 0rem 0.46rem;
+    }
+
+    .fsForm p {
+        color: #ED291B;
+        font-size: 0.24rem;
+        line-height: 0.28rem;
+    }
+</style>
 <body>
 <div class="Box">
     <!-- 软著申报服务 -->
@@ -19,6 +68,12 @@
             </div>
         </div>
         <div>
+            <!--数量-->
+            <h1 class="solt_Tit">数量</h1>
+            <div class="applicant_Box3">
+                <input id="sl_Num" type="number">
+                <p>个</p>
+            </div>
             <div>
                 <!-- 附加代理费 -->
                 <h1 class="solt_Tit">附加代理费</h1>
@@ -26,12 +81,7 @@
                     <input id="dlf_Price" type="number">
                     <p>元</p>
                 </div>
-            </div>
-            <!--数量-->
-            <h1 class="solt_Tit">数量</h1>
-            <div class="applicant_Box3">
-                <input id="sl_Num" type="number">
-                <p>个</p>
+                <p class="solt_Tit" style="margin-top: 0.1rem;">签约价与平台实收价的差额</p>
             </div>
         </div>
 
@@ -181,28 +231,28 @@
             });
             return false;
         }
-        if (gsName === '' && applicationId === 1){
+        if (gsName === '' && applicationId === 1) {
             mui.toast('请输入公司名称', {
                 duration: 1600,
                 type: 'div'
             });
             return false;
         }
-        if (xymName === '' && applicationId === 1){
+        if (xymName === '' && applicationId === 1) {
             mui.toast('请输入信用码', {
                 duration: 1600,
                 type: 'div'
             });
             return false;
         }
-        if (grName === '' && applicationId === 2){
+        if (grName === '' && applicationId === 2) {
             mui.toast('请输入姓名', {
                 duration: 1600,
                 type: 'div'
             });
             return false;
         }
-        if (sfzName === '' && applicationId === 2){
+        if (sfzName === '' && applicationId === 2) {
             mui.toast('请输入身份证', {
                 duration: 1600,
                 type: 'div'
@@ -233,7 +283,7 @@
         if (dlf_Price == "") {
             dlf_Price = 0
         }
-/*        var type = $(this).data('id');*/
+        /*        var type = $(this).data('id');*/
         if (csd === 0) {
             mui.toast('请您先阅读协议', {
                 duration: 1600,
@@ -313,7 +363,7 @@
         }
     });
     var xymReg = /^[^_IOZSVa-z\W]{2}\d{6}[^_IOZSVa-z\W]{10}$/g;
-    $("#xymName").on('blur',function(){
+    $("#xymName").on('blur', function () {
         var xymName = $("#xymName").val();
         if (!(xymReg.test(xymName))) {
             mui.toast('统一社会信用代码不正确', {
@@ -325,7 +375,7 @@
         }
     })
     var sfzReg = /^[1-9]\d{5}(18|19|20|(3\d))\d{2}((0[1-9])|(1[0-2]))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/;
-    $("#sfzName").on('blur',function(){
+    $("#sfzName").on('blur', function () {
         var sfzName = $("#sfzName").val();
         if (!(sfzReg.test(sfzName))) {
             mui.toast('身份证不正确', {

@@ -87,11 +87,14 @@ public class FlowController extends BaseController {
     @ResponseBody
     public ResultDTO emile(String emile) {
         String flowId = (String) session.getAttribute("flowId");
-        hzYwService.emile(flowId,emile);
+        String emile1 = hzYwService.emile(flowId, emile);
 /*        if (wordUrl == null) {
             return new ResultDTO(true, StatusCode.OK, "查询成功,没有委托书", null);
         }*/
-        return new ResultDTO(true, StatusCode.OK, "发送成功");
+        if (emile1 == null) {
+            return new ResultDTO(true, StatusCode.OK, "查询成功,没有委托书", null);
+        }
+        return new ResultDTO(true, StatusCode.OK, "发送成功","发送成功");
     }
 
 

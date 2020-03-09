@@ -19,6 +19,12 @@
             </div>
         </div>
         <div>
+            <!--数量-->
+            <h1 class="solt_Tit">数量</h1>
+            <div class="applicant_Box3">
+                <input id="sl_Num" type="number">
+                <p>个</p>
+            </div>
             <div>
                 <!-- 附加代理费 -->
                 <h1 class="solt_Tit">附加代理费</h1>
@@ -26,12 +32,7 @@
                     <input id="dlf_Price" type="number">
                     <p>元</p>
                 </div>
-            </div>
-            <!--数量-->
-            <h1 class="solt_Tit">数量</h1>
-            <div class="applicant_Box3">
-                <input id="sl_Num" type="number">
-                <p>个</p>
+                <p class="solt_Tit" style="margin-top: 0.1rem;">签约价与平台实收价的差额</p>
             </div>
         </div>
 
@@ -105,6 +106,8 @@
                 </div>
             </div>
         </div>
+
+
         <!-- 阅读同意 -->
         <div class="applicant_Box5" data-id="0">
             <img class="applicant_Img2" src="../image/20_icon.png" alt="">
@@ -169,7 +172,7 @@
         var phone = $('#phone').val(); //手机号
         var email = $('#email').val(); //邮箱
         var sl_Num = $('#sl_Num').val(); //代理费
-
+        var dlf_Price = $('#dlf_Price').val(); //代理费
         if (sl_Num === '') {
             mui.toast('请输入数量', {
                 duration: 1600,
@@ -334,6 +337,7 @@
             return false;
         }
     })
+
 </script>
 </body>
 

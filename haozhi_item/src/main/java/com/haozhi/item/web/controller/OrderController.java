@@ -2,6 +2,7 @@ package com.haozhi.item.web.controller;
 
 import com.haozhi.common.constants.StatusCode;
 import com.haozhi.common.dto.ResultDTO;
+import com.haozhi.common.utils.IdWorker;
 import com.haozhi.item.pojo.Order;
 import com.haozhi.item.service.OrderService;
 import com.haozhi.item.utils.QiniuUtil;
@@ -31,6 +32,8 @@ public class OrderController extends BaseController {
 
     @Autowired
     private OrderService orderService;
+    @Autowired
+    private IdWorker idWorker;
 
     @RequestMapping(value = "all", method = RequestMethod.POST)
     @ResponseBody
@@ -57,9 +60,8 @@ public class OrderController extends BaseController {
     @RequestMapping(value = "upload/file", method = RequestMethod.POST)
     @ResponseBody
     public ResultDTO uploadFile(MultipartFile file) throws IOException {
-        String upload = new QiniuUtil().upload(UUID.randomUUID().toString().replace("-", "") + ".docx", file.getBytes());
+        String upload = new QiniuUtil().upload(idWorker.nextId() + "", file.getBytes());
         return new ResultDTO(true, StatusCode.OK, "上传成功", upload);
     }
-
 
 }

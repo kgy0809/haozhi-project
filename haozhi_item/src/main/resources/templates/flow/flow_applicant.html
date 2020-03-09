@@ -3,7 +3,56 @@
 
 <head th:replace="default :: head">
 </head>
+<style>
+    .mui-loading {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        z-index: 100;
+        transform: translate(-50%, -50%);
+        -webkit-transform: translate(-50%, -50%);
+        -ms-transform: translate(-50%, -50%);
+        -moz-transform: translate(-50%, -50%);
+        -o-transform: translate(-50%, -50%);
+    }
 
+    .loadingTxt {
+        font-size: 0.26rem;
+        color: #333333;
+        text-align: center;
+        margin-top: 0.18rem;
+    }
+
+    .pdfImg img {
+        width: 100%;
+    }
+
+    .fsForm {
+        margin: 0.7rem 0.44rem 0.2rem;
+    }
+
+    .fsForm input {
+        height: 0.64rem;
+        background-color: #EEEEEE;
+        font-size: 0.28rem;
+        text-align: center;
+        width: 100%;
+        display: block;
+    }
+
+    .fsForm button {
+        font-size: 0.28rem;
+        color: white;
+        border: 0;
+        margin: 0.4rem 0rem 0.46rem;
+    }
+
+    .fsForm p {
+        color: #ED291B;
+        font-size: 0.24rem;
+        line-height: 0.28rem;
+    }
+</style>
 <body>
 <div class="Box">
     <!-- 软著申报服务 -->
@@ -41,6 +90,7 @@
                     <input id="dlf_Price" type="number">
                     <p>元</p>
                 </div>
+                <p class="solt_Tit" style="margin-top: 0.1rem;">签约价与平台实收价的差额</p>
             </div>
         </div>
 
@@ -103,7 +153,7 @@
     <div class="applicant_item4">
         <h1 class="applicant_Txt">材料信息</h1>
         <div class="applicant_Box4">
-            <div class="applicant_Li2">
+            <div class="applicant_Li2" id="weiId">
                 <div class="applicant_Img"><img src="../image/19_icon.png" alt=""></div>
                 <p class="wts_download" data-id="1">委托书下载</p>
             </div>
@@ -114,6 +164,24 @@
                 </div>
             </div>
         </div>
+
+        <div class="ht_Mask" id="ht_Mask" style="top: 0;left: 0;">
+            <div class="my_MaskCon">
+                <!--                <h1 class="my_MaskTxt">申请人联系方式</h1>-->
+                <div class="fsForm">
+                    <input type="text" id="email2" placeholder="请输入您的邮箱地址">
+                    <button type="submit" class="my_MaskBtn2 my_fsBtn" id="btn2" style="width: 100%;height: 0.64rem;">
+                        发送到邮箱
+                    </button>
+                    <p>IOS操作系统不支持下载到手机，请选择发送至邮箱接收委托书。</p>
+                </div>
+                <div class="my_MaskBtnBox">
+                    <div type="submit" class="my_MaskBtn1" onclick="$('#ht_Mask').hide()">取消</div>
+                    <button type="submit" class="my_MaskBtn2 my_htBtn">下载到手机</button>
+                </div>
+            </div>
+        </div>
+
         <!-- 阅读同意 -->
         <div class="applicant_Box5" data-id="0">
             <img class="applicant_Img2" src="../image/20_icon.png" alt="">
@@ -149,7 +217,7 @@
         }
     });
 
-    //委托书下载
+    /*//委托书下载
     $('.wts_download').click(function () {
         $.ajax({
             url: "/api/flow/downloadOf",
@@ -167,7 +235,7 @@
                 }
             }
         })
-    });
+    });*/
     $('.appli_submit').click(function () {
 
         var type = $(this).data('id');
@@ -364,6 +432,61 @@
             $('#sfzName').focus();
             return false;
         }
+    })
+    //发送到邮箱
+    $('.my_fsBtn').click(function () {
+        var val = $('.fsForm input').val();
+        $.ajax({
+            url: "/api/flow/emile",
+            type: "POST",
+            data: {
+                emile: val
+            },
+            success(res) {
+                if (res.code == 20000) {
+                    $('#ht_Mask').hide();
+                    if (res.data == null) {
+                        mui.toast('此业务内容不可下载', {
+                            duration: 1600,
+                            type: 'div'
+                        })
+                    } else {
+                        mui.toast('发送成功', {
+                            duration: 1600,
+                            type: 'div'
+                        })
+                    }
+                }
+            }
+        })
+    })
+    //下载到手机
+    $('.my_htBtn').click(function () {
+        $.ajax({
+            url: "/api/flow/downloadOf",
+            type: 'GET',
+            success: function (res) {
+                if (res.code == 20000) {
+                    $('#ht_Mask').hide();
+                    if (res.data == '') {
+                        mui.toast('此业务内容不可下载', {
+                            duration: 1600,
+                            type: 'div'
+                        })
+                    } else {
+                        mui.toast('下载成功', {
+                            duration: 1600,
+                            type: 'div'
+                        })
+                        location.href = res.data
+                    }
+                }
+            }
+        })
+    });
+
+    $('#weiId').click(function () {
+        $('#ht_Mask').show()
     })
 </script>
 </body>

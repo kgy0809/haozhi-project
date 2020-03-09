@@ -85,11 +85,14 @@ public class CaseController extends BaseController {
     @ResponseBody
     public ResultDTO emile(String emile) {
         String caseId = (String) session.getAttribute("caseId");
-        hzYwService.emile(caseId,emile);
+        String emile1 = hzYwService.emile(caseId, emile);
 /*        if (wordUrl == null) {
             return new ResultDTO(true, StatusCode.OK, "查询成功,没有委托书", null);
         }*/
-        return new ResultDTO(true, StatusCode.OK, "发送成功");
+        if (emile1 == null) {
+            return new ResultDTO(true, StatusCode.OK, "查询成功,没有委托书", null);
+        }
+        return new ResultDTO(true, StatusCode.OK, "发送成功","发送成功");
     }
 
     @RequestMapping(value = "save",method = RequestMethod.POST)

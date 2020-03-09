@@ -199,11 +199,14 @@ public class BusinessController extends BaseController {
     @ResponseBody
     public ResultDTO emile(String emile) {
         String twoId = (String) session.getAttribute("twoId");
-        hzYwService.emile(twoId,emile);
+        String emile1 = hzYwService.emile(twoId, emile);
 /*        if (wordUrl == null) {
             return new ResultDTO(true, StatusCode.OK, "查询成功,没有委托书", null);
         }*/
-        return new ResultDTO(true, StatusCode.OK, "发送成功");
+        if (emile1 == null) {
+            return new ResultDTO(true, StatusCode.OK, "查询成功,没有委托书", null);
+        }
+        return new ResultDTO(true, StatusCode.OK, "发送成功","发送成功");
     }
 
     @RequestMapping("last")

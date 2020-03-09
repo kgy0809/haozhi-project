@@ -3,7 +3,56 @@
 
 <head th:replace="default :: head">
 </head>
+<style>
+    .mui-loading {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        z-index: 100;
+        transform: translate(-50%, -50%);
+        -webkit-transform: translate(-50%, -50%);
+        -ms-transform: translate(-50%, -50%);
+        -moz-transform: translate(-50%, -50%);
+        -o-transform: translate(-50%, -50%);
+    }
 
+    .loadingTxt {
+        font-size: 0.26rem;
+        color: #333333;
+        text-align: center;
+        margin-top: 0.18rem;
+    }
+
+    .pdfImg img {
+        width: 100%;
+    }
+
+    .fsForm {
+        margin: 0.7rem 0.44rem 0.2rem;
+    }
+
+    .fsForm input {
+        height: 0.64rem;
+        background-color: #EEEEEE;
+        font-size: 0.28rem;
+        text-align: center;
+        width: 100%;
+        display: block;
+    }
+
+    .fsForm button {
+        font-size: 0.28rem;
+        color: white;
+        border: 0;
+        margin: 0.4rem 0rem 0.46rem;
+    }
+
+    .fsForm p {
+        color: #ED291B;
+        font-size: 0.24rem;
+        line-height: 0.28rem;
+    }
+</style>
 <body>
 <div class="Box">
     <!-- 申请人信息 -->
@@ -64,24 +113,26 @@
     <div>
         <div class="applicant_item3">
             <h1 class="applicant_Txt">附加代理费</h1>
-
             <div class="applicant_Box3">
                 <input id="dlf_Price" type="number">
                 <p>元</p>
             </div>
+            <p class="solt_Tit" style="margin-top: 0.1rem;">签约价与平台实收价的差额</p>
         </div>
     </div>
 
-    <div class="ht_Mask">
+    <div class="ht_Mask" id="ht_Mask" style="top: 0;left: 0;">
         <div class="my_MaskCon">
             <!--                <h1 class="my_MaskTxt">申请人联系方式</h1>-->
             <div class="fsForm">
                 <input type="text" id="email2" placeholder="请输入您的邮箱地址">
-                <button type="submit" class="my_MaskBtn2 my_fsBtn" id="btn2" style="width: 100%;height: 0.64rem;">发送到邮箱</button>
+                <button type="submit" class="my_MaskBtn2 my_fsBtn" id="btn2" style="width: 100%;height: 0.64rem;">
+                    发送到邮箱
+                </button>
                 <p>IOS操作系统不支持下载到手机，请选择发送至邮箱接收委托书。</p>
             </div>
             <div class="my_MaskBtnBox">
-                <div type="submit" class="my_MaskBtn1">取消</div>
+                <div type="submit" class="my_MaskBtn1" onclick="$('#ht_Mask').hide()">取消</div>
                 <button type="submit" class="my_MaskBtn2 my_htBtn">下载到手机</button>
             </div>
         </div>
@@ -92,7 +143,7 @@
         <h1 class="applicant_Txt">材料下载</h1>
 
         <div class="applicant_Box4">
-            <div class="applicant_Li2" th:if="${businessTwo} != '10013'">
+            <div class="applicant_Li2" id="weiId" th:if="${businessTwo} != '10013'">
                 <div class="applicant_Img"><img th:src="@{/image/19_icon.png}" alt=""></div>
                 <p class="wts_download" data-id="1">委托书下载</p>
             </div>
@@ -114,7 +165,6 @@
 <script>
     var applicationId;  //申请类别
     applicationId = $('.order_RLi2').eq(0).data('id');
-
 
 
     // 个人申请/企业申请
@@ -154,49 +204,49 @@
         var phone = $('#phone').val(); //手机号
         var email = $('#email').val(); //邮箱
 
-        if (gsName === '' && applicationId === 1){
+        if (gsName === '' && applicationId === 1) {
             mui.toast('请输入公司名称', {
                 duration: 1600,
                 type: 'div'
             });
             return false;
         }
-        if (xymName === '' && applicationId === 1){
+        if (xymName === '' && applicationId === 1) {
             mui.toast('请输入信用码', {
                 duration: 1600,
                 type: 'div'
             });
             return false;
         }
-        if (grName === '' && applicationId === 2){
+        if (grName === '' && applicationId === 2) {
             mui.toast('请输入姓名', {
                 duration: 1600,
                 type: 'div'
             });
             return false;
         }
-        if (sfzName === '' && applicationId === 2){
+        if (sfzName === '' && applicationId === 2) {
             mui.toast('请输入身份证', {
                 duration: 1600,
                 type: 'div'
             });
             return false;
         }
-        if (lxrName === ''){
+        if (lxrName === '') {
             mui.toast('请输入联系人', {
                 duration: 1600,
                 type: 'div'
             });
             return false;
         }
-        if (phone === ''){
+        if (phone === '') {
             mui.toast('请输入手机号', {
                 duration: 1600,
                 type: 'div'
             });
             return false;
         }
-        if (email === ''){
+        if (email === '') {
             mui.toast('请输入邮箱', {
                 duration: 1600,
                 type: 'div'
@@ -204,10 +254,11 @@
             return false;
         }
         var dlf_Price = $('#dlf_Price').val(); //代理费
-        if(dlf_Price == ""){
+
+        if (dlf_Price == "") {
             dlf_Price = 0
         }
-        if (csd === 0){
+        if (csd === 0) {
             mui.toast('请您先阅读协议', {
                 duration: 1600,
                 type: 'div'
@@ -243,16 +294,16 @@
             data: BusinessTwo,
             success: function (res) {
                 if (res.code == 20000) {
-                    if(type == 3){
+                    if (type == 3) {
                         location.href = "/api/business/last";
-                    }else if(type == 2){
+                    } else if (type == 2) {
                         location.href = "/api/business/etc";
                     }
                 }
             }
         })
     });
-    $("#phone").on('blur',function(){
+    $("#phone").on('blur', function () {
         var t = $("#phone").val();
         if (!(/^1[0-9][0-9]\d{8}$/.test(t)) && !(/\d{8}|\d{4}-\d{7}/.test(t))) {
             mui.toast('手机号不正确', {
@@ -264,7 +315,7 @@
         }
     });
     var reg = /^([a-zA-Z]|[0-9])(\w|\-)+@[a-zA-Z0-9]+\.([a-zA-Z]{2,4})$/;
-    $("#email").on('blur',function(){
+    $("#email").on('blur', function () {
         var email = $("#email").val();
         if (!(reg.test(email))) {
             mui.toast('邮箱格式不正确', {
@@ -276,7 +327,7 @@
         }
     });
     var xymReg = /^[^_IOZSVa-z\W]{2}\d{6}[^_IOZSVa-z\W]{10}$/g;
-    $("#xymName").on('blur',function(){
+    $("#xymName").on('blur', function () {
         var xymName = $("#xymName").val();
         if (!(xymReg.test(xymName))) {
             mui.toast('统一社会信用代码不正确', {
@@ -288,7 +339,7 @@
         }
     })
     var sfzReg = /^[1-9]\d{5}(18|19|20|(3\d))\d{2}((0[1-9])|(1[0-2]))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/;
-    $("#sfzName").on('blur',function(){
+    $("#sfzName").on('blur', function () {
         var sfzName = $("#sfzName").val();
         if (!(sfzReg.test(sfzName))) {
             mui.toast('身份证不正确', {
@@ -300,53 +351,61 @@
         }
     })
 
-    //下载合同
-    $('.wts_download').click(function () {
-        $('.ht_Mask').show();
-    })
     //发送到邮箱
     $('.my_fsBtn').click(function () {
         var val = $('.fsForm input').val();
-        var ids = $('#etc_id').val();
         $.ajax({
-            url: "/api/business/downloadContractCN",
+            url: "/api/business/emile",
             type: "POST",
             data: {
-                type: 2,
-                email:val,
-                id:ids
+                emile: val
             },
             success(res) {
                 if (res.code == 20000) {
-                    $('.ht_Mask').hide();
-                    mui.toast('发送成功', {
-                        duration: 1600,
-                        type: 'div'
-                    });
-                }
-            }
-        })
-    })
-    //下载到手机
-    $('.my_htBtn').click(function () {
-        var ids = $('#etc_id').val();
-        $.ajax({
-            url: "/api/business/downloadOf",
-            type: 'GET',
-            success: function (res) {
-                if (res.code == 20000) {
+                    $('#ht_Mask').hide();
                     if (res.data == null) {
                         mui.toast('此业务内容不可下载', {
                             duration: 1600,
                             type: 'div'
                         })
                     } else {
+                        mui.toast('发送成功', {
+                            duration: 1600,
+                            type: 'div'
+                        })
+                    }
+                }
+            }
+        })
+    })
+    //下载到手机
+    $('.my_htBtn').click(function () {
+        $.ajax({
+            url: "/api/business/downloadOf",
+            type: 'GET',
+            success: function (res) {
+                if (res.code == 20000) {
+                    $('#ht_Mask').hide();
+                    if (res.data == '') {
+                        mui.toast('此业务内容不可下载', {
+                            duration: 1600,
+                            type: 'div'
+                        })
+                    } else {
+                        mui.toast('下载成功', {
+                            duration: 1600,
+                            type: 'div'
+                        })
                         location.href = res.data
                     }
                 }
             }
         })
     });
+
+    $('#weiId').click(function () {
+        $('#ht_Mask').show()
+    })
 </script>
 </body>
 

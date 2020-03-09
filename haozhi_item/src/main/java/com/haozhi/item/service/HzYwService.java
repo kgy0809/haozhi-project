@@ -247,8 +247,9 @@ public class HzYwService {
     @Autowired
     private MailService mailService;
 
-    private static final String SUBJECT = "好智咨询";
-    private static final String CONTNET = "好智咨询发送";
+    private static final String SUBJECT = "合同文本下载     好智咨询--知产人财富倍增平台";
+    private static final String CONTNET = "附件为您在好智咨询平台下单的合同，请您确认内容无误后，打印盖章并扫描成图片格式回传（上传路径：进度查询--待审核--选择订单--上传资料）。感谢您使用好智咨询平台！";
+    private static final String CONTNET_WT = "附件为您在好智咨询平台下单的委托书，请您确认内容无误后，打印盖章并扫描成图片格式回传（上传路径：进度查询--待审核--选择订单--上传资料）。感谢您使用好智咨询平台！";
 
     /**
      * 写入 word数据 转换成 pdf
@@ -866,11 +867,15 @@ public class HzYwService {
      * @param twoId
      * @return
      */
-    public void emile(String twoId,String emile) {
+    public String emile(String twoId,String emile) {
         BusinessTwo businessTwo = businessTwoMapper.selectByPrimaryKey(twoId);
         String oneId = businessTwo.getOneId();
         HzYw hzYw = hzYwRepository.selectByPrimaryKey(oneId);
-        mailService.sendSimpleMail(emile, CONTNET, "委托书下载地址："+hzYw.getWordUrl());
+        if("".equals(hzYw.getWordUrl())){
+            return null;
+        }
+        mailService.sendSimpleMail(emile, CONTNET_WT, "委托书下载地址："+hzYw.getWordUrl());
+        return "委托书下载成功";
     }
 }
 

@@ -36,25 +36,45 @@
         </div>
         <!-- 是否同意 -->
         <div class="reg_Box2" data-id="0">
-            <input type="checkbox" name="Agreed">
+            <!--<input type="checkbox" name="Agreed">-->
+            <img class="applicant_Img2" src="../image/20_icon.png" alt="">
             <div class="reg_Txt">阅读并接受<a href="/api/user/agreement">《好智企业咨询用户协议》</a></div>
         </div>
+        <!--<div class="applicant_Box5" data-id="0">
+            <img class="applicant_Img2" src="../image/20_icon.png" alt="">
+            <div class="applicant_Txt4">我已阅读并同意<a href="/api/knowledge">《知识产权代理分配说明》</a></div>
+        </div>-->
         <!-- 按钮 -->
         <div class="reg_btn">登录</div>
     </div>
 </div>
 <script type="text/javascript">
     //判断阅读并接受
-    let csd = 0;
+    /*let csd = 0;
     $('.reg_Box2').click(function () {
         if ($(this).attr('checked') === undefined) {
             $(this).attr('checked', true)
             $(this).attr('data-id', 1);
             csd = $(this).data('id');
+            console.log(csd)
         } else {
             $(this).removeAttr('checked')
             $(this).attr('data-id', 0);
             csd = 0
+            console.log(csd)
+        }
+    });*/
+    // 阅读同意
+    let csd = 0;
+    $('.reg_Box2').click(function () {
+        if ($(this).find('img').attr('src') == '../image/20_icon.png') {
+            $(this).find('img').attr('src', '../image/21_icon.png')
+            $(this).attr('data-id', 1);
+            csd = $(this).data('id');
+        } else {
+            $(this).find('img').attr('src', '../image/20_icon.png')
+            $(this).attr('data-id', 0);
+            csd = 0;
         }
     });
 
@@ -107,7 +127,6 @@
 
 
     $('.reg_btn').click(function () {
-        console.log(csd)
         var name = $('#name').val();
         var email = $('#email').val();
         var phone = $('#phone').val();

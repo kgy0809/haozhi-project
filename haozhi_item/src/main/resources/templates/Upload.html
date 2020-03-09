@@ -3,29 +3,54 @@
 
 <head th:replace="default :: head">
 </head>
-
+<style>
+    .applicant_title {
+        font-size: 0.36rem;
+        width: 100%;
+        height: 0.8rem;
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+    #up_weiImg,#up_heImg {
+        flex-wrap: wrap;
+    }
+</style>
 <body>
 <div class="Box">
-    <form id="firstFile" action="/api/progress/orderurl" method="post">
+    <form id="firstFile" action="" method="post">
         <div class="uploadBox">
             <h1 class="applicant_Txt">材料信息</h1>
-            <div class="applicant_Box4">
-                <div class="applicant_Li2" id="form">
-                    <div class="applicant_Img">
-                        <img th:src="@{/image/33_icon.png}" alt="">
-                        <input class="input1" type="file" name="file" id="book">
-                        <input class="input2" type="hidden" name="power" value="">
-                        <input type="hidden" name="id" th:value="${id}">
+            <div class="applicant_upImg_box" style="margin-bottom: 0.2rem;">
+                <div class="applicant_title">上传委托书</div>
+                <div class="applicant_Box4" id="up_weiImg">
+
+                    <div class="applicant_Li2" id="form">
+                        <div class="applicant_Img">
+                            <img th:src="@{/image/33_icon.png}" alt="">
+                            <input class="input1" data-type="1" type="file" name="file" id="book">
+                            <input class="input2" type="hidden" name="power" value="">
+                            <input type="hidden" name="id" th:value="${id}">
+                        </div>
+<!--                        <p>上传委托书</p>-->
                     </div>
-                    <p>上传委托书</p>
                 </div>
-                <div class="applicant_Li2" id="form_contract">
-                    <div class="applicant_Img">
-                        <img th:src="@{/image/33_icon.png}" alt="">
-                        <input class="input1" type="file" name="file" id="contract">
-                        <input class="input2" type="hidden" name="contract" value="">
+            </div>
+
+            <div class="applicant_upImg_box">
+                <div class="applicant_title">上传合同</div>
+                <div class="applicant_Box4" id="up_heImg">
+                    <div class="applicant_Img" style="margin: 0 0.12rem 0 0.12rem">
+                        <img src="" alt="">
                     </div>
-                    <p>上传合同</p>
+                    <div class="applicant_Li2" id="form_contract">
+                        <div class="applicant_Img">
+                            <img th:src="@{/image/33_icon.png}" alt="">
+                            <input class="input1" type="file" name="file" id="contract">
+                            <input class="input2" type="hidden" name="contract" value="">
+                        </div>
+<!--                        <p>上传合同</p>-->
+                    </div>
                 </div>
             </div>
         </div>
@@ -33,8 +58,10 @@
     </form>
 </div>
 <script>
+    var weiList = [], heList = []
     $('.applicant_Li2 .input1').change(function () {
         var datas = new FormData($('#firstFile')[0]);
+        console.log(datas);
         let t = this;
         $.ajax({
             url: "/api/order/upload/file",
@@ -46,9 +73,19 @@
             contentType: false,
             success: function (res) {
                 if (res.code === 20000) {
-
-                    $(t).prev('img').attr('src', '/api/image/19_icon.png');
-                    $(t).next('.input2').val(res.data);
+                    if ($(t).data('type') == 1 && weiList.length < 9) {
+                        // 上传委托书
+                        weiList.push(res.data);
+                        $('#up_weiImg').prepend(
+                            '<div class="applicant_Img" style="margin: 0 0.12rem 0 0.12rem">' +
+                            '                        <img src="' + res.data + '" alt="">' +
+                            '                    </div>'
+                        )
+                    } else if ($(t).data('type') == 1 && weiList.length >= 0) {
+                        $('#form').hide();
+                    }
+                    /*                    $(t).prev('img').attr('src', '/api/image/19_icon.png');
+                                        $(t).next('.input2').val(res.data);*/
                     mui.toast('上传成功', {
                         duration: 1600,
                         type: 'div'

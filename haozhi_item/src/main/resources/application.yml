@@ -9,13 +9,39 @@ spring:
   thymeleaf:
     cache: false
   datasource:
-    driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://localhost:3307/haozhi?useUnicode=true&serverTimezone=GMT%2B8&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&functionsNeverReturnBlobs=true&zeroDateTimeBehavior=convertToNull&allowMultiQueries=true&useSSL=false
-    username: db136s1ehvo1yn73
-    password: cxz307311SJK
-    type: org.apache.commons.dbcp2.BasicDataSource
-    dbcp2:
-      connection-init-sqls: SET NAMES utf8mb4
+    dynamic:
+      druid: # 全局druid参数，绝大部分值和默认保持一致。(现已支持的参数如下,不清楚含义不要乱设置)
+        # 连接池的配置信息
+        # 初始化大小，最小，最大
+        initial-size: 5
+        min-idle: 5
+        maxActive: 20
+        # 配置获取连接等待超时的时间
+        maxWait: 60000
+        # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+        timeBetweenEvictionRunsMillis: 60000
+        # 配置一个连接在池中最小生存的时间，单位是毫秒
+        minEvictableIdleTimeMillis: 300000
+        validationQuery: SELECT 1 FROM DUAL
+        testWhileIdle: true
+        testOnBorrow: true
+        testOnReturn: true
+        # 打开PSCache，并且指定每个连接上PSCache的大小
+        poolPreparedStatements: true
+        maxPoolPreparedStatementPerConnectionSize: 20
+        # 配置监控统计拦截的filters，去掉后监控界面sql无法统计，'wall'用于防火墙
+        filters: stat,wall,slf4j
+        # 通过connectProperties属性来打开mergeSql功能；慢SQL记录
+        connectionProperties: druid.stat.mergeSql\=true;druid.stat.slowSqlMillis\=5000
+      datasource:
+        master:
+          driver-class-name: com.mysql.jdbc.Driver
+          url: jdbc:mysql://localhost:3307/haozhi?serverTimezone=Asia/Shanghai&user=root&password=910630&useUnicode=true&characterEncoding=utf-8&useSSL=true
+          username: db136s1ehvo1yn73
+          password: cxz307311SJK
+          type: org.apache.commons.dbcp2.BasicDataSource
+          dbcp2:
+            connection-init-sqls: SET NAMES utf8mb4
   redis:
     host: 182.92.205.118
     port: 6379
@@ -24,8 +50,8 @@ spring:
         max-active: 8
         max-wait: -1
   mail:
-    host: smtp.163.com  # 邮箱配置
-    username: haozhizixun@163.com  #  你的163邮箱
+    host: smtp.vip.163.com  # 邮箱配置
+    username: haozhizixun@vip.163.com  #  你的163邮箱
     password: cl1314520  # 注意这里不是邮箱密码，而是SMTP授权密码
     protocol: smtp
     default-encoding: UTF-8
@@ -35,7 +61,7 @@ spring:
         smtp:
           # 如果是用 SSL 方式，需要配置如下属性,使用qq邮箱的话需要开启
           ssl:
-            trust: smtp.163.com
+            trust: smtp.vip.163.com
             auth: true
             enable: true
             required: true
@@ -49,6 +75,11 @@ spring:
               port: 465
               class: javax.net.ssl.SSLSocketFactory
     port: 465
+# 通用 Mapper 配置
+mapper:
+  identity: MYSQL
+  not-empty: false
+#显示sql语句
 mybatis:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl

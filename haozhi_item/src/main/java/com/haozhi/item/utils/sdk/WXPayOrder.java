@@ -15,7 +15,7 @@ public class WXPayOrder {
     private static Order order;
     private static WXPayOrder wxPayOrder;
 
-    private static final String PRODUCT_NAME = "好智（天津）企业管理咨询有限责任公司";
+    private static final String PRODUCT_NAME = "好智咨询";
     private static final String NOTIFY_URL = "http://haozhiqiye.haozhizixun.com/api/pay/notify";
     private static final String NOTIFY_URL_VIP = "http://haozhiqiye.haozhizixun.com/api/pay/notify/vip";
 
@@ -32,7 +32,7 @@ public class WXPayOrder {
             /**
              * 下单商品名称
              */
-            data.put("body", "111");
+            data.put("body", PRODUCT_NAME);
             /**
              * 商品订单号
              */
