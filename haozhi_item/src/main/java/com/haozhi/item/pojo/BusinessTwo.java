@@ -26,7 +26,7 @@ public class BusinessTwo {
     /**
      * 文字图样
      */
-    private String imgtext;
+    private String imgText;
     /**
      * 商标类型 1文字2图形
      */

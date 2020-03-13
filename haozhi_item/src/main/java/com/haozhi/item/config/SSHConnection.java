@@ -1,12 +1,8 @@
+/*
 package com.haozhi.item.config;
 
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.Session;
-
-/**
- * @author NZL
- * @version 1.0
- * @date 2019/12/11 9:47*/
 
 
 public class SSHConnection {
@@ -25,8 +21,8 @@ public class SSHConnection {
     int remote_port = 3306;
     // 服务器上数据库端口号
     Session session = null;
-/**
-     *    建立SSH连接*/
+
+
 
 
     public void SSHConnection() throws Exception{
@@ -42,8 +38,7 @@ public class SSHConnection {
             // do something
         }
     }
-/**
-     *    断开SSH连接*/
+
 
 
     public void closeSSH () throws Exception
@@ -51,3 +46,4 @@ public class SSHConnection {
         this.session.disconnect();
     }
 }
+*/

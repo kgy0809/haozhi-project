@@ -140,24 +140,25 @@
 
     <!-- 材料下载 -->
     <div class="applicant_item4">
-        <h1 class="applicant_Txt">材料下载</h1>
-
-        <div class="applicant_Box4">
-            <div class="applicant_Li2" id="weiId" th:if="${businessTwo} != '10013'">
-                <div class="applicant_Img"><img th:src="@{/image/19_icon.png}" alt=""></div>
-                <p class="wts_download" data-id="1">委托书下载</p>
-            </div>
-            <div class="applicant_Li2">
-                <div class="applicant_Img"><img th:src="@{/image/19_icon.png}" alt=""></div>
-                <div class="appli_submit" data-id="2">
-                    <p>合同预览</p>
+        <div>
+            <h1 class="applicant_Txt">材料下载</h1>
+            <div class="applicant_Box4">
+                <div class="applicant_Li2" id="weiId" th:if="${businessTwo} != '10013'">
+                    <div class="applicant_Img"><img th:src="@{/image/19_icon.png}" alt=""></div>
+                    <p class="wts_download" data-id="1">委托书下载</p>
+                </div>
+                <div class="applicant_Li2">
+                    <div class="applicant_Img"><img th:src="@{/image/19_icon.png}" alt=""></div>
+                    <div class="appli_submit" data-id="2">
+                        <p>合同预览</p>
+                    </div>
                 </div>
             </div>
         </div>
         <!-- 阅读同意 -->
         <div class="applicant_Box5" data-id="0">
             <img class="applicant_Img2" th:src="@{/image/20_icon.png}" alt="">
-            <div class="applicant_Txt4">我已阅读并同意<a href="/api/knowledge">《知识产权代理分配说明》</a></div>
+            <div class="applicant_Txt4">我已阅读并同意<a href="/api/knowledge">《好智平台代理费分配说明》</a></div>
         </div>
     </div>
     <div class="order_btn appli_submit" data-id="3" style="margin:0.46rem auto 0.24rem;">下一步</div>
@@ -203,6 +204,7 @@
         var lxrName = $('#lxrName').val(); //联系人
         var phone = $('#phone').val(); //手机号
         var email = $('#email').val(); //邮箱
+        var businessTwo = $('#businessTwo').val();
 
         if (gsName === '' && applicationId === 1) {
             mui.toast('请输入公司名称', {
@@ -265,6 +267,7 @@
             });
             return false;
         }
+
         if (applicationId == 1) {
             BusinessTwo = {
                 type: type,
@@ -293,7 +296,7 @@
             type: 'POST',
             data: BusinessTwo,
             success: function (res) {
-                if (res.code == 20000) {
+                if (res.code === 20000) {
                     if (type == 3) {
                         location.href = "/api/business/last";
                     } else if (type == 2) {

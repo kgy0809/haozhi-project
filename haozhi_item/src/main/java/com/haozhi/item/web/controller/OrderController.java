@@ -49,7 +49,13 @@ public class OrderController extends BaseController {
     public String upload(String id, Map<String, Object> map) {
         Order order = orderService.queryById(id);
         if ((order.getPower() != null && !order.getPower().equals("")) || (order.getContract() != null && !order.getContract().equals(""))) {
-            map.put("order", order);
+            String contract = order.getContract();//合同
+            String power = order.getPower();//委托书
+            String[] contracts = contract.split(",");
+            String[] powers = power.split(",");
+            map.put("powers", powers);
+            map.put("contracts", contracts);
+            map.put("id", id);
             return "update_upload";
         }
         map.put("order", order);

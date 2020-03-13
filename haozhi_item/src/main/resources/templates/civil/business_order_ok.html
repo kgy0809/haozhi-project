@@ -29,30 +29,48 @@
                 </div>
             </div>
             <!-- 指定颜色 -->
-            <div class="order_item">
-                <div class="order_Txt">是否指定颜色：</div>
-                <div class="order_Img3" data-id="0">
-                    <input type="hidden" name="sbColor" value="0">
-                    <img th:src="@{/image/15_icon.png}" alt="">
+            <div class="order_item q_order_item">
+                <div class="order_item" style="border-bottom: 0 none;padding-bottom: 0">
+                    <div class="order_Txt">是否指定颜色：</div>
+                    <div class="order_Img3" data-id="0">
+                        <input type="hidden" name="sbColor" value="0">
+                        <img th:src="@{/image/15_icon.png}" alt="">
+                    </div>
+                </div>
+                <div class="swich_box">
+                    <div>是</div>
+                    <div>否</div>
                 </div>
             </div>
 
             <div>
                 <!-- 商标图样 文字-->
                 <div class="order_item2 order_type">
-                    <div class="order_Txt">商标图样：(自动生成和图样上传选中一样)</div>
+                    <div class="order_Txt">商标图样：(请按说明选择自动生成或图样上传)</div>
                     <div class="order_item2Box">
-                        <div class="order_item2Img"></div>
+                        <div id="q_txt" class="order_item2Img"></div>
+                        <div id="q_img" class="order_Img4" style="position: relative;width: 2.74rem;height: 2.74rem;display: none">
+<!--                            <img class="order_Img2_img" th:src="@{/image/14_icon.png}" alt="">-->
+                            <img class="order_Img2_img2" id="order_Img2_img2"  src="" alt="">
+                            <input type="hidden" id="flieImg2" name="imgText" value="">
+                        </div>
                         <!--<img class="order_Img2_img2" src="" alt="">-->
                         <input type="hidden" id="imgText" name="imgtext">
                         <input type="file" name="file" id="file" style="display:none">
-                        <div class="order_item2Btn">自动生成</div>
+                        <div class="q_up_btn">
+                            <div class="order_item2Btn" id="btn1">自动生成</div>
+                            <div class="order_item2Btn" id="btn2">图样上传</div>
+                        </div>
 
                     </div>
-                    <div class="order_item2Box">
-                        <div class="order_item2Img"></div>
-                        <div class="order_item2Btn" id="btn2">图样上传</div>
-                    </div>
+<!--                    <div class="order_item2Box">-->
+<!--                        <div class="order_Img4" style="position: relative;width: 1.76rem;height: 1.76rem;">-->
+<!--                            <img class="order_Img2_img" th:src="@{/image/14_icon.png}" alt="">-->
+<!--                            <img class="order_Img2_img2" id="order_Img2_img2"  src="" alt="">-->
+<!--                            <input type="hidden" id="flieImg2" name="imgText" value="">-->
+<!--                        </div>-->
+<!--                        <div class="order_item2Btn" id="btn2">图样上传</div>-->
+<!--                    </div>-->
                     <div class="order_Txt3">自动生成商标，默认宋体字样从左向右排列</div>
                     <div style="font-size: 0.24rem;margin-top: 0.05rem;color: rgba(140, 145, 152, 1);">
                         非宋体或经设计的字体，请选择图样上传
@@ -64,7 +82,7 @@
                     <div class="order_item3Box">
                         <div class="order_Img2">
                             <img class="order_Img2_img" th:src="@{/image/14_icon.png}" alt="">
-                            <img class="order_Img2_img2" src="" alt="">
+                            <img class="order_Img2_img2" id="order_Img1_img1" src="" alt="">
                             <input type="hidden" id="flieImg" name="sbImage">
                             <input type="file" name="file">
                         </div>
@@ -82,11 +100,16 @@
 </div>
 <script>
     $('.order_Img2 input').change(function () {
-        var datas = new FormData($('#form')[0]);
+        var f1 = this.files.length;
+        var formData = new FormData();
+        for (var i = 0; i < f1; i++) {
+            var file = this.files[i];
+            formData.append("file", file);
+        }
         $.ajax({
             url: "/api/business/upload",
             type: 'POST',
-            data: datas,
+            data: formData,
             dataType: 'JSON',
             cache: false,
             processData: false,
@@ -94,7 +117,7 @@
             success: function (res) {
                 if (res.code == 20000) {
                     $("#flieImg").val(res.data);
-                    $('.order_Img2_img2').attr('src', res.data);
+                    $('#order_Img1_img1').attr('src', res.data);
                     mui.toast('上传成功', {
                         duration: 1600,
                         type: 'div'
@@ -137,29 +160,38 @@
         }
     });
     // 自动生成图标
-    $('.order_item2Btn').click(function () {
+    $('#btn1').click(function () {
         var val = $('.order_input').val();
         $('.order_item2Img').text(val);
     });
     // 点击div按钮触发input标签
     $('#btn2').click(function () {
-        console.log(1111)
         $("#file").trigger("click");
     })
 
     $('#file').change(function () {
-        var datas = new FormData($('#form')[0]);
+        // var datas = new FormData($('#form')[0])
+        var f1 = this.files.length;
+        alert(f1)
+        var formData = new FormData();
+        for (var i = 0; i < f1; i++) {
+            var file = this.files[i];
+            formData.append("file", file);
+        }
         $.ajax({
             url: "/api/business/upload",
             type: 'POST',
-            data: datas,
+            data: formData,
             dataType: 'JSON',
             cache: false,
             processData: false,
             contentType: false,
             success: function (res) {
                 if (res.code == 20000) {
-                    $("#imgText").val(res.data);
+                    $("#flieImg2").val(res.data);
+                    $('#order_Img2_img2').attr('src', res.data);
+                    $("#q_txt").hide();
+                    $('#q_img').show();
                     /*$('.order_Img2_img2').attr('src', res.data);*/
                     mui.toast('上传成功', {
                         duration: 1600,

@@ -22,6 +22,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ClassUtils;
+import org.springframework.util.StringUtils;
 import tk.mybatis.mapper.entity.Example;
 
 import javax.mail.MessagingException;
@@ -71,9 +72,15 @@ public class HzYwService {
      */
     public String businessTextTwo(BusinessTwo businessTwo) {
         businessTwo.setId(idWorker.nextId() + "");
-        if (businessTwo.getSbImage() == "" || businessTwo.getSbImage() == null) {
+        if ("".equals(businessTwo.getSbImage()) || businessTwo.getSbImage() == null) {
             businessTwo.setSbImage(null);
         }
+        if (!StringUtils.isEmpty(businessTwo.getImgText())) {
+            businessTwo.setSbType("3");
+            businessTwoMapper.insert(businessTwo);
+            return businessTwo.getId();
+        }
+        businessTwo.setImgText(null);
         businessTwoMapper.insert(businessTwo);
         return businessTwo.getId();
     }
@@ -387,12 +394,24 @@ public class HzYwService {
             doc.close();
             return png;
         } else {
-
+            /**
+             * 国内注册
+             */
             //加载Word模板文档
-            if ("10013".equals(business.getOneId()))
-                return null;
             Document doc = new Document();
-            doc.loadFromFile("/www/server/haozhi/word/001.docx");
+            if ("10011".equals(business.getOneId())) {
+                //补偿注册
+                doc.loadFromFile("/www/server/haozhi/word/001.docx");
+            } else if ("10010".equals(business.getOneId())) {
+                //急速注册
+                doc.loadFromFile("/www/server/haozhi/word/002.docx");
+            } else if ("10012".equals(business.getOneId())) {
+                //担保注册
+                doc.loadFromFile("/www/server/haozhi/word/003.docx");
+            }else if ("10013".equals(business.getOneId())){
+                doc.loadFromFile("/www/server/haozhi/word/0010.docx");
+            }
+
             if ("1".equals(business.getApplication())) {
                 doc.replace("#qgName", "执照代码", true, true);
             } else if ("2".equals(business.getApplication())) {
@@ -419,11 +438,12 @@ public class HzYwService {
             doc.replace("#dxZjPrice", MoneyUtils.change(Double.parseDouble(String.valueOf(business.getPrice() / 100 + business.getCommission() / 100))), true, true);
             HzYw hzYw = hzYwRepository.selectByPrimaryKey(business.getOneId());
             doc.replace("#Name", hzYw.getName(), true, true);
-            doc.replace("#gfPrice", String.valueOf((hzYw.getGfPrice() / 100)), true, true);
             if (user.getState().equals("1")) {
                 doc.replace("#dlPrice", String.valueOf(hzYw.getHyPrice() / 100 + business.getCommission() / 100), true, true);
+                doc.replace("#gfPrice", String.valueOf((business.getPrice() / 100 - hzYw.getHyPrice() / 100)), true, true);
             } else if (user.getState().equals("2")) {
                 doc.replace("#dlPrice", String.valueOf(hzYw.getVipPrice() / 100 + business.getCommission() / 100), true, true);
+                doc.replace("#gfPrice", String.valueOf((business.getPrice() / 100 - hzYw.getVipPrice() / 100)), true, true);
             }
             String[] split = business.getMenuId().split(",");
             List<WordMune> list = new LinkedList();
@@ -601,7 +621,7 @@ public class HzYwService {
         //替换文档中以#开头的文本
         doc.replace("#jfGsName", business.getApplicationName(), true, true);//名字
         doc.replace("#jfXxdm", business.getApplicationId(), true, true);//身份证
-/*        doc.replace("#jfGsName", business.getApplicationNumName(), true, true);*/
+        /*        doc.replace("#jfGsName", business.getApplicationNumName(), true, true);*/
         doc.replace("#jfName", business.getApplicationNumName(), true, true);
         doc.replace("#jfEmail", business.getApplicationNumMail(), true, true);
         doc.replace("#jfNum", business.getApplicationNumTel(), true, true);
@@ -689,7 +709,7 @@ public class HzYwService {
         doc.replace("#name", business.getApplicationName(), true, true);//名字
         doc.replace("#jfXxdm", business.getApplicationId(), true, true);//身份证
         /*doc.replace("#name", business.getApplicationNumName(), true, true);*/
-        doc.replace("#jfXxdm", business.getApplicationNumName(), true, true);
+        /*doc.replace("#jfXxdm", business.getApplicationNumName(), true, true);*/
         doc.replace("#jfName", business.getApplicationNumName(), true, true);
         doc.replace("#Email", business.getApplicationNumMail(), true, true);
         doc.replace("#jfNum", business.getApplicationNumTel(), true, true);
@@ -782,8 +802,8 @@ public class HzYwService {
         //替换文档中以#开头的文本
         doc.replace("#jfGsName", business.getApplicationName(), true, true);//名字
         doc.replace("#jfXxdm", business.getApplicationId(), true, true);//身份证
-/*        doc.replace("#jfGsName", business.getApplicationNumName(), true, true);*/
-        doc.replace("#jfXxdm", business.getApplicationNumName(), true, true);
+        /*        doc.replace("#jfGsName", business.getApplicationNumName(), true, true);*/
+        /*doc.replace("#jfXxdm", business.getApplicationNumName(), true, true);*/
         doc.replace("#jfName", business.getApplicationNumName(), true, true);
         doc.replace("#jfEmail", business.getApplicationNumMail(), true, true);
         doc.replace("#jfNum", business.getApplicationNumTel(), true, true);
@@ -864,17 +884,18 @@ public class HzYwService {
 
     /**
      * 发送委托书 邮件
+     *
      * @param twoId
      * @return
      */
-    public String emile(String twoId,String emile) {
+    public String emile(String twoId, String emile) {
         BusinessTwo businessTwo = businessTwoMapper.selectByPrimaryKey(twoId);
         String oneId = businessTwo.getOneId();
         HzYw hzYw = hzYwRepository.selectByPrimaryKey(oneId);
-        if("".equals(hzYw.getWordUrl())){
+        if ("".equals(hzYw.getWordUrl())) {
             return null;
         }
-        mailService.sendSimpleMail(emile, CONTNET_WT, "委托书下载地址："+hzYw.getWordUrl());
+        mailService.sendSimpleMail(emile, CONTNET_WT, "委托书下载地址：" + hzYw.getWordUrl());
         return "委托书下载成功";
     }
 }

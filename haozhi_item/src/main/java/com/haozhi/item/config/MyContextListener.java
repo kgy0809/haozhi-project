@@ -1,3 +1,4 @@
+/*
 
 package com.haozhi.item.config;
 
@@ -6,11 +7,6 @@ import org.springframework.stereotype.Component;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
-
-/**
- * @author NZL
- * @version 1.0
- * @date 2019/12/11 9:53*/
 
 
 @WebListener
@@ -22,9 +18,8 @@ public class MyContextListener implements ServletContextListener {
         super();
     }
 
-/**
-     * @see ServletContextListener#contextInitialized(ServletContextEvent)
-     */
+
+
 
     @Override
     public void contextInitialized(ServletContextEvent arg0) {
@@ -40,9 +35,8 @@ public class MyContextListener implements ServletContextListener {
         }
     }
 
-/**
-     * @see ServletContextListener#contextDestroyed(ServletContextEvent)
-     */
+
+
 
     @Override
     public void contextDestroyed(ServletContextEvent arg0) {
@@ -57,3 +51,4 @@ public class MyContextListener implements ServletContextListener {
         }
     }
 }
+*/

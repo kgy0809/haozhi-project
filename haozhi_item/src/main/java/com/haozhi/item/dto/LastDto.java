@@ -28,6 +28,7 @@ public class LastDto {
      * 商标状态 1 文字  2 图形
      */
     private String sbType;
+    private String imgText;
     /**
      * 文字为空 图片为 url
      */

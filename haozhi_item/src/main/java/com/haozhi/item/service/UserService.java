@@ -333,6 +333,8 @@ public class UserService {
 
     @Autowired
     private VipTimeMapper vipTimeMapper;
+    @Autowired
+    private SmsCodeMapper smsCodeMapper;
 
     /**
      * 短信验证码  验证
@@ -343,9 +345,10 @@ public class UserService {
      */
     public boolean querySms(String code, String tel) {
         //判断用户的验证码和redis中一致，才可以注册
-        String codeRedis = redisTemplate.boundValueOps(tel).get();
+        /*String codeRedis = redisTemplate.boundValueOps(tel).get();*/
         //通过StringUtils比较两个字符串是否一致
-        if (!StringUtils.equals(codeRedis, code)) {
+        String code1 = smsCodeMapper.selectByPrimaryKey(tel).getCode();
+        if (!StringUtils.equals(code1, code)) {
             return false;
         }
         return true;

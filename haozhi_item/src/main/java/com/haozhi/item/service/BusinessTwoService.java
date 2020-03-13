@@ -34,9 +34,6 @@ public class BusinessTwoService {
         Order order = orderMapper.selectByPrimaryKey(id);
         BusinessTwo businessTwo = businessTwoMapper.selectByPrimaryKey(order.getPOrder());
         HzYw hzYw = hzYwRepository.selectByPrimaryKey(businessTwo.getOneId());
-        if (hzYw.getId().equals("10013")){
-            return null;
-        }
         HzZc hzZc = hzZcRepository.selectByPrimaryKey(hzYw.getZid());
         if (hzZc.getId().equals("10086")){
             return "10086";

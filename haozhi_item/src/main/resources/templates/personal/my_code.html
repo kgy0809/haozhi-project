@@ -36,12 +36,65 @@
         <p class="code_Txt2">邀请新用户扫描二维码加入你的团队<br> 每邀请一名新用户注册<br>即可获得VIP会员购买抵扣券<i>[[${vip.couponPrice}]]</i>元</p>
 
         <div class="code_Img">
-            <img class="saveImg" th:src="@{'/personal/qrimage'}" alt="">
+            <img class="saveImg" id="save" src="" alt="">
         </div>
 
-        <div href="#" class="code_btn">长按图片保存到手机</div>
+        <div class="code_btn">长按图片保存到手机</div>
     </div>
 </div>
 </body>
+<script>
+
+    var url = ''
+    $(function () {
+        $.ajax({
+            url:"/api/personal/qrimage",
+            type:"get",
+            success:function (ref) {
+                $('#save').attr('src', ref.data)
+                url = ref.data;
+            }
+        })
+    })
+
+    var url = $('#save').attr('src');
+    longPress("save", saveSharePic);
+
+
+
+    function longPress(id, func) {
+        var timeOutEvent;
+
+        document.querySelector("#" + id).addEventListener("touchstart", function (e) {
+            //开启定时器前先清除定时器，防止重复触发
+            clearTimeout(timeOutEvent);
+            //开启延时定时器
+            timeOutEvent = setTimeout(function () {
+                //调用长按之后的逻辑函数func
+                func();
+            }, 300); //长按时间为300ms，可以自己设置
+        });
+
+        document.querySelector("#" + id).addEventListener("touchmove", function (e) {
+            //长按过程中，手指是不能移动的，若移动则清除定时器，中断长按逻辑
+            clearTimeout(timeOutEvent);
+            /* e.preventDefault() --> 若阻止默认事件，则在长按元素上滑动时，页面是不滚动的，按需求设置吧 */
+        });
+
+        document.querySelector("#" + id).addEventListener("touchend", function (e) {
+            //若手指离开屏幕，时间小于我们设置的长按时间，则为点击事件，清除定时器，结束长按逻辑
+            clearTimeout(timeOutEvent);
+        })
+    }
+
+    //保存图片
+    function saveSharePic() {
+        console.log('33333333333333333333')
+        console.log(url);
+        window.open(url)
+    }
+
+
+</script>
 
 </html>

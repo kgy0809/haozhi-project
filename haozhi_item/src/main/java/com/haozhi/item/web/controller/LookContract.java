@@ -37,9 +37,7 @@ public class LookContract extends BaseController {
     public String mycan(String id, Map<String, Object> map) {
         String mycan = businessTwoService.mycan(id);
         Order order = orderService.queryById(id);
-        if (mycan == null) {
-            return "没有合同";
-        } else if (mycan.equals("10086")) {
+        if (mycan.equals("10086")) {
             BusinessTwo etc = hzYwService.etc(order.getPOrder());
             etc.setStall("1");
             map.put("etc", etc);

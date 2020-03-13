@@ -36,12 +36,12 @@ public class PayService {
     @Autowired
     private MonthOrderMapper monthOrderMapper;
 
-
     @Autowired
     private IdWorker idWorker;
 
     /**
      * 微信支付
+     *
      * @param user
      * @param bid
      * @param pay
@@ -52,9 +52,9 @@ public class PayService {
         BusinessTwo business = businessTwoMapper.selectByPrimaryKey(bid);
         HzYw hzYw = hzYwRepository.selectByPrimaryKey(business.getOneId());
         Example example = new Example(Order.class);
-        example.createCriteria().andEqualTo("pOrder",bid);
+        example.createCriteria().andEqualTo("pOrder", bid);
         Order newOrder = orderMapper.selectOneByExample(example);
-        if (newOrder != null){
+        if (newOrder != null) {
             newOrder.setRemark(remark);
             orderMapper.updateByPrimaryKeySelective(newOrder);
             /**
@@ -74,11 +74,34 @@ public class PayService {
         order.setTime(new Date());
         order.setRemark(remark);
         order.setUserId(user.getId());
-        if ("1".equals(user.getState()))
+        if ("1".equals(user.getState())) {
             order.setFwPrice(hzYw.getHyPrice() + business.getCommission());
-        if ("2".equals(user.getState()))
+            if ("10010".equals(hzYw.getId())) {
+                order.setGfPrice(business.getPrice() - hzYw.getHyPrice());
+            } else if ("10011".equals(hzYw.getId())) {
+                order.setGfPrice(business.getPrice() - hzYw.getHyPrice());
+            } else if ("10012".equals(hzYw.getId())) {
+                order.setGfPrice(business.getPrice() - hzYw.getHyPrice());
+            } else if ("10013".equals(hzYw.getId())) {
+                order.setGfPrice(business.getPrice() - hzYw.getHyPrice());
+            } else {
+                order.setGfPrice(hzYw.getGfPrice());
+            }
+        }
+        if ("2".equals(user.getState())) {
             order.setFwPrice(hzYw.getVipPrice() + business.getCommission());
-        order.setGfPrice(hzYw.getGfPrice());
+            if ("10010".equals(hzYw.getId())) {
+                order.setGfPrice(business.getPrice() - hzYw.getVipPrice());
+            } else if ("10011".equals(hzYw.getId())) {
+                order.setGfPrice(business.getPrice() - hzYw.getVipPrice());
+            } else if ("10012".equals(hzYw.getId())) {
+                order.setGfPrice(business.getPrice() - hzYw.getVipPrice());
+            } else if ("10013".equals(hzYw.getId())) {
+                order.setGfPrice(business.getPrice() - hzYw.getVipPrice());
+            } else {
+                order.setGfPrice(hzYw.getGfPrice());
+            }
+        }
         order.setPrice(pay);
         order.setNumber(business.getNumber());
         HzZc hzZc = hzZcRepository.selectByPrimaryKey(hzYw.getZid());
@@ -236,9 +259,9 @@ public class PayService {
         BusinessTwo business = businessTwoMapper.selectByPrimaryKey(bid);
         HzYw hzYw = hzYwRepository.selectByPrimaryKey(business.getOneId());
         Example example = new Example(Order.class);
-        example.createCriteria().andEqualTo("pOrder",bid);
+        example.createCriteria().andEqualTo("pOrder", bid);
         Order newOrder = orderMapper.selectOneByExample(example);
-        if (newOrder != null){
+        if (newOrder != null) {
             newOrder.setRemark(remark);
             orderMapper.updateByPrimaryKeySelective(newOrder);
             return;
@@ -248,11 +271,34 @@ public class PayService {
         order.setTime(new Date());
         order.setRemark(remark);
         order.setUserId(user.getId());
-        if ("1".equals(user.getState()))
+        if ("1".equals(user.getState())) {
             order.setFwPrice(hzYw.getHyPrice() + business.getCommission());
-        if ("2".equals(user.getState()))
+            if ("10010".equals(hzYw.getId())) {
+                order.setGfPrice(business.getPrice() - hzYw.getHyPrice());
+            } else if ("10011".equals(hzYw.getId())) {
+                order.setGfPrice(business.getPrice() - hzYw.getHyPrice());
+            } else if ("10012".equals(hzYw.getId())) {
+                order.setGfPrice(business.getPrice() - hzYw.getHyPrice());
+            } else if ("10013".equals(hzYw.getId())) {
+                order.setGfPrice(business.getPrice() - hzYw.getHyPrice());
+            } else {
+                order.setGfPrice(hzYw.getGfPrice());
+            }
+        }
+        if ("2".equals(user.getState())) {
             order.setFwPrice(hzYw.getVipPrice() + business.getCommission());
-        order.setGfPrice(hzYw.getGfPrice());
+            if ("10010".equals(hzYw.getId())) {
+                order.setGfPrice(business.getPrice() - hzYw.getVipPrice());
+            } else if ("10011".equals(hzYw.getId())) {
+                order.setGfPrice(business.getPrice() - hzYw.getVipPrice());
+            } else if ("10012".equals(hzYw.getId())) {
+                order.setGfPrice(business.getPrice() - hzYw.getVipPrice());
+            } else if ("10013".equals(hzYw.getId())) {
+                order.setGfPrice(business.getPrice() - hzYw.getVipPrice());
+            } else {
+                order.setGfPrice(hzYw.getGfPrice());
+            }
+        }
         order.setPrice(pay);
         order.setNumber(business.getNumber());
         HzZc hzZc = hzZcRepository.selectByPrimaryKey(hzYw.getZid());

@@ -5,7 +5,8 @@
 .mui-picker {
     background: white !important;
 }
-.personal_topB{
+
+.personal_topB {
     display: flex;
     display: -webkit-flex;
     flex-direction: column;
@@ -13,7 +14,8 @@
     justify-content: center;
     -webkit-justify-content: center;
 }
-.personal_topB2{
+
+.personal_topB2 {
     display: flex;
     margin-top: 0.14rem;
     display: -webkit-flex;
@@ -384,22 +386,24 @@
     font-size: 0.28rem;
 }
 
-.bus_item2List,.bus_item2List2 {
+.bus_item2List, .bus_item2List2 {
     margin-top: 0.24rem;
 }
-.bus_item2List ul li p,.bus_item2List2 ul li p{
+
+.bus_item2List ul li p, .bus_item2List2 ul li p {
     opacity: 0;
     width: 0;
     height: 0;
 }
-.bus_item2List ul,.bus_item2List2 ul {
+
+.bus_item2List ul, .bus_item2List2 ul {
     display: flex;
     display: -webkit-flex;
     flex-wrap: wrap;
     -webkit-flex-wrap: wrap;
 }
 
-.bus_item2List ul li,.bus_item2List2 ul li {
+.bus_item2List ul li, .bus_item2List2 ul li {
     /*width: 1.52rem;*/
     height: 0.48rem;
     margin: 0rem 0.12rem 0.2rem 0rem;
@@ -415,14 +419,14 @@
     color: rgba(6, 18, 30, 1);
 }
 
-.bus_item2List ul li span,.bus_item2List2 ul li span {
+.bus_item2List ul li span, .bus_item2List2 ul li span {
     font-size: 0.24rem;
     display: block;
     padding: 0 0.1rem;
     box-sizing: border-box;
 }
 
-.bus_item2List ul .bus_active,.bus_item2List2 ul .bus_active {
+.bus_item2List ul .bus_active, .bus_item2List2 ul .bus_active {
     color: #ED291B;
     border: 1px solid rgba(237, 41, 27, 1);
 }
@@ -487,9 +491,11 @@
     font-size: 0.32rem;
     font-weight: 600;
 }
-.bus_Txt4 i{
+
+.bus_Txt4 i {
     color: #ED291B;
 }
+
 .bus_Txt4 span {
     color: #ED291B;
 }
@@ -566,6 +572,8 @@
     display: -webkit-flex;
     align-items: center;
     -webkit-align-items: center;
+    justify-content: space-between;
+    -webkit-justify-content: space-between;
     padding: 0.32rem 0rem;
     box-sizing: border-box;
     border-bottom: 1px solid #BDC4CE;
@@ -616,6 +624,8 @@
     display: -webkit-flex;
     align-items: flex-end;
     -webkit-align-items: flex-end;
+    justify-content: space-between;
+    -webkit-justify-content: space-between;
     margin-top: 0.36rem;
 }
 
@@ -655,9 +665,9 @@
     font-size: 0.28rem;
     background: rgba(237, 41, 27, 1);
     border-radius: 0.12rem;
-/*    position: absolute;
-    top:6rem;
-    left:9rem;*/
+    /*    position: absolute;
+        top:6rem;
+        left:9rem;*/
 }
 
 .order_Txt3 {
@@ -690,12 +700,14 @@
     background: rgba(237, 41, 27, 1);
     border-radius: 0.12rem;
 }
-.contract_Click{
+
+.contract_Click {
     font-size: 0.32rem;
     color: #333333;
     color: rgba(237, 41, 27, 1);
     text-decoration: underline;
 }
+
 .order_item3 {
     display: flex;
     justify-content: space-between;
@@ -715,12 +727,14 @@
     margin-left: auto;
     margin-bottom: 0.28rem;
 }
-.order_Img2_img2{
+
+.order_Img2_img2 {
     position: absolute;
     /*z-index: 10;*/
     top: 0;
     left: 0;
 }
+
 .order_Img2 input {
     opacity: 0;
     position: absolute;
@@ -729,6 +743,7 @@
     top: 0;
     left: 0;
 }
+
 .order_item3Box p {
     font-size: 0.24rem;
     text-align: right;
@@ -738,7 +753,6 @@
 .order_Img3 {
     width: 0.86rem;
     height: 0.56rem;
-    margin-left: auto;
 }
 
 
@@ -790,7 +804,7 @@
 
 .category_Txt {
     flex: 0.94;
-    -webkit-flex:0.94;
+    -webkit-flex: 0.94;
     font-size: 0.32rem;
     color: rgba(61, 68, 77, 1);
 }
@@ -1130,10 +1144,12 @@
     -webkit-justify-content: center;
     background-color: #EEEEEE;
 }
-.information_Img2{
+
+.information_Img2 {
     width: 1.36rem;
     height: 1.36rem;
 }
+
 .information_List p {
     font-size: 0.28rem;
     margin-bottom: 0.16rem;
@@ -1162,12 +1178,14 @@
     line-height: 0.4rem;
     color: rgba(61, 68, 77, 1);
 }
-.information_bei input{
+
+.information_bei input {
     outline: none;
     border: 0;
     width: 86%;
     font-size: 0.28rem;
 }
+
 .information_item6 {
     display: flex;
     display: -webkit-flex;
@@ -1829,7 +1847,7 @@
     border-radius: 0.12rem;
 }
 
-.my_ContractBtn button,.my_ContractBtn div {
+.my_ContractBtn button, .my_ContractBtn div {
     width: 3.36rem;
     height: 0.88rem;
     border-radius: 0.12rem;
@@ -1852,7 +1870,7 @@
     background-color: #ED291B;
 }
 
-.my_Mask,.ht_Mask {
+.my_Mask, .ht_Mask {
     position: fixed;
     width: 7.5rem;
     height: 100%;
@@ -1930,7 +1948,7 @@
     display: -webkit-flex;
 }
 
-.my_MaskBtnBox div,.my_MaskBtnBox button {
+.my_MaskBtnBox div, .my_MaskBtnBox button {
     width: 50%;
     font-size: 0.32rem;
     color: white;
@@ -2792,3 +2810,45 @@
     margin: 0.32rem;
     font-size: 0.28rem;
 }
+
+/* 新增样式 */
+
+#btn1 {
+    margin-bottom: 0.2rem;
+}
+
+.swich_box {
+    width: 100%;
+    display: flex;
+    display: -webkit-flex;
+    align-items: center;
+    justify-content: flex-end;
+    -webkit-align-items: center;
+    -webkit-justify-content: flex-end;
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    padding: 0 0.1rem 0 0;
+}
+
+.swich_box > div {
+    margin-left: 0.3rem;
+    font-size: 0.24rem;
+    color: #3D444D;
+}
+
+.q_order_item {
+    display: block;
+    padding: 0;
+}
+
+
+
+
+
+
+
+
+
+
+
+

@@ -176,7 +176,12 @@ public class TeamService {
             orderEx.createCriteria().andEqualTo("userId", user.getId()).andEqualTo("state", 3).andLike("time", "%" + newDate + "%");
             List<Order> orders = orderMapper.selectByExample(orderEx);
             orders.forEach(order -> {
-                newPrice.updateAndGet(v -> v + order.getPrice());
+                Integer gfPrice = order.getGfPrice();
+                if (gfPrice == -1) {
+                    gfPrice = 0;
+                }
+                Integer finalGfPrice = gfPrice;
+                newPrice.updateAndGet(v -> v + order.getPrice() - finalGfPrice);
             });
             Example ea = new Example(User.class);
             ea.createCriteria().andEqualTo("superId", user.getId());
@@ -186,7 +191,12 @@ public class TeamService {
                 orderEx2.createCriteria().andEqualTo("userId", user1.getId()).andEqualTo("state", 3).andLike("time", "%" + newDate + "%");
                 List<Order> orders1 = orderMapper.selectByExample(orderEx2);
                 orders1.forEach(order -> {
-                    newPrice.updateAndGet(v -> v + order.getPrice());
+                    Integer gfPrice = order.getGfPrice();
+                    if (gfPrice == -1) {
+                        gfPrice = 0;
+                    }
+                    Integer finalGfPrice = gfPrice;
+                    newPrice.updateAndGet(v -> v + order.getPrice() - finalGfPrice);
                 });
             });
             Integer i = users1.size();

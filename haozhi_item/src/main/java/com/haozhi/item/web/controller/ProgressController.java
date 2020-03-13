@@ -1,5 +1,7 @@
 package com.haozhi.item.web.controller;
 
+import com.haozhi.common.constants.StatusCode;
+import com.haozhi.common.dto.ResultDTO;
 import com.haozhi.item.dto.NumDto;
 import com.haozhi.item.pojo.Order;
 import com.haozhi.item.service.OrderService;
@@ -37,11 +39,39 @@ public class ProgressController extends BaseController {
     }
 
     @RequestMapping(value = "orderurl", method = RequestMethod.POST)
-    public String uploadFileUrl(Order order) {
+    @ResponseBody
+    public ResultDTO uploadFileUrl(String id, String htString, String wtSting) {
+        Order order = new Order();
+        order.setId(id);
+        order.setPower(wtSting);
+        order.setContract(htString);
         orderService.uploadFileUrl(order);
-        return "redirect:/progress";
+        return new ResultDTO(true, StatusCode.OK, "上传成功");
     }
 
+    @RequestMapping(value = "orderurl/xg", method = RequestMethod.POST)
+    @ResponseBody
+    public ResultDTO uploadFileUrlXg(String id, String htString, String wtSting) {
+        Order orderOld = orderService.uploadFileUrlXg(id);
+        Order order = new Order();
+        if (!"".equals(htString)) {
+            if (!"".equals(orderOld.getContract())) {
+                String concat = orderOld.getContract().concat(",");
+                String newContract = concat.concat(htString);
+                order.setContract(newContract);
+            }
+        }
+        if (!"".equals(wtSting)) {
+            if (!"".equals(orderOld.getPower())) {
+                String concat = orderOld.getPower().concat(",");
+                String newPower = concat.concat(wtSting);
+                order.setPower(newPower);
+            }
+        }
+        order.setId(id);
+        orderService.uploadFileUrl(order);
+        return new ResultDTO(true, StatusCode.OK, "上传成功");
+    }
 
     @RequestMapping("orderIndex")
     public String orderIndex(Map<String, Object> map) {

@@ -3,6 +3,7 @@ package com.haozhi.item.web.controller;
 import com.google.zxing.WriterException;
 import com.haozhi.common.constants.StatusCode;
 import com.haozhi.common.dto.ResultDTO;
+import com.haozhi.common.utils.IdWorker;
 import com.haozhi.item.dao.AccountMapper;
 import com.haozhi.item.dao.BankMapper;
 import com.haozhi.item.dao.VipTimeMapper;
@@ -12,6 +13,7 @@ import com.haozhi.item.service.OrderService;
 import com.haozhi.item.service.UserService;
 import com.haozhi.item.service.VipService;
 import com.haozhi.item.utils.QRCodeGenerator;
+import com.haozhi.item.utils.QiniuUtil;
 import com.haozhi.item.web.common.BaseController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -251,13 +253,16 @@ public class PersonalController extends BaseController {
         return "personal/my_code";
     }
 
+    @Autowired
+    private IdWorker idWorker;
     /**
      * 生成二维码
      *
      * @return
      */
     @GetMapping(value = "/qrimage")
-    public ResponseEntity<byte[]> getQRImage() {
+    @ResponseBody
+    public ResultDTO getQRImage() {
         String URL = "http://haozhiqiye.haozhizixun.com/api/login?superId=" + getUser().getId();
         //二维码内的信息
         String info = URL;
@@ -271,12 +276,13 @@ public class PersonalController extends BaseController {
         } catch (IOException e) {
             System.out.println("Could not generate QR Code, IOException :: " + e.getMessage());
         }
-
+        QiniuUtil qiniuUtil = new QiniuUtil();
+        String upload = qiniuUtil.upload(idWorker.nextId() + "", qrcode);
         // Set headers
         final HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.IMAGE_PNG);
-
-        return new ResponseEntity<byte[]>(qrcode, headers, HttpStatus.CREATED);
+        return new ResultDTO(true,StatusCode.OK,"成功",upload);
+       /* return new ResponseEntity<byte[]>(qrcode, headers, HttpStatus.CREATED);*/
     }
 
     /**

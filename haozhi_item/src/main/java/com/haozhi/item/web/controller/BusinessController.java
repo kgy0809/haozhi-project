@@ -230,8 +230,9 @@ public class BusinessController extends BaseController {
     public ResultDTO downloadContract(String type, String email,String id) throws MessagingException, IOException {
         String twoId = (String) session.getAttribute("twoId");
         String contract = hzYwService.downloadContract(twoId, getUser(), type, email, id);
-        if (contract == null)
-            return new ResultDTO(true, StatusCode.OK, "没有合同供下载", null);
+        if (contract == null){
+            return new ResultDTO(true, StatusCode.REPERROR, "没有合同供下载");
+        }
         return new ResultDTO(true, StatusCode.OK, "合同下载成功", contract);
     }
 

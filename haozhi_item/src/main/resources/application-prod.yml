@@ -1,0 +1,92 @@
+server:
+  port: 9001
+  servlet:
+    context-path: /api
+spring:
+  servlet:
+    multipart:
+      max-file-size: 10MB # 限制文件上传的大小
+  thymeleaf:
+    cache: false
+  datasource:
+    dynamic:
+      druid: # 全局druid参数，绝大部分值和默认保持一致。(现已支持的参数如下,不清楚含义不要乱设置)
+        # 连接池的配置信息
+        # 初始化大小，最小，最大
+        initial-size: 5
+        min-idle: 5
+        maxActive: 20
+        # 配置获取连接等待超时的时间
+        maxWait: 60000
+        # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+        timeBetweenEvictionRunsMillis: 60000
+        # 配置一个连接在池中最小生存的时间，单位是毫秒
+        minEvictableIdleTimeMillis: 300000
+        validationQuery: SELECT 1 FROM DUAL
+        testWhileIdle: true
+        testOnBorrow: true
+        testOnReturn: true
+        # 打开PSCache，并且指定每个连接上PSCache的大小
+        poolPreparedStatements: true
+        maxPoolPreparedStatementPerConnectionSize: 20
+        # 配置监控统计拦截的filters，去掉后监控界面sql无法统计，'wall'用于防火墙
+        filters: stat,wall,slf4j
+        # 通过connectProperties属性来打开mergeSql功能；慢SQL记录
+        connectionProperties: druid.stat.mergeSql\=true;druid.stat.slowSqlMillis\=5000
+      datasource:
+        master:
+          driver-class-name: com.mysql.jdbc.Driver
+          url: jdbc:mysql://rm-m5eblhc9o3515i25n.mysql.rds.aliyuncs.com:3306/haozhi?serverTimezone=Asia/Shanghai&user=root&password=910630&useUnicode=true&characterEncoding=utf-8&useSSL=true
+          username: db136s1ehvo1yn73
+          password: cxz307311SJK
+          type: org.apache.commons.dbcp2.BasicDataSource
+          dbcp2:
+            connection-init-sqls: SET NAMES utf8mb4
+  redis:
+    host: 182.92.205.118
+    port: 6379
+    jedis:
+      pool:
+        max-active: 8
+        max-wait: -1
+  mail:
+    host: smtp.vip.163.com  # 邮箱配置
+    username: haozhizixun@vip.163.com  #  你的163邮箱
+    password: cl1314520  # 注意这里不是邮箱密码，而是SMTP授权密码
+    protocol: smtp
+    default-encoding: UTF-8
+    # 其它参数
+    properties:
+      mail:
+        smtp:
+          # 如果是用 SSL 方式，需要配置如下属性,使用qq邮箱的话需要开启
+          ssl:
+            trust: smtp.vip.163.com
+            auth: true
+            enable: true
+            required: true
+            # 邮件接收时间的限制，单位毫秒
+            timeout: 10000
+            # 连接时间的限制，单位毫秒
+            connectiontimeout: 10000
+            # 邮件发送时间的限制，单位毫秒
+            writetimeout: 10000
+            socketFactory:
+              port: 465
+              class: javax.net.ssl.SSLSocketFactory
+    port: 465
+# 通用 Mapper 配置
+mapper:
+  identity: MYSQL
+  not-empty: false
+#显示sql语句
+mybatis:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    map-underscore-to-camel-case: true
+    cache-enabled: true
+haozhi:
+  openid:
+    APPID: wx061b55a767d388d8
+    SECRET: 87c3d6673bd8d18b6b37bb41c817b0e6
+
