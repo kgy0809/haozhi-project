@@ -1,34 +1,82 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.w3.org/1999/xhtml">
 
-    <head th:replace="public :: head">
-    </head>
+<head th:replace="public :: head">
+</head>
 
-    <body>
-        <div class="cBody">
-            <table class="layui-table">
-                <thead>
-                    <tr>
-                        <th>用户</th>
-                        <th>持卡人</th>
-                        <th>卡号</th>
-                        <th>银行名称</th>
-                        <th>手机号</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr th:each="p : ${bank}">
-                        <td th:text="${p.userId}"></td>
-                        <td th:text="${p.name}"></td>
-                        <td th:text="${p.bankId}"></td>
-                        <td th:text="${p.bankName}"></td>
-                        <td th:text="${p.num}"></td>
-                    </tr>
+<body>
+<div class="cBody">
+    <table class="layui-table">
+        <thead>
+        <tr>
+            <th>用户</th>
+            <th>持卡人</th>
+            <th>卡号</th>
+            <th>银行名称</th>
+            <th>手机号</th>
+        </tr>
+        </thead>
+        <tbody>
+<!--        <tr th:each="p : ${bank}">
+            <td th:text="${p.userId}"></td>
+            <td th:text="${p.name}"></td>
+            <td th:text="${p.bankId}"></td>
+            <td th:text="${p.bankName}"></td>
+            <td th:text="${p.num}"></td>
+        </tr>-->
 
-                </tbody>
-            </table>
+        </tbody>
+    </table>
 
-        </div>
-    </body>
+    <div id="pages"></div>
+</div>
+</body>
+<script>
+    ajaxFun(1, 10);
+    function ajaxFun(page, rows) {
+        $.ajax({
+            url: "/bank",
+            type: 'post',
+            data: {
+                page: page,
+                rows: rows,
+            },
+            success(res) {
+                var html = '';
+                $.each(res.rows, function (index, ele) {
+                    html += ' <tr>' +
+                        '            <td>' + ele.userId + '</td>' +
+                        '            <td>' + ele.name + '</td>' +
+                        '            <td >' + ele.bankId + '</td>' +
+                        '            <td>' + ele.bankName + '</td>' +
+                        '            <td>' + ele.num + '</td>' +
+                        '        </tr>';
+                });
+                $('tbody').empty().html(html);
+                listPage(res.total, page);
+            }
+        })
+    }
 
+    function listPage(total, page) {
+        layui.use('laypage', function () {
+            var laypage = layui.laypage;
+            var limits = total / 10;
+            //总页数大于页码总数
+            laypage.render({
+                elem: 'pages'
+                , count: total,
+                limit: 10,
+                curr: page
+                , layout: ['count', 'prev', 'page', 'next']
+                , jump: function (obj, first) {
+                    if (!first) {
+                        ajaxFun(obj.curr, 10);
+                    }
+                }
+            });
+        });
+    }
+</script>
 </html>
+

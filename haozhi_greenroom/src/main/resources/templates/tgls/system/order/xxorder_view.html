@@ -18,7 +18,9 @@
         </tr>
         <th>服务费： <i th:text="${order.doubleFwPrice}"></i></th>
         </tr>
-        <th>官费： <i th:text="${order.doubleGfPrice}"></i></th>
+        <th th:if="${order.doubleGfPrice} != '0.0-1'">官费： <i th:text="${order.doubleGfPrice}"></i></th>
+        </tr>
+        <th th:if="${order.doubleGfPrice} == '0.0-1'">官费： <i>国外费用单独确认</i></th>
         </tr>
         <th>订单数量： <i th:text="${order.number}"></i></th>
         </tr>
@@ -40,15 +42,17 @@
         </tr>
         <th th:if="${order.invoiceState} == '2'">开票日期： <i th:text="${order.sInvoiceTime}"></i></th>
         </tr>
-        <th>委托书： <i> <a th:text="${order.power}" th:href="${order.power}"></a> </i></th>
+        <th>委托书： <i th:each="p : ${order.powers}"> <a th:text="${p}" th:href="${p}"></a> </i></th>
         </tr>
-        <th>合同： <i> <a th:text="${order.contract}" th:href="${order.contract}"></a> </i></th>
-        </tr>
-
-        <th>注册商标名称： <i th:text="${business.sbName}"></i></th>
+        <th>合同： <i th:each="p : ${order.contracts}"> <a th:text="${p}" th:href="${p}"></a> </i></th>
         </tr>
 
-        <th th:if="${business.sbType} == '1'">商标类型： <i th:if="${business.sbType} == '1'">文字</i> &nbsp;&nbsp;<i th:text="${business.sbName}"></i> &nbsp;&nbsp;&nbsp;&nbsp;图样 <a th:href="${business.imgtext}" th:text="${business.imgtext}"></a></th>
+        <th>商标名称： <i th:text="${business.sbName}"></i></th>
+        </tr>
+
+        <th th:if="${business.sbType} == '1'">商标类型： <i th:if="${business.sbType} == '1'">文字</i> &nbsp;&nbsp;<i th:text="${business.sbName}"></i></th>
+        </tr>
+        <th th:if="${business.sbType} == '3'">商标图样： <i th:if="${business.sbType} == '3'">图样</i> &nbsp;&nbsp;<a th:href="${business.imgText}" th:text="${business.imgText}"></a> </th>
         </tr>
         <th th:if="${business.sbType} == '2'">商标类型： <i th:if="${business.sbType} == '2'">图片</i> &nbsp;&nbsp;<a th:href="${business.sbImage}" th:text="${business.sbName}"></a> </th>
         </tr>

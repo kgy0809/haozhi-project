@@ -26,10 +26,11 @@ public class BusinessTwo {
      * 商标类型 1文字2图形
      */
     private String sbType;
+
     /**
      * 文字图样
      */
-    private String imgtext;
+    private String imgText;
     /**
      * 商标颜色 0不指定 1指定
      */

@@ -11,23 +11,23 @@
         <div style="float: left">
             <form id="timeBox" action="/excel/export" method="post">
                 <div class="layui-input-inline">
-                    <input type="text" name="time" id="test1" class="layui-input">
+                    <input type="text" name="time" id="test3" autocomplete="off" class="layui-input">
                 </div>
                 <div class="layui-input-inline">
-                    <button class="layui-btn" lay-submit lay-filter="formDemo">用户数据导出</button>
+                    <button class="layui-btn" lay-submit lay-filter="formDemo" >用户数据导出</button>
                 </div>
             </form>
         </div>
         <div style="float: right;">
             <div class="layui-input-inline" style="width: 30%;margin-right: 10px;">
-                <input type="text" name="id" id="id" value="" placeholder="输入用户ID" class="layui-input">
+                <input type="text" name="id" id="id" value="" autocomplete="off" placeholder="输入用户ID" class="layui-input">
             </div>
 
             <div class="layui-input-inline">
-                <input type="text" name="name" id="name" value="" placeholder="输入姓名" class="layui-input">
+                <input type="text" name="name" id="name" value="" autocomplete="off" placeholder="输入姓名" class="layui-input">
             </div>
             <div class="layui-input-inline">
-                <input type="text" name="phone" id="phone" value="" placeholder="输入手机号" class="layui-input">
+                <input type="text" name="phone" id="phone" value="" autocomplete="off" placeholder="输入手机号" class="layui-input">
             </div>
             <button class="layui-btn" lay-submit="" lay-filter="formDemo" id="Btn_Ss">搜索</button>
         </div>
@@ -143,8 +143,13 @@
 
         layui.use(['laydate'], function () {
             var laydate = layui.laydate;
-            laydate.render({
+   /*         laydate.render({
                 elem: '#test1' //指定元素
+            });*/
+            //年月选择器
+            laydate.render({
+                elem: '#test3'
+                ,type: 'month'
             });
         });
         /*function insertBut() {

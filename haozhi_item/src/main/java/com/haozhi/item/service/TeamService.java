@@ -1,15 +1,18 @@
 package com.haozhi.item.service;
 
 import com.github.pagehelper.PageHelper;
+import com.haozhi.item.dao.BusinessTwoMapper;
 import com.haozhi.item.dao.MonthOrderMapper;
 import com.haozhi.item.dao.OrderMapper;
 import com.haozhi.item.dao.UserRepository;
 import com.haozhi.item.dto.NewDto;
+import com.haozhi.item.pojo.BusinessTwo;
 import com.haozhi.item.pojo.MonthOrder;
 import com.haozhi.item.pojo.Order;
 import com.haozhi.item.pojo.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import tk.mybatis.mapper.entity.Example;
 
 import java.text.SimpleDateFormat;
@@ -28,6 +31,8 @@ public class TeamService {
     private UserRepository userRepository;
     @Autowired
     private MonthOrderMapper monthOrderMapper;
+    @Autowired
+    private BusinessTwoMapper businessTwoMapper;
 
     @Autowired
     private OrderMapper orderMapper;
@@ -176,13 +181,21 @@ public class TeamService {
             orderEx.createCriteria().andEqualTo("userId", user.getId()).andEqualTo("state", 3).andLike("time", "%" + newDate + "%");
             List<Order> orders = orderMapper.selectByExample(orderEx);
             orders.forEach(order -> {
-                Integer gfPrice = order.getGfPrice();
+                BusinessTwo businessTwo = businessTwoMapper.selectByPrimaryKey(order.getPOrder());
+    /*            Integer gfPrice = order.getGfPrice();
                 if (gfPrice == -1) {
                     gfPrice = 0;
+                }*/
+                Integer price = 0;
+                if (!StringUtils.isEmpty(businessTwo.getCommission())){
+                    price = businessTwo.getCommission();
                 }
-                Integer finalGfPrice = gfPrice;
-                newPrice.updateAndGet(v -> v + order.getPrice() - finalGfPrice);
+                Integer finalPrice = price;
+                newPrice.updateAndGet(v -> v + (order.getFwPrice() - finalPrice) * order.getNumber() + finalPrice);
             });
+            /**
+             * 二级
+             */
             Example ea = new Example(User.class);
             ea.createCriteria().andEqualTo("superId", user.getId());
             List<User> users1 = userRepository.selectByExample(ea);
@@ -191,12 +204,19 @@ public class TeamService {
                 orderEx2.createCriteria().andEqualTo("userId", user1.getId()).andEqualTo("state", 3).andLike("time", "%" + newDate + "%");
                 List<Order> orders1 = orderMapper.selectByExample(orderEx2);
                 orders1.forEach(order -> {
+                    BusinessTwo businessTwo = businessTwoMapper.selectByPrimaryKey(order.getPOrder());
+      /*              BusinessTwo businessTwo = businessTwoMapper.selectByPrimaryKey(order.getPOrder());
                     Integer gfPrice = order.getGfPrice();
                     if (gfPrice == -1) {
                         gfPrice = 0;
                     }
-                    Integer finalGfPrice = gfPrice;
-                    newPrice.updateAndGet(v -> v + order.getPrice() - finalGfPrice);
+                    Integer finalGfPrice = gfPrice;*/
+                    Integer price = 0;
+                    if (!StringUtils.isEmpty(businessTwo.getCommission())){
+                        price = businessTwo.getCommission();
+                    }
+                    Integer finalPrice = price;
+                    newPrice.updateAndGet(v -> v + (order.getFwPrice() - finalPrice) * order.getNumber() + finalPrice);
                 });
             });
             Integer i = users1.size();

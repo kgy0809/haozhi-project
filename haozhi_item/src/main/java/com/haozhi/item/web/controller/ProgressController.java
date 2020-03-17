@@ -52,9 +52,8 @@ public class ProgressController extends BaseController {
     @RequestMapping(value = "orderurl/xg", method = RequestMethod.POST)
     @ResponseBody
     public ResultDTO uploadFileUrlXg(String id, String htString, String wtSting) {
-        Order orderOld = orderService.uploadFileUrlXg(id);
         Order order = new Order();
-        if (!"".equals(htString)) {
+/*        if (!"".equals(htString)) {
             if (!"".equals(orderOld.getContract())) {
                 String concat = orderOld.getContract().concat(",");
                 String newContract = concat.concat(htString);
@@ -67,8 +66,10 @@ public class ProgressController extends BaseController {
                 String newPower = concat.concat(wtSting);
                 order.setPower(newPower);
             }
-        }
+        }*/
         order.setId(id);
+        order.setPower(wtSting);
+        order.setContract(htString);
         orderService.uploadFileUrl(order);
         return new ResultDTO(true, StatusCode.OK, "上传成功");
     }

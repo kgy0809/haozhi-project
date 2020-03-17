@@ -29,6 +29,10 @@ public class ExcelDataTest {
      */
     private String hyTel;
     /**
+     * 会员银行名字
+     */
+    private String hyBankName;
+    /**
      * 会员银行卡
      */
     private String hyBankId;

@@ -23,11 +23,11 @@ public class LastDto {
      * 申请人 信息
      */
     private String sqrMessage;
-    private String imgtext;
     /**
      * 商标名称
      */
     private String sbName;
+    private String imgText;
     /**
      * 商标状态 1 文字  2 图形
      */

@@ -21,7 +21,6 @@
 <script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.6.0.js"></script>
 <script>
     var superId = $('#superId').val();
-    console.log(superId);
     // 关闭分享
     $('.new_share').click(function () {
         $(this).hide();
@@ -41,7 +40,6 @@
     var imgUrl = "http://wx.qlogo.cn/mmopen/9bqKyBJpXXqRDZEibicPjk5v93ciaqDtysmIVib2WYjdMPngUOWoGFaVBrI57ngBHIGu9gnrpickmHOYib9AOydiaGcNEm3V03hVdvE/64";
     $(document).ready(function () {
         var url = encodeURI(location.href.split('#')[0]);
-        console.log("url==" + url);
         $.ajax({
             url: "/api/weixin/sgture",
             type: "POST",

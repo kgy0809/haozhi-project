@@ -43,22 +43,28 @@
     </div>
 </div>
 </body>
+<script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.6.0.js"></script>
 <script>
-
-    var url = ''
     $(function () {
         $.ajax({
             url:"/api/personal/qrimage",
             type:"get",
             success:function (ref) {
                 $('#save').attr('src', ref.data)
-                url = ref.data;
             }
         })
     })
-
-    var url = $('#save').attr('src');
-    longPress("save", saveSharePic);
+    $('#save').click(function () {
+        var url = $(this).attr('src');
+        wx.downloadImage({
+            serverId: url, // 需要下载的图片的服务器端ID，由uploadImage接口获得
+            isShowProgressTips: 1, // 默认为1，显示进度提示
+            success: function (res) {
+                var localId = res.localId; // 返回图片下载后的本地ID
+            }
+        });
+    })
+/*    longPress("save", saveSharePic);
 
 
 
@@ -78,7 +84,7 @@
         document.querySelector("#" + id).addEventListener("touchmove", function (e) {
             //长按过程中，手指是不能移动的，若移动则清除定时器，中断长按逻辑
             clearTimeout(timeOutEvent);
-            /* e.preventDefault() --> 若阻止默认事件，则在长按元素上滑动时，页面是不滚动的，按需求设置吧 */
+            /!* e.preventDefault() --> 若阻止默认事件，则在长按元素上滑动时，页面是不滚动的，按需求设置吧 *!/
         });
 
         document.querySelector("#" + id).addEventListener("touchend", function (e) {
@@ -89,10 +95,9 @@
 
     //保存图片
     function saveSharePic() {
-        console.log('33333333333333333333')
-        console.log(url);
         window.open(url)
-    }
+    }*/
+
 
 
 </script>

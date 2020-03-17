@@ -16,6 +16,14 @@
     #up_weiImg, #up_heImg {
         flex-wrap: wrap;
     }
+
+    .del_img {
+        position: absolute;
+        top: -0.1rem;
+        right: -0.1rem;
+        width: 0.32rem;
+        height: 0.32rem;
+    }
 </style>
 <body>
 <div class="Box">
@@ -57,20 +65,20 @@
 <script>
     var weiList = [], heList = []
     $('.applicant_Li2 .input1').change(function () {
-        var f1 = this.files.length;
-        var formData = new FormData();
-        for (var i = 0; i < f1; i++) {
-            var file = this.files[i];
-            //var r = new FileReader();
-            //r.readAsDataURL(file);
-            formData.append("file", file);
-        }
-        /*var datas = new FormData($('#firstFile')[0]);*/
+        /*        var f1 = this.files.length;
+                var formData = new FormData();
+                for (var i = 0; i < f1; i++) {
+                    var file = this.files[i];
+                    //var r = new FileReader();
+                    //r.readAsDataURL(file);
+                    formData.append("file", file);
+                }*/
+        var datas = new FormData($('#firstFile')[0]);
         let t = this;
         $.ajax({
             url: "/api/order/upload/file",
             type: 'POST',
-            data: formData,
+            data: datas,
             dataType: 'JSON',
             cache: false,
             processData: false,
@@ -81,8 +89,9 @@
                         // 上传委托书
                         weiList.push(res.data);
                         $('#up_weiImg').prepend(
-                            '<div class="applicant_Img" style="margin: 0 0.12rem 0 0.12rem">' +
+                            '<div class="applicant_Img" style="margin: 0 0.24rem 0.2rem 0">' +
                             '                        <img src="' + res.data + '" alt="">' +
+                            '                        <img src="/api/image/input_del.png" class="del_img" data-img="' + res.data + '" onclick="delImg(this)" alt="">' +
                             '                    </div>'
                         )
                     } else if ($(t).data('type') == 1 && weiList.length >= 0) {
@@ -102,6 +111,23 @@
             }
         })
     });
+
+    // 删除委托书图片
+    function delImg(e) {
+        $(e).parents('.applicant_Img').remove();
+        var img = $(e).data('img');
+        weiList.forEach(element => {
+            if (element == img) {
+                if (weiList.indexOf(element) > -1) {
+                    var i = weiList.indexOf(element);
+                    weiList.splice(i, 1);
+                }
+            }
+        });
+        $('#form').show();
+    }
+
+
     $('.applicant_Li2 .input2').change(function () {
         var f1 = this.files.length;
         var formData = new FormData();
@@ -127,8 +153,9 @@
                         // 上传合同
                         heList.push(res.data);
                         $('#up_heImg').prepend(
-                            '<div class="applicant_Img" style="margin: 0 0.12rem 0 0.12rem">' +
+                            '<div class="applicant_Img" style="margin: 0 0.24rem 0.2rem 0">' +
                             '                        <img src="' + res.data + '" alt="">' +
+                            '                        <img src="/api/image/input_del.png" class="del_img" data-img="' + res.data + '" onclick="delHeImg(this)" alt="">' +
                             '                    </div>'
                         )
                     } else if ($(t).data('type') == 2 && heList.length >= 0) {
@@ -147,6 +174,23 @@
             }
         })
     });
+
+    // 删除合同图片
+    // 删除图片
+    function delHeImg(e) {
+        $(e).parents('.applicant_Img').remove();
+        var img = $(e).data('img');
+        heList.forEach(element => {
+            if (element == img) {
+                if (heList.indexOf(element) > -1) {
+                    var i = heList.indexOf(element);
+                    heList.splice(i, 1);
+                }
+            }
+        })
+        $('#form_contract').show();
+    }
+
     $('#btn_Sc').click(function () {
         var id = $('#id').val();
         $.ajax({
@@ -159,7 +203,7 @@
             },
             success: function (ref) {
                 if (ref.code === 20000) {
-                    location.href="/api/progress"
+                    location.href = "/api/progress"
                     mui.toast('上传成功', {
                         duration: 1600,
                         type: 'div'

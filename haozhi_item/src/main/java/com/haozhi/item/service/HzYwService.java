@@ -408,7 +408,7 @@ public class HzYwService {
             } else if ("10012".equals(business.getOneId())) {
                 //担保注册
                 doc.loadFromFile("/www/server/haozhi/word/003.docx");
-            }else if ("10013".equals(business.getOneId())){
+            } else if ("10013".equals(business.getOneId())) {
                 doc.loadFromFile("/www/server/haozhi/word/0010.docx");
             }
 
@@ -731,14 +731,14 @@ public class HzYwService {
             String abcName = "软著撰写+代理";
             doc.replace("#abcName", abcName, true, true);
         }
-        doc.replace("#gfPrice", String.valueOf(hzYw.getGfPrice() / 100), true, true);
+        doc.replace("#gfPrice", String.valueOf(hzYw.getGfPrice() / 100 * business.getNumber()), true, true);
 
         doc.replace("#zjPrice", String.valueOf(business.getPrice() * business.getNumber() / 100 + business.getCommission() / 100), true, true);
         doc.replace("#dxZjPrice", MoneyUtils.change(Double.parseDouble(String.valueOf(business.getPrice() * business.getNumber() / 100 + business.getCommission() / 100))), true, true);
         if (user.getState().equals("1")) {
-            doc.replace("#dlPrice", String.valueOf(hzYw.getHyPrice() / 100 + business.getCommission() / 100), true, true);
+            doc.replace("#dlPrice", String.valueOf(hzYw.getHyPrice() / 100 * business.getNumber() + business.getCommission() / 100), true, true);
         } else if (user.getState().equals("2")) {
-            doc.replace("#dlPrice", String.valueOf(hzYw.getVipPrice() / 100 + business.getCommission() / 100), true, true);
+            doc.replace("#dlPrice", String.valueOf(hzYw.getVipPrice() / 100 * business.getNumber() + business.getCommission() / 100), true, true);
         }
         //更新域
         doc.isUpdateFields(true);
@@ -817,13 +817,13 @@ public class HzYwService {
         doc.replace("#gwNum", user.getTel(), true, true);
         HzYw hzYw = hzYwRepository.selectByPrimaryKey(business.getOneId());
         doc.replace("#Name", hzYw.getName(), true, true);
-        doc.replace("#zjPrice", String.valueOf(business.getPrice() / 100 + business.getCommission() / 100), true, true);
-        /*doc.replace("#dxZjPrice", MoneyUtils.change(Double.parseDouble(String.valueOf(business.getPrice() / 100 + business.getCommission() / 100))), true, true);*/
-        doc.replace("#gfPrice", String.valueOf(hzYw.getGfPrice() / 100), true, true);
+        doc.replace("#zjPrice", String.valueOf((business.getPrice() / 100) * business.getNumber() + business.getCommission() / 100), true, true);
+        doc.replace("#dxZjPrice", MoneyUtils.change(Double.parseDouble(String.valueOf((business.getPrice() / 100) * business.getNumber() + business.getCommission() / 100))), true, true);
+        doc.replace("#gfPrice", String.valueOf(hzYw.getGfPrice() / 100 * business.getNumber()), true, true);
         if (user.getState().equals("1")) {
-            doc.replace("#dlPrice", String.valueOf(hzYw.getHyPrice() / 100 + business.getCommission() / 100), true, true);
+            doc.replace("#dlPrice", String.valueOf(hzYw.getHyPrice() / 100 * business.getNumber() + business.getCommission() / 100), true, true);
         } else if (user.getState().equals("2")) {
-            doc.replace("#dlPrice", String.valueOf(hzYw.getVipPrice() / 100 + business.getCommission() / 100), true, true);
+            doc.replace("#dlPrice", String.valueOf(hzYw.getVipPrice() / 100 * business.getNumber() + business.getCommission() / 100), true, true);
         }
 
         //更新域

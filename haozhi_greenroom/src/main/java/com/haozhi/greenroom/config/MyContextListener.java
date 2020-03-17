@@ -1,3 +1,4 @@
+/*
 
 package com.haozhi.greenroom.config;
 
@@ -7,11 +8,9 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
 
-/**
- * @author NZL
- * @version 1.0
- * @date 2019/12/11 9:53
- */
+
+
+
 @WebListener
 @Component
 public class MyContextListener implements ServletContextListener {
@@ -21,9 +20,9 @@ public class MyContextListener implements ServletContextListener {
         super();
     }
 
-    /**
-     * @see ServletContextListener#contextInitialized(ServletContextEvent)
-     */
+
+
+
     @Override
     public void contextInitialized(ServletContextEvent arg0) {
         // 建立连接
@@ -38,9 +37,9 @@ public class MyContextListener implements ServletContextListener {
         }
     }
 
-    /**
-     * @see ServletContextListener#contextDestroyed(ServletContextEvent)
-     */
+
+
+
     @Override
     public void contextDestroyed(ServletContextEvent arg0) {
         // 断开连接
@@ -54,3 +53,4 @@ public class MyContextListener implements ServletContextListener {
         }
     }
 }
+*/

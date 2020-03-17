@@ -11,6 +11,7 @@ import com.haozhi.greenroom.service.OrderService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -55,13 +56,11 @@ public class OrderController {
     ) {
         PageHelper.startPage(page, rows);
         List<Order> orders = orderService.queryOrder();
-        List<Order> list = new ArrayList<>();
         for (Order order : orders) {
             HzUser user = hzUserMapper.selectByPrimaryKey(order.getUserId());
             order.setUserId(user.getName());
-            list.add(order);
         }
-        PageInfo<Order> orderPageInfo = new PageInfo<>(list);
+        PageInfo<Order> orderPageInfo = new PageInfo<>(orders);
         return new PageResultDTO(orderPageInfo.getTotal(), orderPageInfo.getList());
     }
 
@@ -104,6 +103,14 @@ public class OrderController {
     public String xxView(String id, Map<String, Object> map) {
         Order order = orderService.queryOrderById(id);
         LastDto lastDto = businessLast(order.getPOrder());
+        if (!StringUtils.isEmpty(order.getContract())) {
+            String[] contracts = order.getContract().split(",");
+            order.setContracts(contracts);
+        }
+        if (!StringUtils.isEmpty(order.getPower())) {
+            String[] powers = order.getPower().split(",");
+            order.setPowers(powers);
+        }
         map.put("order", order);
         map.put("business", lastDto);
         return "tgls/system/order/xxorder_view";
@@ -154,13 +161,11 @@ public class OrderController {
                             @RequestParam(value = "rows", defaultValue = "10") Integer rows) {
         PageHelper.startPage(page, rows);
         List<Order> orders = orderService.queryWxOrder();
-        List<Order> list = new ArrayList<>();
         for (Order order : orders) {
             HzUser user = hzUserMapper.selectByPrimaryKey(order.getUserId());
             order.setUserId(user.getName());
-            list.add(order);
         }
-        PageInfo<Order> orderPageInfo = new PageInfo<>(list);
+        PageInfo<Order> orderPageInfo = new PageInfo<>(orders);
         return new PageResultDTO(orderPageInfo.getTotal(), orderPageInfo.getList());
     }
 
@@ -195,13 +200,11 @@ public class OrderController {
                              @RequestParam(value = "rows", defaultValue = "10") Integer rows) {
         PageHelper.startPage(page, rows);
         List<Order> orders = orderService.queryYshOrder();
-        List<Order> list = new ArrayList<>();
         for (Order order : orders) {
             HzUser user = hzUserMapper.selectByPrimaryKey(order.getUserId());
             order.setUserId(user.getName());
-            list.add(order);
         }
-        PageInfo<Order> orderPageInfo = new PageInfo<>(list);
+        PageInfo<Order> orderPageInfo = new PageInfo<>(orders);
         return new PageResultDTO(orderPageInfo.getTotal(), orderPageInfo.getList());
     }
 
@@ -222,13 +225,11 @@ public class OrderController {
                              @RequestParam(value = "rows", defaultValue = "10") Integer rows) {
         PageHelper.startPage(page,rows);
         List<Order> orders = orderService.queryYtkOrder();
-        List<Order> list = new ArrayList<>();
         for (Order order : orders) {
             HzUser user = hzUserMapper.selectByPrimaryKey(order.getUserId());
             order.setUserId(user.getName());
-            list.add(order);
         }
-        PageInfo<Order> orderPageInfo = new PageInfo<>(list);
+        PageInfo<Order> orderPageInfo = new PageInfo<>(orders);
         return new PageResultDTO(orderPageInfo.getTotal(),orderPageInfo.getList());
     }
 

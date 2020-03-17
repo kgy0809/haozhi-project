@@ -43,6 +43,10 @@ public class Order {
     private Date invoiceTime;//开票日期
     @Transient
     private String sInvoiceTime;//开票日期
+    @Transient
+    private String[] contracts;
+    @Transient
+    private String[] powers;
     private String xxPayStart;//是否线下支付
 
     public void setPrice(Integer price) {

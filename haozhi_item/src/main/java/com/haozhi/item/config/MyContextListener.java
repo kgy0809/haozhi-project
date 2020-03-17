@@ -20,7 +20,6 @@ public class MyContextListener implements ServletContextListener {
 
 
 
-
     @Override
     public void contextInitialized(ServletContextEvent arg0) {
         // 建立连接

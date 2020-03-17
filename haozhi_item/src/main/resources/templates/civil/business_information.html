@@ -61,10 +61,10 @@
     </div>
     <!-- 支付 -->
     <div class="information_pay">
-        <div class="applicant_Box5" style="margin-top:0;" data-id="0">
+<!--        <div class="applicant_Box5" style="margin-top:0;" data-id="0">
             <img class="applicant_Img2" th:src="@{/image/20_icon.png}" alt="">
             <div class="applicant_Txt4">我已阅读并同意<a href="/api/knowledge">《好智平台代理费分配说明》</a></div>
-        </div>
+        </div>-->
         <!-- 支付按钮 -->
         <div class="information_btn">
             <div class="information_Ok">确认支付</div>
@@ -90,13 +90,13 @@
         let price = $("#price").text();
         let text = $("#text").val();
         let pid = $("#pid").val();
-        if (csd === 0){
+/*        if (csd === 0){
             mui.toast('请您先阅读协议', {
                 duration: 1600,
                 type: 'div'
             });
             return false;
-        }
+        }*/
         $.ajax({
             url: "[[@{/pay}]]",
             type: "post",
@@ -145,13 +145,13 @@
         let price = $("#price").text();
         let text = $("#text").val();
         let pid = $("#pid").val();
-        if (csd === 0){
+/*        if (csd === 0){
             mui.toast('请您先阅读协议', {
                 duration: 1600,
                 type: 'div'
             });
             return false;
-        }
+        }*/
         $.ajax({
             url: "/api/pay/xxPayOrder",
             type: "post",

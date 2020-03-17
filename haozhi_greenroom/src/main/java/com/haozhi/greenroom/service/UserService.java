@@ -5,6 +5,7 @@ import com.haozhi.greenroom.pojo.User;
 import org.apache.shiro.crypto.hash.Md5Hash;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import tk.mybatis.mapper.entity.Example;
 
 /**
  * @author kgy
@@ -21,9 +22,9 @@ public class UserService {
         if (userName == null) {
             return null;
         }
-        User user = new User();
-        user.setUsername(userName);
-        return userMapper.selectOne(user);
+        Example example = new Example(User.class);
+        example.createCriteria().andEqualTo("username",userName);
+        return userMapper.selectByExample(example).get(0);
     }
     public int updatePassword(String loginUser, String oldPassword,String password) {
         User user = new User();

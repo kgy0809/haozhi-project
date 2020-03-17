@@ -91,8 +91,10 @@ public class ExcelController {
                     Bank bank = bankMapper.selectOneByExample(example);
                     if (bank != null) {
                         data.setHyBankId(bank.getBankId());
+                        data.setHyBankName(bank.getBankName());
                     } else {
                         data.setHyBankId(" ");
+                        data.setHyBankName(" ");
                     }
                     Example countEx = new Example(HzUser.class);
                     countEx.createCriteria().andEqualTo("superId", user.getId());
