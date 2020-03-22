@@ -61,8 +61,9 @@ public class DataController {
     }
 
     @DeleteMapping("delete/{id}")
-    public Map<String, Object> dataUpdateDelete(@PathVariable("id") String pid) {
-        dataService.dataUpdateDelete(pid);
+    @ResponseBody
+    public Map<String, Object> dataUpdateDelete(@PathVariable("id") String id) {
+        dataService.dataUpdateDelete(id);
         Map<String, Object> map = new HashMap<>();
         map.put("msg", "成功");
         return map;
